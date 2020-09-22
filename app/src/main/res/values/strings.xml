@@ -1,0 +1,202 @@
+<resources>
+    <string name="app_name">HappiTV</string>
+    <string name="app_store_url">https://play.google.com/store/apps/details?id=com.anandamediamobile.androidtest&amp;hl=en</string>
+    <string name="USER_PREFERENCES">user_preferences</string>
+
+    <string name="facebook_app_id">1989191491402145</string>
+    <string name="fb_login_protocol_scheme">fb1989191491402145</string>
+
+    <!--   <string name="facebook_app_id">304997783624225</string>
+    <string name="fb_login_protocol_scheme">fb304997783624225</string>-->
+    <string name="search_by_preson_title_etc">Search by Preson, Title, Etc</string>
+    <string name="error_message_loading_users">There seems to have some error loading.</string>
+    <string name="server_error">There seems to have some trouble reaching server.</string>
+    <string name="no_results_found">No results available.</string>
+    <string name="server_error_please_try_again">Server is currently busy. Please try after sometime.</string>
+    <string name="selection_disabled">Disabled</string>
+    <string name="selection_default">Default</string>
+    <string name="enable_random_adaptation">Enable random adaptation</string>
+    <string name="ima_not_loaded">Playing sample without ads, as the IMA extension was not loaded</string>
+
+    <string name="search_results_for">Search Results for</string>
+    <string name="keyword">Keyword</string>
+    <string name="results_found">Results Found</string>
+    <string name="no">No.</string>
+    <string name="enter_text_to_search">Enter Text to Search</string>
+    <string name="searchKeyword">Title</string>
+    <string name="live_about">HappiTV Live</string>
+    <string name="channel_popular_videos">Popular Videos</string>
+    <string name="new_releases">New Releases</string>
+    <string name="watch_history">Watch History</string>
+    <string name="more_channels">More Channels</string>
+    <string name="trending_channels">Trending Channels</string>
+    <string name="no_channels">Sorry, Unable to display channels now!</string>
+    <string name="genere">GENERE</string>
+    <string name="live_label">Live</string>
+    <string name="_15_00">15:00</string>
+    <string name="logout">LogOut</string>
+    <string name="search">SEARCH</string>
+    <string name="search_video">Search Videos</string>
+    <string name="search_show">Search</string>
+    <string name="search_channel">Search Channels</string>
+    <string name="suggested_keyword">Suggested Keyword</string>
+    <string name="_05">05</string>
+    <string name="by">By</string>
+    <string name="owner_name">Owner Name</string>
+    <string name="demo_channel">Demo Channel</string>
+    <string name="video_title">Video Title</string>
+    <string name="count">Count</string>
+    <string name="more_videos_by">More Videos </string>
+    <string name="more_shows_by">You may also like </string>
+    <string name="load_them_up">Load them up</string>
+
+
+    // Login Activity
+    <string name="name">Name</string>
+    <string name="email_address">Email Address</string>
+    <string name="enter_email_address">Enter your email address</string>
+    <string name="password">Password</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_pass">Forgot Password</string>
+    <string name="return_to_login">Return to login</string>
+    <string name="forgotten_your_password">Forgot your Password?</string>
+    <string name="please_enter_your_email_address">Please enter your email address to receive reset password link.</string>
+    <string name="select_workout_locations">Select workout locations</string>
+    <string name="or_login_with">Or, Login with</string>
+    <string name="new_to_hypber">Don\'t have an account?</string>
+    <string name="signup">Sign Up</string>
+
+    // Register Activity
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="or_signup_with">Or, Signup with</string>
+    <string name="verify_number">Verify your number</string>
+
+    // Forgot your password
+    <string name="submit">Submit</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="enter_search_text">Enter Search Text</string>
+    <string name="search_results">Search results</string>
+    <string name="categories">Categories</string>
+    <string name="language">Select Languages</string>
+    <string name="home">Home</string>
+    <string name="channels">Channels</string>
+    <string name="programs">Programs</string>
+    <string name="notifications">Notifications</string>
+
+    //Premium
+    <string name="tv_show_live">TV Shows, Live, Channels</string>
+    <string name="latest_channels">Latest channels</string>
+    <string name="all_fav_shows">All of your favourite shows.</string>
+    <string name="already_mem">Already a member? </string>
+    <string name="prem_video">Already a member? </string>
+    <string name="prem_channel">Already a member? </string>
+    <string name="premium">Premium</string><!--
+    <string name="subscription">Subscription</string>-->
+    <string name="subscription_text">Choose One Package</string>
+    <string name="my_subscription">My Subscription</string>
+    <string name="subscriptions">Subscriptions</string>
+    <string name="subscription_list">Subscription List</string>
+    <string name="no_subs_error">Sorry, you donot have any active subscriptions.</string>
+    <string name="try_again">Please try again after sometime.</string>
+    <string name="subs_valid">Subscription Valid Till:</string>
+    <string name="enter_number_error">Please enter mobile number to continue</string>
+    <string name="register_number">Please register your mobile</string>
+    <string name="cancel_subs">Cancel Subscription</string>
+    <string name="wrong_phone">Looks like you have entered an invalid country code - phone number combination. Please check and try again</string>
+
+
+    <string name="one">One</string>
+    <string name="two">Two</string>
+    <string name="three">Three</string>
+    <string name="views">views</string>
+    <string name="more_videos">More videos</string>
+    <string name="continue_to_page">Continue</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="terms_and_conditions">Terms and Conditions</string>
+    <string name="no_internet">No internet connection detected\nplease connect to a network and
+        retry</string>
+    <string name="retry">Retry</string>
+    <string name="settings">Settings</string>
+    <string name="youtube">YouTube Player</string>
+    <string name="clear_search_history">Clear Search History</string>
+    <string name="title">Title</string>
+    <string name="channel_title">Channel Title</string>
+    <string name="subscribers">Subscribers</string>
+    <string name="video_details">Video Details</string>
+    <string name="change_preferred_languages">Change preferred languages</string>
+    <string name="item_name">Item name</string>
+    <string name="live_videos">Live videos</string>
+    <string name="live_channel">Live Channel</string>
+    <string name="live_videos_to_tv">Live</string>
+    <string name="schedule">Program Schedule</string>
+    <string name="version">Version</string>
+    <string name="contact_us">Contact us</string>
+    <string name="skip_login">Skip Login</string>
+    <string name="skip">Skip</string>
+    <string name="toggle_night_mode">Toggle night mode</string>
+    <string name="close">Close</string>
+    <string name="for_better_experience_watch_anandamedia_on_your_tv">For better experience\nwatch
+        HappiTV on your TV.</string>
+    <string name="watch_on_tv">Watch on TV</string>
+    <string name="later">Later</string>
+    <string name="ok">Ok</string>
+    <string name="channel_name">HappiTV</string>
+    <string name="channel_description">HappiTVNotificationChannel</string>
+    <string name="popular_shows">Popular Shows</string>
+    <string name="live_now">Live Now</string>
+    <string name="free">Watch for Free</string>
+    <string name="email_us_at">For further queries,\nemail us at</string>
+    <string name="support_email"></string>
+
+
+    //subscription
+    <string name="subscription_period_prompt">Select your subscription period</string>
+    <string name="subscription_resignup_prompt">To reactivate your subscription, select your subscription period</string>
+    <string name="subscription_update_prompt">To change your subscription, select your new subscription period</string>
+    <string name="subscription_period_monthly">Monthly $1.99</string>
+    <string name="subscription_period_threemonth">Three Month $4.99</string>
+    <string name="subscription_period_sixmonth">Six Month $6.99</string>
+    <string name="subscription_period_yearly">Yearly $11.99</string>
+    <string name="subscription_prompt_continue">Continue</string>
+    <string name="subscription_prompt_cancel">Cancel</string>
+    <string name="content_description_app_loading_image">App loading image</string>
+    <string name="content_description_title_image">80\'s Video Game Style Car Logo</string>
+    <string name="content_desc_gas_gauge_indicator">Gas gauge indicator</string>
+    <string name="content_desc_free_vs_premium_indicator">Free or Premium Image Indicator</string>
+    <string name="signup_alert">Please register to continue.</string>
+    //otp
+    <string name="enter_otp">Enter the code you received </string>
+    <string name="resend_otp">Resend code in </string>
+    <string name="verf_code">Verification Code</string>
+    <string name="please_type_verf_code">Please type the verification code sent to </string>
+    <string name="media_route_menu_title">Cast</string>
+    <string name="introducing_cast">Introducting Cast</string>
+
+    //show_details
+    <string name="producer_label">Producer:</string>
+    <string name="year_label">Year of release:</string>
+    <string name="audio_label">Audio:</string>
+    <string name="director_label">Director:</string>
+    <string name="cast_label">Cast:</string>
+    <string name="theme_label">Theme:</string>
+    <string name="synopsis_label">Synopsis:</string>
+    <string name="watch_trailer">Watch Trailer</string>
+    <string name="play_now">Play Now</string>
+    <string name="like_label">Like</string>
+    <string name="watch_list_label">Watch List</string>
+    <string name="PayPerView_Videos_label">My Videos</string>
+    <string name="share_label">Share</string>
+
+    //watch,fav
+    <string name="favourite_label">Favourites</string>
+    <string name="watchlist_label">Watch List</string>
+    <string name="image_label">image</string>
+    <string name="dislike_label">Dislike</string>
+
+    <string name="yt_api_key">AIzaSyDqTCHtltk1Y9xgGZgw-SYPBGWgo-mN_gM</string>
+
+</resources>

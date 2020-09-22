@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:paddingLeft="@dimen/dimen_24dp"
+        android:paddingTop="@dimen/dimen_32dp"
+        android:paddingRight="@dimen/dimen_24dp"
+        android:paddingBottom="@dimen/dimen_32dp">
+
+        <ImageView
+            android:id="@+id/iv_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_width="@dimen/dimen_165dp"
+            android:layout_height="@dimen/dimen_65dp"
+            android:src="@drawable/ic_transparent_logo" />
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:text="@string/version"
+            android:textSize="@dimen/text_regular" />
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_email_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_version"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:text="@string/email_us_at"
+            android:textSize="@dimen/text_small_medium2" />
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_email_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:padding="@dimen/dimen_2dp"
+            android:autoLink="email"
+            android:text="@string/support_email"
+            android:textSize="@dimen/text_regular_medium1" />
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/bt_submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_email"
+            android:padding="@dimen/dimen_5dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/dimen_35dp"
+            android:text="@string/close"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/text_regular_medium2" />
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

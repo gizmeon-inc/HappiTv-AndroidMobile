@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_black"
+    tools:context=".ChannelsListingActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <include layout="@layout/content_toolbar" />
+    </RelativeLayout>
+
+
+    <!--  <LinearLayout
+          android:id="@+id/rl_vwpager"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          android:layout_below="@id/rl_toolbar">
+
+
+
+              <android.support.design.widget.TabLayout
+                  android:id="@+id/tab_layout"
+                  android:layout_width="match_parent"
+                  android:layout_height="?attr/actionBarSize"
+                  android:layout_gravity="top"
+                  app:tabGravity="fill"
+                  app:tabIndicatorColor="@color/colorPrimaryDark"
+                  app:tabMode="fixed"
+                  app:tabSelectedTextColor="@color/colorPrimaryDark"
+                  app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget">
+
+                  <android.support.design.widget.TabItem
+                      android:id="@+id/ti_other"
+                      android:layout_width="wrap_content"
+                      android:layout_height="?attr/actionBarSize"
+                      android:text="Other Channels" />
+
+                  <android.support.design.widget.TabItem
+                      android:id="@+id/ti_youtube"
+                      android:layout_width="wrap_content"
+                      android:layout_height="?attr/actionBarSize"
+                      android:text="Youtube Channels" />
+              </android.support.design.widget.TabLayout>
+          <RelativeLayout
+              android:id="@+id/rl_ytplayer"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/tab_layout"
+              android:visibility="gone">
+
+              <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content">
+
+                  <FrameLayout
+                      android:id="@+id/youtube_fragment"
+                      android:layout_width="match_parent"
+                      android:layout_height="@dimen/dimen_250dp"
+                      android:layout_centerHorizontal="true" />
+
+              </FrameLayout>
+
+          </RelativeLayout>
+
+          <android.support.v4.view.ViewPager
+              android:id="@+id/view_pager"
+              android:layout_width="match_parent"
+              android:layout_height="0dp"
+              android:layout_weight="1">
+
+          </android.support.v4.view.ViewPager>
+
+
+
+      </LinearLayout>-->
+    <RelativeLayout
+        android:id="@+id/rl_channels"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_toolbar">
+
+        <include layout="@layout/content_channels" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <FrameLayout
+        android:id="@+id/ll_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_165dp"
+        android:layout_gravity="center">
+
+        <ImageView
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_165dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_placeholder" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/vignette" />
+
+        <LinearLayout
+            android:id="@+id/ll_delete"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:padding="@dimen/dimen_7dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.happi.android.customviews.TypefacedTextViewSemiBold
+                android:id="@+id/tv_video_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:singleLine="true"
+                android:text=""
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="@dimen/dimen_18dp"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/dimen_5dp"/>
+            <ImageView
+                android:id="@+id/iv_delete_icon"
+                android:layout_width="@dimen/dimen_50dp"
+                android:layout_height="@dimen/dimen_50dp"
+                android:src="@drawable/ic_trash_delete"
+                android:tint="@color/colorPrimary"
+                android:visibility="visible"/>
+
+
+        </LinearLayout>
+    </FrameLayout>
+</androidx.cardview.widget.CardView>

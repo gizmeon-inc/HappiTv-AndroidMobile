@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#BA2C99</color>
+    <color name="colorPrimaryDark">#BA2C99</color>
+    <color name="colorAccent">#BA2C99</color>
+    <color name="white">#FFFFFF</color>
+    <color name="darkBlue">#0d47a1</color>
+    <color name="blue">#0057e7</color>
+    <color name="lightBlue">#2793e8</color>
+    <color name="lightBlue1">#0080ff</color>
+    <color name="brightBlue">#3366ff</color>
+    <color name="pinkishGrey">#c3c3c3</color>
+    <color name="silverTwo">#bebfc0</color>
+    <color name="cloudyBlue">#c1c3d6</color>
+    <color name="error_tint">#BDBDBD</color>
+    <color name="live_tag_color">#FF0000</color>
+    <color name="green">#2ee347</color>
+    <color name="darkGreen">#008744</color>
+    <color name="darkRed">#d62d20</color>
+    <color name="black">#98000000</color>
+    <color name="gray">#BA2C99</color>
+    <color name="dark_black">#000000</color>
+
+    <color name="colorLine">#05000000</color>
+    <color name="light_transparent">#16000000</color>
+    <color name="greyishBrownTwo">#595959</color>
+    <color name="whiteTwo">#ffffff</color>
+    <color name="paleBlue">#edf1f0</color>
+
+
+    // Login Activity
+    <color name="greyishBrown">#545454</color>
+    <color name="whiteThree">#dedede</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="cornflowerTwo">#5d61fc</color>
+    <color name="coolGrey">#8a8e91</color>
+
+    <color name="orange">#34A7CD</color>
+    <color name="transparent_blue">#1AE50914</color>
+
+    //live schedule
+    <color name="schedule_grey">#303030</color>
+    <color name="schedule_item_grey">#003333</color>
+
+
+    <color name="grey">#43464B</color>
+
+    <color name="alert_dark">#424242</color>
+    <color name="dark_overlay">#99000000</color>
+
+</resources>

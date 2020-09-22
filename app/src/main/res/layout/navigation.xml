@@ -1,0 +1,381 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/ll_home"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical|end"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingRight="@dimen/dimen_20dp"
+        android:paddingBottom="@dimen/dimen_5dp">
+
+        <ImageView
+            android:id="@+id/iv_home"
+            android:layout_width="@dimen/dimen_38dp"
+            android:layout_height="@dimen/dimen_38dp"
+            android:layout_marginRight="@dimen/dimen_5dp"
+            android:padding="@dimen/dimen_6dp"
+            android:src="@drawable/ic_home"
+            android:tint="@color/colorPrimaryDark" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/home"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_regular_medium2" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ll_home"
+        android:paddingLeft="@dimen/dimen_20dp"
+        android:paddingBottom="@dimen/dimen_20dp">
+
+        <LinearLayout
+            android:id="@+id/ll_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:id="@+id/iv_profile"
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_profile"
+                android:tint="@color/colorPrimaryDark" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="Hi User"
+                android:textSize="@dimen/text_regular_medium3" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_channels"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_profile"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_channel_list"
+                android:tint="@color/colorPrimaryDark" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_channels"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/channels"
+                android:textSize="@dimen/text_regular_medium3" />
+            <LinearLayout
+                android:id="@+id/ll_new"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_vertical|end"
+                android:layout_marginRight="@dimen/dimen_25dp"
+                android:visibility="invisible">
+                <ImageView
+                    android:layout_width="@dimen/dimen_20dp"
+                    android:layout_height="@dimen/dimen_20dp"
+                    android:src="@drawable/ic_new"
+                    android:gravity="center_vertical|end"
+                    />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_live"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_channels"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_live"
+                android:tint="@color/colorPrimaryDark" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_live"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/live_videos_to_tv"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+
+        <!--    <LinearLayout
+                android:id="@+id/ll_schedule"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/ll_live"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dimen_7dp"
+                android:paddingBottom="@dimen/dimen_7dp">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_32dp"
+                    android:layout_height="@dimen/dimen_32dp"
+                    android:src="@drawable/ic_schedule"
+                    android:tint="@color/colorPrimaryDark" />
+
+                <com.icon.android.customviews.TypefacedTextViewRegular
+                    android:id="@+id/tv_schedule"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:text="@string/schedule"
+                    android:textSize="@dimen/text_regular_medium3" />
+            </LinearLayout>-->
+        <LinearLayout
+            android:id="@+id/ll_premium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_live"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_premium"
+                android:tint="@color/colorPrimaryDark"/>
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_premium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/my_subscription"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_favourite"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_premium"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_favourite_icon"
+                android:tint="@color/colorPrimaryDark"/>
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_favourite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/favourite_label"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_watch_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_favourite"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_watch_history"
+                android:tint="@color/colorPrimaryDark"/>
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_watchlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/watch_list_label"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_payperview_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_watch_list"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/payperviewvideo"
+                android:tint="@color/colorPrimaryDark"/>
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_payperviewlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/PayPerView_Videos_label"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_terms"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_payperview_list"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:src="@drawable/ic_terms"
+                android:tint="@color/colorPrimaryDark" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_terms"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/terms_and_conditions"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_privacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_terms"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_privacy"
+                android:tint="@color/colorPrimaryDark" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_privacy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/privacy_policy"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_settings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_privacy"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:padding="@dimen/dimen_2dp"
+                android:src="@drawable/ic_settings"
+                android:tint="@color/colorPrimaryDark" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/settings"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_contact_us"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_settings"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_7dp"
+            android:paddingBottom="@dimen/dimen_7dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_call"
+                android:padding="@dimen/dimen_2dp"
+                android:tint="@color/colorPrimaryDark"/>
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_version"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/contact_us"
+                android:textSize="@dimen/text_regular_medium3" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/ll_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="100dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_logout"
+                android:tint="@color/colorPrimaryDark" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/logout"
+                android:textSize="@dimen/text_regular_medium3" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_black">
+
+    <com.happi.android.customviews.TypefacedTextViewSemiBold
+        android:id="@+id/tv_clear_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
+        android:paddingLeft="@dimen/dimen_24dp"
+        android:paddingTop="@dimen/dimen_12dp"
+        android:paddingBottom="@dimen/dimen_12dp"
+        android:text="@string/clear_search_history"
+        android:textSize="@dimen/text_regular_medium" />
+
+    <com.happi.android.customviews.TypefacedTextViewSemiBold
+        android:id="@+id/tv_preferred_languages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_clear_search_history"
+        android:background="?selectableItemBackground"
+        android:paddingLeft="@dimen/dimen_24dp"
+        android:paddingTop="@dimen/dimen_12dp"
+        android:paddingBottom="@dimen/dimen_12dp"
+        android:text="@string/change_preferred_languages"
+        android:textSize="@dimen/text_regular_medium"
+        android:visibility="gone"/>
+
+<!--
+    <LinearLayout
+        android:id="@+id/ll_toggle_theme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_preferred_languages"
+        android:background="?selectableItemBackground"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/dimen_24dp"
+        android:paddingTop="@dimen/dimen_12dp"
+        android:paddingRight="@dimen/dimen_12dp"
+        android:paddingBottom="@dimen/dimen_12dp">
+
+        <com.fantastic.android.customviews.TypefacedTextViewSemiBold
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_clear_search_history"
+            android:layout_weight="4"
+            android:text="@string/toggle_night_mode"
+            android:textSize="@dimen/text_regular_medium" />
+
+        <Switch
+            android:id="@+id/sw_night_toggle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+-->
+
+</RelativeLayout>

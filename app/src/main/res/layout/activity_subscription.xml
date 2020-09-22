@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_black"
+    tools:context=".SubscriptionActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <include layout="@layout/content_toolbar" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_web_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_toolbar"
+        android:gravity="center_horizontal"
+        android:padding="@dimen/dimen_5dp"
+        android:visibility="gone">
+
+        <WebView
+            android:id="@+id/wv_subscription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:background="@android:color/transparent"
+            android:scrollbars="none"
+            android:visibility="visible" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_container_for_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_toolbar"
+        android:layout_gravity="center"
+        android:background="@color/dark_black"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="@dimen/dimen_300dp"
+            android:layout_height="@dimen/dimen_200dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_transparent_logo" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dark_overlay" />
+    </FrameLayout>
+    <RelativeLayout
+        android:id="@+id/rl_btm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/bottom_sheet" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_otp_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <include layout="@layout/layout_otp_verification"></include>
+
+    </RelativeLayout>
+</RelativeLayout>

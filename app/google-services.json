@@ -1,0 +1,93 @@
+{
+  "project_info": {
+    "project_number": "345778720026",
+    "firebase_url": "https://mangol-androidmobile.firebaseio.com",
+    "project_id": "mangol-androidmobile",
+    "storage_bucket": "mangol-androidmobile.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345778720026:android:0aec602fcfb3089a8230a3",
+        "android_client_info": {
+          "package_name": "com.happi.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345778720026-goja60j9rrgab0sg6td9mgn593274j95.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.happi.android",
+            "certificate_hash": "5a9276a32a0150309dca74388b0aa6354840bc0d"
+          }
+        },
+        {
+          "client_id": "345778720026-hqjab75voust4r4o7ani9e28fl3du5fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQv893ejWn2AEJICnnO68uqedAcsKb-rU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345778720026-hqjab75voust4r4o7ani9e28fl3du5fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345778720026:android:3c4a5669c8d755288230a3",
+        "android_client_info": {
+          "package_name": "com.mangol.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345778720026-hp2ih26uq5pe48sk414j0in4dta0ncav.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mangol.android",
+            "certificate_hash": "03bc8bf829afda4936bb666e5ab4479d06d09208"
+          }
+        },
+        {
+          "client_id": "345778720026-uvup3mpg9ge8ma0ckcnb0e3fhbh20eki.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mangol.android",
+            "certificate_hash": "5a9276a32a0150309dca74388b0aa6354840bc0d"
+          }
+        },
+        {
+          "client_id": "345778720026-hqjab75voust4r4o7ani9e28fl3du5fj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDQv893ejWn2AEJICnnO68uqedAcsKb-rU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345778720026-hqjab75voust4r4o7ani9e28fl3du5fj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

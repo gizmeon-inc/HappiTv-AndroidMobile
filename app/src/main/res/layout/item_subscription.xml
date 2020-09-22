@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="140dp"
+    android:background="@color/dark_black"
+    card_view:cardBackgroundColor="@color/dark_black"
+    android:layout_height="140dp"
+    android:layout_marginLeft="@dimen/dimen_15dp"
+    card_view:cardCornerRadius="2dp">
+    <LinearLayout
+        android:id="@+id/ll_premium"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:background="@drawable/bg_outline_grey"
+        android:padding="@dimen/dimen_5dp">
+        <com.happi.android.customviews.TypefacedTextViewBold
+            android:id="@+id/tv_subscription_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="subscription name"
+            android:textSize="@dimen/dimen_15dp"
+            android:lines="1"
+            android:gravity="center"
+            android:paddingLeft="2dp"
+            android:paddingRight="@dimen/dimen_2dp"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:textColor="@color/whiteThree"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:layout_marginBottom="@dimen/dimen_10dp">
+
+            <com.happi.android.customviews.TypefacedTextViewBold
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/whiteThree"
+                android:textSize="15sp"
+                android:gravity="center" />
+        </LinearLayout>
+        <com.happi.android.customviews.TypefacedTextViewBold
+            android:id="@+id/tv_subscription_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="subscription type"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/dimen_5dp"
+            android:textColor="@color/whiteThree"/>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

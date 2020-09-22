@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/schedule_grey"
+        android:paddingLeft="@dimen/dimen_5dp"
+        android:paddingTop="@dimen/dimen_10dp"
+        android:paddingRight="@dimen/dimen_5dp"
+        android:paddingBottom="@dimen/dimen_5dp">
+        <ImageView
+            android:id="@+id/iv_item_logo"
+            android:layout_centerHorizontal="true"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_128dp"
+            android:src="@drawable/icon_logo_main" />
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_item_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_item_logo"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:text="Cliff Hanger"
+            android:textSize="@dimen/dimen_18dp"
+            android:textColor="@color/colorPrimaryDark"/>
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_item_title"
+            android:gravity="center"
+            android:text="3:27 PM"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:textSize="@dimen/dimen_15dp"
+            android:textColor="@color/whiteThree"/>
+
+        <RelativeLayout
+            android:id="@+id/ll_reminder"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_50dp"
+            android:layout_below="@+id/tv_item_time"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:gravity="center_vertical">
+
+            <com.happi.android.customviews.TypefacedTextViewBold
+                android:id="@+id/tv_remind_me_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/dimen_2dp"
+                android:text="Remind me"
+                android:textSize="@dimen/dimen_15dp"
+                android:textColor="@color/white"/>
+
+            <com.suke.widget.SwitchButton
+                android:id="@+id/sb_reminder"
+                android:layout_width="@dimen/dimen_50dp"
+                android:layout_height="@dimen/dimen_30dp"
+                android:layout_alignParentEnd="true"
+               android:layout_marginRight="@dimen/dimen_10dp"
+                app:sb_show_indicator="false"
+                app:sb_shadow_color="@color/colorPrimaryDark"
+                app:sb_checked_color="@color/colorPrimaryDark"
+                app:sb_background="@android:color/transparent"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

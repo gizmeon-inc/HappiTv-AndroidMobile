@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <FrameLayout
+        android:id="@+id/ll_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_80dp">
+
+        <ImageView
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_80dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_placeholder" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="fitXY"
+            android:src="@drawable/vignette" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dimen_7dp">
+
+            <com.happi.android.customviews.TypefacedTextViewSemiBold
+                android:id="@+id/tv_category_title"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:textColor="@color/white"
+                android:text="@string/searchKeyword"
+                android:textSize="@dimen/text_regular_medium3" />
+
+        </RelativeLayout>
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>-->
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="110dp"
+    android:background="@android:color/transparent"
+    android:gravity="center">
+
+    <FrameLayout
+        android:id="@+id/ll_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp"
+            android:layout_gravity="center"
+            app:civ_border_color="@color/white"
+            app:civ_border_width="@dimen/dimen_2dp"
+            android:src="@drawable/ic_placeholder"/>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/vignette" />
+        <com.happi.android.customviews.TypefacedTextViewSemiBold
+            android:id="@+id/tv_category_title"
+            android:layout_width="@dimen/dimen_100dp"
+            android:layout_height="@dimen/dimen_100dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:lines="1"
+            android:textColor="@color/white"
+            android:text=""
+            android:textSize="@dimen/text_regular_medium3" />
+    </FrameLayout>
+</RelativeLayout>

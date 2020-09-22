@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".CategoriesListActivity">
+
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <include layout="@layout/content_toolbar" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_toolbar">
+
+        <ImageView
+            android:id="@+id/iv_errorimg"
+            android:layout_width="@dimen/dimen_75dp"
+            android:layout_height="@dimen/dimen_75dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:layout_above="@id/tv_errormsg"
+            android:src="@drawable/no_channels"
+            android:layout_centerHorizontal="true"
+            android:tint="@color/error_tint"
+            android:visibility="gone" />
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_errormsg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/dimen_5dp"
+            android:textColor="@color/error_tint"
+            android:padding="@dimen/dimen_10dp"
+            android:visibility="gone" />
+
+        <com.happi.android.recyclerview.GridRecyclerView
+            android:id="@+id/rv_category_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:overScrollMode="never"
+            android:clipToPadding="false"
+            android:paddingLeft="@dimen/dimen_10dp"
+            android:paddingRight="@dimen/dimen_10dp"
+            android:paddingBottom="@dimen/dimen_10dp" />
+
+    </RelativeLayout>
+</RelativeLayout>

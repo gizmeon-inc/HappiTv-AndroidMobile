@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_container"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dimen_60dp"
+    android:paddingLeft="@dimen/dimen_25dp"
+    android:paddingRight="@dimen/dimen_25dp">
+
+    <com.happi.android.customviews.TypefacedTextViewSemiBold
+        android:id="@+id/tv_item"
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="@string/item_name"
+        android:textSize="@dimen/text_regular_medium"
+        android:layout_height="wrap_content" />
+
+    <ImageView
+        android:id="@+id/iv_checkBox"
+        android:layout_width="@dimen/dimen_32dp"
+        android:layout_height="@dimen/dimen_32dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_checkbox_empty"/>
+
+</RelativeLayout>

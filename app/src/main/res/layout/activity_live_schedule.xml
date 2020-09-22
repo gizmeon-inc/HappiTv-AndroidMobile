@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_black">
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <include layout="@layout/channel_toolbar" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_schedule_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_40dp"
+        android:layout_below="@+id/rl_toolbar"
+        android:background="@color/schedule_grey"
+        android:gravity="center">
+        <com.happi.android.customviews.TypefacedTextViewBold
+            android:id="@+id/tv_schedule_label"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Schedule"
+            android:textColor="@color/white"
+            android:textSize="@dimen/dimen_18dp"/>
+    </RelativeLayout>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_date_list"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_40dp"
+            android:layout_below="@+id/rl_schedule_title_bar"
+            android:layout_marginTop="@dimen/dimen_10dp"
+            android:visibility="visible"
+            android:background="@color/schedule_grey"
+            android:layout_centerHorizontal="true"
+            android:clipToPadding="false"
+            android:paddingTop="@dimen/dimen_10dp"/>
+    <ImageView
+        android:layout_width="70dp"
+        android:layout_height="@dimen/dimen_35dp"
+        android:src="@drawable/bg_datepicker_for_schedule"
+        android:layout_below="@+id/rl_schedule_title_bar"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingBottom="@dimen/dimen_5dp"
+        android:layout_marginTop="@dimen/dimen_10dp"/>
+
+    <RelativeLayout
+        android:id="@+id/rl_error"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rv_date_list"
+        android:layout_marginTop="@dimen/dimen_5dp"
+        android:gravity="center"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/iv_error"
+            android:layout_width="@dimen/dimen_40dp"
+            android:layout_height="@dimen/dimen_40dp"
+            android:src="@drawable/no_channels"
+            android:tint="@color/error_tint"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tv_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/dimen_15dp"
+            android:textColor="@color/error_tint"
+            android:gravity="center"
+            android:layout_below="@+id/iv_error"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_schedule_list_for_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="vertical"
+        android:layout_below="@+id/rv_date_list"
+        android:layout_marginTop="@dimen/dimen_10dp"
+        android:layout_marginBottom="@dimen/dimen_3dp"
+        android:visibility="gone"/>
+
+
+</RelativeLayout>

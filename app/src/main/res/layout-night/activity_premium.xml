@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/dark_black"
+    tools:context=".PremiumActivity">
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <include layout="@layout/content_toolbar" />
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rl_subscriptions"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dimen_8dp"
+        android:layout_marginTop="@dimen/dimen_7dp"
+        android:layout_below="@+id/rl_toolbar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_subscription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+    </RelativeLayout>
+    <com.happi.android.customviews.TypefacedTextViewRegular
+        android:id="@+id/tv_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:text=""
+        android:gravity="center"
+        android:visibility="gone" />
+    <!-- <LinearLayout
+         android:id="@+id/ll_error"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_gravity="center">
+         <TextView
+             android:id="@+id/tv_error"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:textColor="@color/colorPrimaryDark"
+             android:visibility="gone"
+             android:text=""
+             android:layout_marginBottom="@dimen/dimen_2dp" />
+     </LinearLayout>-->
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|bottom"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center">
+        <LinearLayout
+            android:id="@+id/ll_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@color/dark_black">
+            <Button
+                android:id="@+id/btn_cancel"
+                android:layout_width="270dp"
+                android:layout_height="50dp"
+                android:backgroundTint="@color/colorPrimaryDark"
+                android:text="@string/cancel_subs"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:layout_marginBottom="@dimen/dimen_5dp"
+                android:textSize="@dimen/text_regular_medium3"
+                android:visibility="invisible"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+
+</RelativeLayout>

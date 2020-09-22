@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".NoInternetActivity">
+
+    <ImageView
+        android:id="@+id/iv_no_internet"
+        android:layout_width="@dimen/dimen_75dp"
+        android:layout_height="@dimen/dimen_75dp"
+        android:layout_above="@id/tv_errormsg"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_no_internet"
+        android:tint="@color/error_tint"
+        android:visibility="visible" />
+
+    <com.happi.android.customviews.TypefacedTextViewRegular
+        android:id="@+id/tv_errormsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:padding="@dimen/dimen_10dp"
+        android:text="@string/no_internet"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/ll_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_errormsg"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:padding="@dimen/dimen_10dp">
+
+        <com.happi.android.customviews.TypefacedTextViewSemiBold
+            android:id="@+id/tv_retry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingRight="@dimen/dimen_5dp"
+            android:text="@string/retry"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_regular_medium3" />
+
+        <ImageView
+            android:id="@+id/iv_retry"
+            android:layout_width="@dimen/dimen_35dp"
+            android:layout_height="@dimen/dimen_35dp"
+            android:padding="@dimen/dimen_5dp"
+            android:src="@drawable/ic_retry"
+            android:tint="@color/colorPrimaryDark" />
+
+    </LinearLayout>
+
+</RelativeLayout>

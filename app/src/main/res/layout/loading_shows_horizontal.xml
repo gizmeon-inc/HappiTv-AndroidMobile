@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/dimen_165dp"
+    android:layout_height="@dimen/dimen_128dp"
+    android:orientation="horizontal"
+    app:cardCornerRadius="5dp"
+    android:layout_marginRight="@dimen/dimen_7dp"
+    android:elevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <FrameLayout
+        android:id="@+id/ll_main_layout"
+        android:layout_width="@dimen/dimen_165dp"
+        android:layout_height="@dimen/dimen_128dp"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_transparent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dimen_15dp">
+
+            <com.happi.android.customviews.TypefacedTextViewBold
+                android:id="@+id/tv_video_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_20dp"
+                android:ellipsize="end"
+                android:lines="2"
+                android:maxLines="2"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:background="@color/light_transparent"/>
+
+            <View
+                android:id="@+id/tv_video_tag"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tv_video_title"
+                android:background="@color/light_transparent"
+                android:gravity="center"
+                android:padding="@dimen/dimen_2dp"
+                android:text="@string/genere" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>

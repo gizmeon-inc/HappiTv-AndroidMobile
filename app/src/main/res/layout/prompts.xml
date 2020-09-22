@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_root"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:padding="20dp" >
+
+    <EditText
+        android:id="@+id/editTextDialogUserInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_20dp"
+        android:backgroundTint="@android:color/transparent"
+        android:hint="@string/enter_email_address"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/greyishBrown"
+        android:textColorHint="@color/whiteThree"
+        android:textSize="20sp"
+        android:textStyle="bold" >
+
+        <requestFocus />
+    </EditText>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_1dp"
+        android:layout_marginTop="-15dp"
+        android:background="@color/whiteThree" />
+
+</LinearLayout>

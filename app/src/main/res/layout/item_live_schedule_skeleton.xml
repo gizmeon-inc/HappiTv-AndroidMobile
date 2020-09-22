@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginRight="@dimen/dimen_7dp"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <RelativeLayout
+        android:layout_width="@dimen/dimen_200dp"
+        android:layout_height="@dimen/dimen_100dp"
+        android:gravity="left|center_vertical"
+        android:padding="@dimen/dimen_8dp"
+        android:background="@color/coolGrey">
+
+        <TextView
+            android:id="@+id/tv_next_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/whiteThree"
+            android:textSize="@dimen/dimen_15dp"
+            android:padding="@dimen/dimen_2dp"
+            android:paddingLeft="@dimen/dimen_2dp"
+            android:paddingRight="@dimen/dimen_2dp"
+            android:background="@color/black"/>
+
+        <com.happi.android.customviews.TypefacedTextViewSemiBold
+            android:id="@+id/tv_schedule_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_3dp"
+            android:layout_marginBottom="@dimen/dimen_3dp"
+            android:ellipsize="end"
+            android:lines="1"
+            android:background="@color/whiteThree"
+            android:textSize="@dimen/dimen_18dp"
+            android:layout_below="@+id/tv_next_label"/>
+
+        <TextView
+            android:id="@+id/tv_schedule_item_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_3dp"
+            android:layout_marginBottom="@dimen/dimen_3dp"
+            android:background="@color/whiteThree"
+            android:layout_below="@+id/tv_schedule_title"/>
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>
