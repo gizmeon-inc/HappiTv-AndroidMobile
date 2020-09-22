@@ -19,9 +19,10 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.widget.RemoteViews;
+
+import com.happi.android.ChannelLivePlayerActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.happi.android.ChannelHomeActivity;
 import com.happi.android.HomeActivity;
 import com.happi.android.R;
 import com.happi.android.VideoPlayerActivity;
@@ -32,7 +33,7 @@ import java.net.URL;
 
 public class HappiMessagingService extends FirebaseMessagingService {
 
-    private static final String TAG = "FEMessagingService";
+    private static final String TAG = "HappiMessagingService";
     Bitmap bitmap;
     private static final String CHANNEL_ID = "Happi Tv";
 
@@ -61,12 +62,14 @@ public class HappiMessagingService extends FirebaseMessagingService {
 
     private void sendNotification(String id,String type, Bitmap image, String title, String description,boolean im) {
         if(type.equals("channel")){
-            Intent intent = new Intent(this, ChannelHomeActivity.class);
+           // Intent intent = new Intent(this, ChannelHomeActivity.class);
+            Intent intent = new Intent(this, ChannelLivePlayerActivity.class);
             intent.putExtra(ConstantUtils.CHANNEL_ID, Integer.parseInt(id));
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
             stackBuilder.addParentStack(HomeActivity.class);
-            stackBuilder.addParentStack(ChannelHomeActivity.class);
+            //stackBuilder.addParentStack(ChannelHomeActivity.class);
+            stackBuilder.addParentStack(ChannelLivePlayerActivity.class);
             stackBuilder.addNextIntent(intent);
 
             PendingIntent pendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);

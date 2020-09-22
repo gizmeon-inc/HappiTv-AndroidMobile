@@ -44,7 +44,8 @@
             <ImageView
                 android:id="@+id/iv_logo_text"
                 android:layout_width="@dimen/dimen_150dp"
-                android:layout_height="65dp"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dimen_5dp"
                 android:src="@drawable/ic_title_side"/>
 
             <com.happi.android.customviews.TypefacedTextViewRegular

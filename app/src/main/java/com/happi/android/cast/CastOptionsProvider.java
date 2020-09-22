@@ -24,13 +24,13 @@ public class CastOptionsProvider implements OptionsProvider {
 //                .setActions(Arrays.asList(MediaIntentReceiver.ACTION_SKIP_NEXT,
 //                        MediaIntentReceiver.ACTION_TOGGLE_PLAYBACK,
 //                        MediaIntentReceiver.ACTION_STOP_CASTING), new int[]{1, 2})
-                //.setTargetActivityClassName(VideoPlayerActivity.class.getName())
+                // .setTargetActivityClassName(HomeActivity.class.getName())
                 .setTargetActivityClassName(ExpandedControlsActivity.class.getName())
                 .build();
         CastMediaOptions mediaOptions = new CastMediaOptions.Builder()
                 .setImagePicker(new ImagePickerImpl())
                 .setNotificationOptions(notificationOptions)
-                //.setExpandedControllerActivityClassName(VideoPlayerActivity.class.getName())
+                //.setExpandedControllerActivityClassName(HomeActivity.class.getName())
                 .setExpandedControllerActivityClassName(ExpandedControlsActivity.class.getName())
                 .build();
         return new CastOptions.Builder()

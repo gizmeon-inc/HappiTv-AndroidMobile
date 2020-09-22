@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteTwo"
+    android:background="@color/dark_black"
     android:orientation="vertical"
-    tools:context="com.happi.android.RegisterActivity">
+    tools:context="com.happi.android.SubscriptionRegisterActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -38,13 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
-                android:id="@+id/ll_main_page"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,7 +71,8 @@
                     android:inputType="textCapWords"
                     android:textColorHint="@color/whiteThree"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -96,7 +91,8 @@
                     android:inputType="textEmailAddress"
                     android:textColorHint="@color/whiteThree"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -140,7 +136,8 @@
                         android:maxLength="15"
                         android:textColorHint="@color/whiteThree"
                         android:textSize="@dimen/dimen_20dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:textColor="@color/white"/>
 
 
                 </LinearLayout>
@@ -161,7 +158,8 @@
                     android:inputType="textPassword"
                     android:textColorHint="@color/whiteThree"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/white"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -203,13 +201,12 @@
                     android:text="@string/forgot_password"
                     android:textColor="@color/coolGrey"
                     android:textSize="@dimen/text_regular_medium1"
-                    android:visibility="gone" />
-
+                    android:visibility="invisible" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dimen_15dp"
+                    android:layout_marginTop="@dimen/dimen_24dp"
                     android:gravity="center_horizontal"
                     android:orientation="horizontal">
 
@@ -229,15 +226,12 @@
                         android:padding="@dimen/dimen_5dp"
                         android:gravity="center_horizontal"
                         android:text="@string/login"
-                        android:singleLine="true"
-                        android:maxLines="1"
                         android:background="?selectableItemBackground"
                         android:textColor="@color/colorPrimaryDark"
                         android:textSize="@dimen/text_regular_medium1" />
 
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
         </LinearLayout>
     </ScrollView>
     <RelativeLayout

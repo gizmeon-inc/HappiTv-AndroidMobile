@@ -240,8 +240,10 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private boolean isVideoDescVisible = false;
     private boolean isVideoDescAvailable = false;
 
-    private void loadRemoteMedia(int position, boolean autoPlay) {
+    public void loadRemoteMedia() {
         Log.e("CAST", "loadRemoteMedia called");
+        Log.v("okhttp","VIDEOPLAYER>>LOAD RMT MEDIA");
+
         if (mCastSession == null) {
             return;
         }
@@ -253,6 +255,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onStatusUpdated() {
                 super.onStatusUpdated();
+                Log.v("okhttp","VIDEOPLAYER>>STATUS UPDTD");
+
                 Intent intent = new Intent(VideoPlayerActivity.this, ExpandedControlsActivity.class);
                 startActivity(intent);
                 remoteMediaClient.unregisterCallback(this);
@@ -283,9 +287,13 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 super.onAdBreakStatusUpdated();
             }
         });
+
+
         MediaLoadOptions mediaLoadOptions = new MediaLoadOptions.Builder().build();
         try {
             Log.d(TAG, "loading media");
+            Log.v("okhttp","VIDEOPLAYER>>.LOAD");
+
             remoteMediaClient.load(mSelectedMedia, mediaLoadOptions).setResultCallback(
                     new ResultCallback<RemoteMediaClient.MediaChannelResult>() {
                         @Override
@@ -304,11 +312,14 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                             } else {
                                 Log.e(TAG, "Error loading Media : "
                                         + mediaChannelResult.getStatus().getStatusCode());
+                                Log.v("okhttp","VIDEOPLAYER>> ERR"+mediaChannelResult.getStatus().getStatusCode());
+
                             }
                         }
                     });
         } catch (Exception e) {
             Log.e(TAG, "Problem opening media during loading", e);
+            Log.v("okhttp","VIDEOPLAYER>>.LOAD CATCH");
         }
     }
 
@@ -347,13 +358,14 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 .setStreamDuration(duration * 1000)
                 .setCustomData(jsonObj)
                 .build();
+
     }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+Log.v("okhttp","VIDEOPLAYER>>ONCREATE");
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE);
 
@@ -381,30 +393,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         mCastContext = CastContext.getSharedInstance(this);
         mCastSession = mCastContext.getSessionManager().getCurrentCastSession();
         mMediaRouteButton = (MediaRouteButton) findViewById(R.id.media_route_button);
-        CastButtonFactory.setUpMediaRouteButton(getApplicationContext(), mMediaRouteButton);
-        mCastStateListener = new CastStateListener() {
-            @Override
-            public void onCastStateChanged(int newState) {
-                switch (newState) {
-                    case CastState.CONNECTED:
-                        //disable exoplayer
-                        isCasting = true;
-                        if (exoPlayer != null) {
-                            exoPlayer.setPlayWhenReady(false);
-                        }
-                        break;
-                    case CastState.NOT_CONNECTED:
-                        //enable exoplayer
-                        isCasting = false;
-                        if (exoPlayer != null) {
-                            exoPlayer.setPlayWhenReady(true);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
+        CastButtonFactory.setUpMediaRouteButton(this, mMediaRouteButton);
 
         videoModel = new SelectedVideoModel();
         compositeDisposable = new CompositeDisposable();
@@ -702,7 +691,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
                         token = tvexcelResponse.getData().trim();
                         Log.e("TOKEN", token);
-
                         initializePlayer(videoModel);
                     }
                 }, new Consumer<Throwable>() {
@@ -1175,6 +1163,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onStart() {
         super.onStart();
+        Log.v("okhttp","VIDEOPLAYER>>ONSTART");
         if (Util.SDK_INT > 23) {
 
 
@@ -1197,19 +1186,20 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");
         }
-
-
+        Log.v("okhttp","VIDEOPLAYER>>ONRESUME");
         mCastContext.getSessionManager().addSessionManagerListener(mSessionManagerListener, CastSession.class);
         mCastContext.addCastStateListener(mCastStateListener);
         if (mCastSession == null) {
+          //  Log.v("okhttp","VIDEOPLAYER>>CAST SESS NULL");
             mCastSession = CastContext.getSharedInstance(this).getSessionManager()
                     .getCurrentCastSession();
         }
 
         if ((mCastSession != null) && mCastSession.isConnected()) {
+         //   Log.v("okhttp","VIDEOPLAYER>>CAST SESS CONN"+mCastSession.isConnected());
             mMediaRouteButton.setVisibility(View.VISIBLE);
         } else {
-           mMediaRouteButton.setVisibility(View.VISIBLE);
+            mMediaRouteButton.setVisibility(View.VISIBLE);
         }
 
 
@@ -1380,10 +1370,14 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     private void setupCastListener() {
         Log.e("CAST", "setupCastListener called");
+        Log.v("okhttp","VIDEOPLAYER>>CAST LIST");
+
         mSessionManagerListener = new SessionManagerListener<CastSession>() {
 
             @Override
             public void onSessionEnded(CastSession session, int error) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS ENDED");
+
                 invalidateOptionsMenu();
 
 
@@ -1391,38 +1385,55 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
             @Override
             public void onSessionResumed(CastSession session, boolean wasSuspended) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS RESUMED");
+
                 onApplicationConnected(session);
             }
 
             @Override
             public void onSessionStarted(CastSession session, String sessionId) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS STARTED");
+
                 onApplicationConnected(session);
             }
 
             @Override
             public void onSessionStarting(CastSession session) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS STRNG");
             }
+
+
 
             @Override
             public void onSessionStartFailed(CastSession session, int error) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS FAILED");
+
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onSessionEnding(CastSession session) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS ENDNG");
+
             }
 
             @Override
             public void onSessionResuming(CastSession session, String sessionId) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS RESMNG");
+
             }
 
             @Override
             public void onSessionResumeFailed(CastSession session, int error) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS RES FLD");
+
                 invalidateOptionsMenu();
             }
 
             @Override
             public void onSessionSuspended(CastSession session, int reason) {
+                Log.v("okhttp","VIDEOPLAYER>>SESS SUSPND");
+
             }
 
 
@@ -1430,14 +1441,36 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 Log.e("CAST", "onApplicationConnected called");
                 mCastSession = castSession;
                 if (null != mSelectedMedia) {
-                    loadRemoteMedia(0, true);
+                    loadRemoteMedia();
                     return;
                 }
 
                 invalidateOptionsMenu();
             }
         };
-
+        mCastStateListener = new CastStateListener() {
+            @Override
+            public void onCastStateChanged(int newState) {
+                switch (newState) {
+                    case CastState.CONNECTED:
+                        //disable exoplayer
+                        isCasting = true;
+                        if (exoPlayer != null) {
+                            exoPlayer.setPlayWhenReady(false);
+                        }
+                        break;
+                    case CastState.NOT_CONNECTED:
+                        //enable exoplayer
+                        isCasting = false;
+                        if (exoPlayer != null) {
+                            exoPlayer.setPlayWhenReady(true);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
     }
 
     private void setVideoDetails() {
@@ -1465,7 +1498,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onPause() {
 
-
+        Log.v("okhttp","VIDEOPLAYER>>ONPAUSE");
         mCastContext.removeCastStateListener(mCastStateListener);
         mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener, CastSession.class);
 
@@ -1485,6 +1518,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         //if (Util.SDK_INT > 23) {
             releasePlayer();
        // }
+        Log.v("okhttp","VIDEOPLAYER>>ONSTOP");
     }
 
     private void releaseAdsLoader() {
@@ -1665,8 +1699,9 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         if (exoPlayer != null) {
             exoPlayer.release();
         }
+        mMediaRouteButton.setVisibility(View.INVISIBLE);
         safelyDispose(compositeDisposable);
-
+        Log.v("okhttp","VIDEOPLAYER>>ONDESTROY");
         super.onDestroy();
     }
 

@@ -7,7 +7,6 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,9 +33,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -447,10 +444,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         addOrRemoveFromWatchList(0, 1);
                     } else {
                         isAddToWatchLaterClicked = true;
-                        Drawable unwrappedDrawable = AppCompatResources.getDrawable(ShowDetailsActivity.this, R.drawable.ic_checkmark_blue);
-                        Drawable wrappedDrawable = DrawableCompat.wrap(unwrappedDrawable);
-                        DrawableCompat.setTint(wrappedDrawable,Color.parseColor("#BA2C99"));
-                        iv_watch_list.setImageResource(R.drawable.ic_checkmark_blue);
+                        iv_watch_list.setImageResource(R.drawable.ic_checkmark);
                         addOrRemoveFromWatchList(1, 0);
                     }
                 } else {
@@ -540,7 +534,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                     if (watchlistflagResponseModel.getWatchListData().size() != 0) {
                         if (watchlistflagResponseModel.getWatchListData().get(0).getWatchlist_flag() == 1) {
                             isAddToWatchLaterClicked = true;
-                            iv_watch_list.setImageResource(R.drawable.ic_checkmark_blue);
+                            iv_watch_list.setImageResource(R.drawable.ic_checkmark);
                             ll_watch_list.setEnabled(true);
                         } else if (watchlistflagResponseModel.getWatchListData().get(0).getWatchlist_flag() == 0) {
                             isAddToWatchLaterClicked = false;
@@ -567,7 +561,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                     if (likedFlagResponseModel.getLikeFlagModelList().size() != 0) {
                         if (likedFlagResponseModel.getLikeFlagModelList().get(0).getLiked_flag() == 1) {
                             isLikeClicked = true;
-                            iv_like.setImageResource(R.drawable.ic_like_fill_blue);
+                            iv_like.setImageResource(R.drawable.ic_like_fill_full);
                             ll_like.setEnabled(true);
 
                         } else if (likedFlagResponseModel.getLikeFlagModelList().get(0).getLiked_flag() == 0) {
@@ -1345,7 +1339,21 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     }
 
     private void goToVideoPlayer(int videoId) {
-        releasePlayer();
+        if(exoPlayer!=null){
+            isTrailerPlayable = true;
+            exoPlayer.setPlayWhenReady(false);
+            exoPlayer.stop();
+            exoPlayer.release();
+            exoPlayer.removeListener(eventLogger);
+            exoPlayer.removeMetadataOutput(eventLogger);
+            exoPlayer.removeAudioDebugListener(eventLogger);
+            exoPlayer.removeVideoDebugListener(eventLogger);
+            exoPlayer = null;
+            exo_player_view.setPlayer(null);
+        }
+        rl_player.setVisibility(View.GONE);
+        rl_image.setVisibility(View.VISIBLE);
+
         SharedPreferenceUtility.setVideoId(videoId);
         ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoId);
         // finish();
@@ -1395,6 +1403,8 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
     private void initializePlayer(String teaser) {
         // rl_image.setVisibility(View.GONE);
+        rl_image.setVisibility(View.GONE);
+        rl_player.setVisibility(View.VISIBLE);
         exo_player_view.setVisibility(View.VISIBLE);
 
         SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss", Locale.getDefault());
@@ -1582,10 +1592,10 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_200dp));
+                (int) getResources().getDimension(R.dimen.dimen_250dp));
         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_200dp));
+                (int) getResources().getDimension(R.dimen.dimen_250dp));
         // actionBarHeight = rl_toolbar.getHeight();
         params.setMargins(0, actionBarHeight, 0, 0);
         params2.setMargins(0, 0, 0, 0);

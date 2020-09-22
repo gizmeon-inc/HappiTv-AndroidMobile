@@ -180,16 +180,16 @@ public class BaseActivity extends AppCompatActivity {
 
         LinearLayout ll_terms = findViewById(R.id.ll_terms);
         ll_terms.setOnClickListener(v -> {
-            Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-           // goToWebView("T");
-           // drawer.closeDrawer(findViewById(R.id.navigation));
+           // Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
+            goToWebView("T");
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_privacy = findViewById(R.id.ll_privacy);
         ll_privacy.setOnClickListener(v -> {
-            Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-           // goToWebView("P");
-           // drawer.closeDrawer(findViewById(R.id.navigation));
+            //Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
+            goToWebView("P");
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_settings = findViewById(R.id.ll_settings);

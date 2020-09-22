@@ -301,6 +301,15 @@ public class ApiClient {
                                              @Query("password") String password,
                                              @Query("pubid") String publisher_id);
 
+        //new login and logout
+        @GET("Loginnew?")
+        Observable<LoginResponseModel> newLogin(@Query("user_email") String email_id,
+                                                @Query("password") String password,
+                                                @Query("pubid") String publisher_id,
+                                                @Query("device_id") String device_id,
+                                                @Query("ipaddress") String ipaddress,
+                                                @Query("version") String version);
+
 
         @GET("Forgotpassword")
         Observable<BasicResponse> forgotPassword(@Query("user_email") String user_email,

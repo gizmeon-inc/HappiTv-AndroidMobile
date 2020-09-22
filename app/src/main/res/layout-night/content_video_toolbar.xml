@@ -91,15 +91,23 @@
                 android:layout_gravity="center_vertical"
                 android:paddingStart="42dp"
                 android:paddingEnd="42dp">
-
                 <ImageView
+                    android:id="@+id/iv_logo_text_title"
+                    android:layout_width="@dimen/dimen_150dp"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/dimen_5dp"
+                    android:src="@drawable/ic_title_side"
+                    android:visibility="visible"
+                    android:contentDescription="@string/image_label"
+                    android:layout_gravity="center" />
+               <!-- <ImageView
                     android:id="@+id/iv_logo_text_title"
                     android:layout_width="@dimen/dimen_150dp"
                     android:layout_height="?attr/actionBarSize"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_title_side"
                     android:visibility="visible"
-                    android:contentDescription="@string/image_label"/>
+                    android:contentDescription="@string/image_label" />-->
             </FrameLayout>
 
 

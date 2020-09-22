@@ -20,14 +20,14 @@ public class ConstantUtils {
     //Production
     public static final String BASE_URL = "https://poppo.tv/platform/bk/";
     // Test
-   // public static final String BASE_URL = "https://staging.poppo.tv/platform/bk/";
+    //public static final String BASE_URL = "https://staging.poppo.tv/platform/bk/";
 
 
 
-    public static final String termsDayUrl = "";
-    public static final String termsNightUrl = "";
-    public static final String policyDayUrl = "";
-    public static final String policyNightUrl = "";
+    public static final String termsDayUrl = "https://web.fantastic-entertainment.com/termsDarkMOde";
+    public static final String termsNightUrl = "https://web.fantastic-entertainment.com/termsDarkMOde";
+    public static final String policyDayUrl = "https://web.fantastic-entertainment.com/policyDarkMode";
+    public static final String policyNightUrl = "https://web.fantastic-entertainment.com/policyDarkMode";
 
     //Urls
     public static final String VIDEO_DETAILS = "video_details";
@@ -59,9 +59,12 @@ public class ConstantUtils {
     public static final String SHARE_URL = "";
 
     //Subscription webview url
-    //https://fantastic.poppo.tv/androidHomeSub?antkn=token&vd=10123&ch=0
-    //http://stagingweb.fantastic-entertainment.com/androidHomeSub?antkn=token&vd=10123&ch=0
-    public static final String SUBSCRIPTION_WEBVIEW_URL = "https://stagingweb.fantastic-entertainment.com/androidHomeSub?antkn=";
+    //test
+  /*  public static final String SUBSCRIPTION_WEBVIEW_URL = "https://stagingweb.fantastic-entertainment.com/androidHomeSub?antkn=";
     public static final String SUBSCRIPTION_WEBVIEW_URL_SUCCESS = "https://stagingweb.fantastic-entertainment.com/webviewsuccess";
-    public static final String SUBSCRIPTION_WEBVIEW_URL_FAILURE = "https://stagingweb.fantastic-entertainment.com/failed";
+    public static final String SUBSCRIPTION_WEBVIEW_URL_FAILURE = "https://stagingweb.fantastic-entertainment.com/failed";*/
+    //production
+    public static final String SUBSCRIPTION_WEBVIEW_URL = "https://web.fantastic-entertainment.com/androidHomeSub?antkn=";
+    public static final String SUBSCRIPTION_WEBVIEW_URL_SUCCESS = "https://web.fantastic-entertainment.com/webviewsuccess";
+    public static final String SUBSCRIPTION_WEBVIEW_URL_FAILURE = "https://web.fantastic-entertainment.com/failed";
 }

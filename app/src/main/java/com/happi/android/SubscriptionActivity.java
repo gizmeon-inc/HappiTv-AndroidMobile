@@ -113,7 +113,8 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
     boolean isOtpScreenOpen = false;
     private CountDownTimer otpTimer;
     private TextView tv_error;
-    private String channel = "0";
+    private long channel = 0;
+    private long video = 0;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -187,14 +188,19 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
                 (getIntent().getStringExtra("from") != null && !getIntent().getStringExtra("from").isEmpty())){
             String from  = getIntent().getStringExtra("from");
             if(from.equalsIgnoreCase("videoPlayer")){
-                channel = "0";
+                channel = 0;
+                video = SharedPreferenceUtility.getVideoId();
             }else if(from.equalsIgnoreCase("channelPlayer")){
-                channel = "1";
+                //channel = "1";
+                video = 0;
+                channel = SharedPreferenceUtility.getChannelId();
             }else{
-                channel = "0";
+                channel = 0;
+                video = SharedPreferenceUtility.getVideoId();
             }
         }else{
-            channel = "0";
+            channel = 0;
+            video = SharedPreferenceUtility.getVideoId();
         }
 
         //number registration
@@ -776,13 +782,14 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
         rl_web_view.setVisibility(View.VISIBLE);
         fl_container_for_icon.setVisibility(GONE);
         String url = ConstantUtils.SUBSCRIPTION_WEBVIEW_URL.trim() + token.trim()
-                + "&vd=" + SharedPreferenceUtility.getVideoId()
+                + "&vd=" + video
                 + "&ch=" + channel;
         Log.v("okhttp", "MAIN: url: " + url);
         WebSettings settings = wv_subscription.getSettings();
         settings.setLoadWithOverviewMode(true);
         settings.setUseWideViewPort(true);
         settings.setJavaScriptEnabled(true);
+        settings.setAppCacheEnabled(false);
         settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
         settings.setDomStorageEnabled(true);
         settings.setUserAgentString("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E233 Safari/601.1");
@@ -911,14 +918,14 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
                         }
                     }
                     HappiApplication.setSub_id(subids);
-                    //////////////////////////////////for test purposes///////////////////////////
-                    /*List<String> subscriptionModelListSample = FEApplication.getSub_id();
+                    //////////////////////////////////IMPORTANT : uncomment for test purposes only ///////////////////////////
+                   /* List<String> subscriptionModelListSample = FEApplication.getSub_id();
                     ArrayList<String> subscriptionIdListTest = SharedPreferenceUtility.getSubscriptionItemIdList();
                     if (subscriptionIdListTest.size() != 0) {
                         subscriptionModelListSample.addAll(subscriptionIdListTest);
                     }
                    FEApplication.setSub_id(subscriptionModelListSample);*/
-                    ////////////////////////////////////////////////////////////////////////////////////
+                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                     List<String> subscriptionIds = HappiApplication.getSub_id();
                     if (subscriptionIds.size() != 0) {
@@ -983,7 +990,8 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
             if(from.equalsIgnoreCase("videoPlayer")){
                 intent = new Intent(SubscriptionActivity.this, VideoPlayerActivity.class);
             }else if(from.equalsIgnoreCase("channelPlayer")){
-                intent = new Intent(SubscriptionActivity.this, ChannelHomeActivity.class);
+             //   intent = new Intent(SubscriptionActivity.this, ChannelHomeActivity.class);
+                intent = new Intent(SubscriptionActivity.this, ChannelLivePlayerActivity.class);
             }else{
                 intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
             }

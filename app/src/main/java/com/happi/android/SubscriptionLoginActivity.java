@@ -371,7 +371,8 @@ public class SubscriptionLoginActivity extends BaseActivity {
         finish();
     }
     private void goToChannelPlayerScreen(){
-        Intent intent = new Intent(SubscriptionLoginActivity.this, ChannelHomeActivity.class);
+        //Intent intent = new Intent(SubscriptionLoginActivity.this, ChannelHomeActivity.class);
+        Intent intent = new Intent(SubscriptionLoginActivity.this, ChannelLivePlayerActivity.class);
         startActivity(intent);
         finish();
     }

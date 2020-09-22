@@ -47,14 +47,14 @@
     <RelativeLayout
         android:id="@+id/rl_details"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_200dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:gravity="center">
 
         <RelativeLayout
             android:id="@+id/rl_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/dimen_200dp"
             android:layout_margin="@dimen/dimen_5dp"
             android:gravity="center"
             android:padding="@dimen/dimen_5dp"
@@ -71,7 +71,7 @@
             android:id="@+id/rl_player"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:layout_height="@dimen/dimen_200dp">
+            android:layout_height="@dimen/dimen_250dp">
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/exo_player_view"
@@ -240,7 +240,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" UHD Lab Production"
-                    android:textColor="@color/whiteTwo"
+                    android:textColor="@color/orange"
                     android:textSize="@dimen/dimen_15dp"
                     android:visibility="gone" />
 

@@ -121,7 +121,8 @@ public class LiveScheduleActivity extends BaseActivity implements LiveScheduleDa
 
     }
     private void onBack(){
-        Intent intentChannel = new Intent(LiveScheduleActivity.this, ChannelHomeActivity.class);
+        //Intent intentChannel = new Intent(LiveScheduleActivity.this, ChannelHomeActivity.class);
+        Intent intentChannel = new Intent(LiveScheduleActivity.this, ChannelLivePlayerActivity.class);
         startActivity(intentChannel);
         LiveScheduleActivity.super.finish();
     }

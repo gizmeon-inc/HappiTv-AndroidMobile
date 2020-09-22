@@ -271,7 +271,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                     } else {
                         rv_watchList.setVisibility(View.GONE);
                         dismissProgress();
-                        displayErrorLayout("Your WatchList is empty.");
+                        displayErrorLayout("Oops! Your Watch List is empty.");
                     }
 
                 }, throwable -> {
@@ -306,7 +306,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                         }
                         rv_watchList.setVisibility(View.GONE);
                         dismissProgress();
-                        displayErrorLayout("Your Favourites list is empty.");
+                        displayErrorLayout("Oops! Your Favourites list is empty.");
                     }
 
                 }, throwable -> {
@@ -322,18 +322,14 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     }
 
     private void populateList(List<GetWatchListModel> showList) {
-//       // watchListAdapter.clearAll();
-//        watchListAdapter.addAll(showList);
-//        loadingVideos.hide();
-//        watchListAdapter.notifyDataSetChanged();
-//        runLayoutAnimation(rv_watchList, mSelectedItem);
-//        if (watchListAdapter.isEmpty()) {
-//            rv_watchList.setVisibility(View.GONE);
-//        }
+
         dismissProgress();
+        iv_errorimg.setVisibility(View.GONE);
+        tv_errormsg.setVisibility(View.GONE);
+        ll_error.setVisibility(View.GONE);
+
         rv_watchList.setVisibility(View.VISIBLE);
-       // rv_watchList.setLayoutManager(new GridLayoutManager(this, 3));
-       // rv_watchList.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
+
         watchListAdapter.clearAll();
         watchListAdapter.addAll(showList);
         loadingVideos.hide();
@@ -341,17 +337,12 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         runLayoutAnimation(rv_watchList, mSelectedItem);
         if(watchListAdapter.isEmpty()){
             rv_watchList.setVisibility(View.GONE);
+            displayErrorLayout("Oops!! You don't have any data.");
         }
         if(sw_list.isRefreshing()){
             sw_list.setRefreshing(false);
         }
-      /*  watchListAdapter = new WatchListAdapter(pageContext, showList, FEApplication.getCurrentContext(), this::onShowItemClicked, this::onShowItemLongClick);
 
-        rv_watchList.setAdapter(watchListAdapter);
-        watchListAdapter.notifyDataSetChanged();
-        if(sw_list.isRefreshing()){
-            sw_list.setRefreshing(false);
-        }*/
     }
     private void displayErrorLayout(String message){
         dismissProgress();
@@ -499,7 +490,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                             watchListAdapter.removeItem(adapterPosition);
                             watchListAdapter.notifyDataSetChanged();
                             if(watchListAdapter.isEmpty()){
-                                displayErrorLayout("Oops! Your WatchList is empty.");
+                                displayErrorLayout("Oops! Your Watch List is empty.");
                             }
                             dismissProgress();
                         } else {

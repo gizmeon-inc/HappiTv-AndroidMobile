@@ -25,6 +25,7 @@
                 <ImageView
                     android:layout_width="210dp"
                     android:layout_height="90dp"
+                    android:padding="@dimen/dimen_10dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/ic_title_side" />
             </LinearLayout>
@@ -44,7 +45,7 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/email_address"
                     android:inputType="textEmailAddress"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/coolGrey"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"/>
@@ -63,7 +64,7 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/coolGrey"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/white"/>

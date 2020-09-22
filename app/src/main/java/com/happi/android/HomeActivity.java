@@ -258,7 +258,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         adapterEmptyCount = 0;
 
         // getSessionToken();
-        // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(width, modifiedHeight));
+       // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(width, modifiedHeight));
         apiErrorCount = 0;
         getSessionToken();
 
@@ -758,7 +758,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                     if (showResponse.getShowModelList().size() != 0) {
                         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(width, modifiedHeight);
-                        // cv_banner.setLayoutParams(rlp);
+                       // cv_banner.setLayoutParams(rlp);
                         //  cv_banner.setPadding(-10,0,-10,0);
                         updateBannerTiles(showResponse.getShowModelList());
                     } else {

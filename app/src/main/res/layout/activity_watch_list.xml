@@ -61,7 +61,7 @@
                 android:paddingTop="@dimen/dimen_10dp"
                 android:visibility="gone"/>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-      <!--  <com.fantastic.android.recyclerview.GridRecyclerView
+      <!--  <com.fe.android_mobile.recyclerview.GridRecyclerView
             android:id="@+id/rv_watchList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

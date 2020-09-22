@@ -3,7 +3,7 @@ package com.happi.android.common;
 import android.content.Intent;
 
 import com.happi.android.CategoryViewActivity;
-import com.happi.android.ChannelHomeActivity;
+import com.happi.android.ChannelLivePlayerActivity;
 import com.happi.android.ChannelScheduleActivity;
 import com.happi.android.HomeActivity;
 import com.happi.android.R;
@@ -100,7 +100,8 @@ public class ActivityChooser {
         switch (key) {
 
             case ConstantUtils.CHANNEL_HOME_ACTIVITY:
-                intent = new Intent(HappiApplication.getCurrentActivity(), ChannelHomeActivity.class);
+               // intent = new Intent(FEApplication.getCurrentActivity(), ChannelHomeActivity.class);
+                intent = new Intent(HappiApplication.getCurrentActivity(), ChannelLivePlayerActivity.class);
                 intent.putExtra(ConstantUtils.CHANNEL_ID, channelID);
                 break;
 

@@ -176,9 +176,11 @@ public class LoginActivity extends BaseActivity  {
 
         dialog.show();
 
+        String versionName = BuildConfig.VERSION_NAME;
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable loginDisposable = usersService.login(email,
-                password, SharedPreferenceUtility.getPublisher_id())
+        Disposable loginDisposable = usersService.newLogin(email,
+                password, SharedPreferenceUtility.getPublisher_id(), SharedPreferenceUtility.getAdvertisingId(),
+                HappiApplication.getIpAddress(), versionName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(loginResponseModel -> {
@@ -192,7 +194,13 @@ public class LoginActivity extends BaseActivity  {
                         isGuest = false;
                         getSessionToken();
 
-                    } else if (loginResponseModel.getStatus() == 102) {
+                    }
+                    /*else if (loginResponseModel.getStatus() == 101) {
+
+                        user_id =loginResponseModel.getData().get(0).getUser_id();
+                        showOtpVerificationPage();
+
+                    }*/else if (loginResponseModel.getStatus() == 102) {
                         if (dialog.isShowing()) {
                             dialog.dismiss();
                         }

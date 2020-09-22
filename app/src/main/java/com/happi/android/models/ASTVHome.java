@@ -70,6 +70,10 @@ public class ASTVHome implements Serializable {
     private String adLink;
     @SerializedName("premium_flag")
     private String premium_flag;
+    @SerializedName("payper_flag")
+    private String payper_flag;
+    @SerializedName("rental_flag")
+    private String rental_flag;
     @SerializedName("ad_pod_url")
     @Expose
     private String ad_pod_url;
@@ -112,6 +116,23 @@ public class ASTVHome implements Serializable {
     @SerializedName("vod_flag")
     @Expose
     private String vod_flag;
+
+
+    public String getPayper_flag() {
+        return payper_flag;
+    }
+
+    public void setPayper_flag(String payper_flag) {
+        this.payper_flag = payper_flag;
+    }
+
+    public String getRental_flag() {
+        return rental_flag;
+    }
+
+    public void setRental_flag(String rental_flag) {
+        this.rental_flag = rental_flag;
+    }
 
     public String getPremium_flag() {
         return premium_flag;

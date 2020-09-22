@@ -42,7 +42,7 @@
         android:paddingRight="@dimen/dimen_12dp"
         android:paddingBottom="@dimen/dimen_12dp">
 
-        <com.fantastic.android.customviews.TypefacedTextViewSemiBold
+        <com.fe.android_mobile.customviews.TypefacedTextViewSemiBold
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_clear_search_history"

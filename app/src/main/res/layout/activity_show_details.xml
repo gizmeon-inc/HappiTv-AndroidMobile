@@ -5,7 +5,7 @@
     android:id="@+id/rl_container_show_details"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+    android:background="@color/white"
     tools:context=".ShowDetailsActivity">
 
     <RelativeLayout
@@ -16,6 +16,7 @@
         <include layout="@layout/content_toolbar" />
 
     </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/ll_error"
         android:layout_width="match_parent"
@@ -29,7 +30,7 @@
             android:layout_width="@dimen/dimen_75dp"
             android:layout_height="@dimen/dimen_75dp"
             android:src="@drawable/no_channels"
-            android:tint="@color/greyishBrownTwo"
+            android:tint="@color/error_tint"
             android:visibility="gone" />
 
         <com.happi.android.customviews.TypefacedTextViewRegular
@@ -38,31 +39,22 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_5dp"
             android:padding="@dimen/dimen_10dp"
-            android:textColor="@color/greyishBrownTwo"
+            android:textColor="@color/error_tint"
             android:text="@string/error_message_loading_users"
             android:visibility="gone" />
     </LinearLayout>
 
-
     <RelativeLayout
         android:id="@+id/rl_details"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_200dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="?attr/actionBarSize"
         android:gravity="center">
-
-
-        <!-- <com.google.android.youtube.player.YouTubePlayerView
-             android:id="@+id/yt_player"
-             android:layout_width="match_parent"
-             android:layout_centerHorizontal="true"
-             android:visibility="gone"
-             android:layout_height="@dimen/dimen_200dp"/>-->
 
         <RelativeLayout
             android:id="@+id/rl_image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/dimen_200dp"
             android:layout_margin="@dimen/dimen_5dp"
             android:gravity="center"
             android:padding="@dimen/dimen_5dp"
@@ -79,7 +71,7 @@
             android:id="@+id/rl_player"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:layout_height="@dimen/dimen_200dp">
+            android:layout_height="@dimen/dimen_250dp">
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/exo_player_view"
@@ -115,7 +107,6 @@
             android:id="@+id/rl_meta_data"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/rl_details"
             android:layout_margin="@dimen/dimen_10dp">
 
             <LinearLayout
@@ -127,7 +118,7 @@
                 android:layout_marginBottom="@dimen/dimen_5dp"
                 android:layout_marginLeft="@dimen/dimen_15dp"
                 android:layout_marginRight="@dimen/dimen_15dp"
-                android:weightSum="3"
+                android:weightSum="4"
                 android:visibility="gone">
 
                 <LinearLayout
@@ -151,7 +142,7 @@
                         android:text="@string/like_label"
                         android:textSize="12sp"
                         android:layout_marginTop="@dimen/dimen_5dp"
-                        android:textColor="@color/whiteThree"/>
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -175,7 +166,7 @@
                         android:text="@string/dislike_label"
                         android:textSize="12sp"
                         android:layout_marginTop="@dimen/dimen_5dp"
-                        android:textColor="@color/whiteThree"/>
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -197,7 +188,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/watch_list_label"
                         android:textSize="@dimen/dimen_12dp"
-                        android:layout_marginTop="@dimen/dimen_5dp"/>
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
                 <LinearLayout
@@ -219,7 +211,8 @@
                         android:layout_height="wrap_content"
                         android:text="@string/share_label"
                         android:textSize="@dimen/dimen_12dp"
-                        android:layout_marginTop="@dimen/dimen_5dp"/>
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:textColor="@color/black"/>
 
                 </LinearLayout>
 
@@ -275,7 +268,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" 2019"
-                    android:textColor="@color/whiteTwo"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/dimen_15dp"
                     android:visibility="gone" />
 
@@ -304,7 +297,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=" English"
-                    android:textColor="@color/whiteTwo"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/dimen_15dp"
                     android:visibility="gone" />
 
@@ -331,7 +324,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/whiteTwo"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/dimen_15dp"
                     android:visibility="gone" />
 
@@ -358,11 +351,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text=""
-                    android:textColor="@color/whiteTwo"
+                    android:textColor="@color/black"
                     android:textSize="@dimen/dimen_15dp"
                     android:visibility="gone" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:id="@+id/ll_theme"
                 android:layout_width="match_parent"
@@ -391,8 +385,8 @@
                     app:atg_checkedTextColor="@color/error_tint"
                     app:atg_textColor="@color/error_tint"
                     app:atg_textSize="@dimen/dimen_12dp"
-                    app:atg_backgroundColor="@color/dark_black"
-                    app:atg_pressedBackgroundColor="@color/dark_black"
+                    app:atg_backgroundColor="@color/white"
+                    app:atg_pressedBackgroundColor="@color/white"
                     app:atg_horizontalSpacing="@dimen/dimen_10dp"
                     app:atg_verticalSpacing="@dimen/dimen_10dp"
                     app:atg_isAppendMode="false"
@@ -401,66 +395,108 @@
                     android:visibility="gone"/>
 
             </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_trailer"
+            <FrameLayout
+                android:id="@+id/fl_trailer"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dimen_35dp"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:layout_below="@+id/ll_theme"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/ll_theme">
                 <LinearLayout
-                    android:id="@+id/ll_watch_trailer"
-                    android:layout_width="@dimen/dimen_0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_5dp"
-                    android:layout_marginRight="@dimen/dimen_7dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_outline_blue"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:padding="@dimen/dimen_5dp"
-                    android:visibility="gone">
+                    android:id="@+id/ll_trailer"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_35dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:weightSum="2">
 
-                    <TextView
-                        android:id="@+id/tv_watch_trailer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/watch_trailer"
-                        android:textColor="@color/colorPrimaryDark"
-                        android:textSize="@dimen/dimen_15dp" />
+                    <LinearLayout
+                        android:id="@+id/ll_play_now"
+                        android:layout_width="@dimen/dimen_0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_7dp"
+                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_solid_blue"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:padding="@dimen/dimen_5dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_play_now"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/play_now"
+                            android:textAllCaps="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dimen_15dp" />
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_watch_trailer"
+                        android:layout_width="@dimen/dimen_0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_5dp"
+                        android:layout_marginRight="@dimen/dimen_7dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_outline_blue"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:padding="@dimen/dimen_5dp"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tv_watch_trailer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/watch_trailer"
+                            android:textColor="@color/colorPrimaryDark"
+                            android:textSize="@dimen/dimen_15dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_play_overlap"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_35dp"
+                    android:layout_marginTop="@dimen/dimen_10dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    android:gravity="center">
+                    <LinearLayout
+                        android:id="@+id/ll_play_now_overlap"
+                        android:layout_width="@dimen/dimen_0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="@dimen/dimen_7dp"
+                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_solid_blue"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:padding="@dimen/dimen_5dp">
+
+                        <ImageView
+                            android:layout_width="@dimen/dimen_18dp"
+                            android:layout_height="@dimen/dimen_18dp"
+                            android:src="@drawable/ic_play_now"
+                            android:tint="@color/black"
+                            android:layout_marginRight="@dimen/dimen_5dp"/>
+                        <TextView
+                            android:id="@+id/tv_play_now_overlap"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/play_now"
+                            android:textAllCaps="true"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/dimen_15dp" />
+                    </LinearLayout>
+
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/ll_play_now"
-                    android:layout_width="@dimen/dimen_0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/dimen_7dp"
-                    android:layout_marginRight="@dimen/dimen_5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_solid_blue"
-                    android:gravity="center_vertical|center_horizontal"
-                    android:padding="@dimen/dimen_5dp"
-                    android:visibility="gone">
+            </FrameLayout>
 
-                    <TextView
-                        android:id="@+id/tv_play_now"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/play_now"
-                        android:textAllCaps="true"
-                        android:textColor="@color/whiteTwo"
-                        android:textSize="@dimen/dimen_15dp" />
-                </LinearLayout>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/ll_synopsis"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/ll_trailer"
+                android:layout_below="@+id/fl_trailer"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:orientation="vertical">
@@ -536,7 +572,7 @@
                 android:layout_below="@+id/tv_show_name"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:text="10 x 52 Min HD TV Series"
-                android:textColor="@color/colorWhite"
+                android:textColor="@color/black"
                 android:textSize="@dimen/dimen_18dp"
                 android:visibility="gone" />
 

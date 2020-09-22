@@ -6,7 +6,7 @@
     android:id="@+id/ll_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_black"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context="com.happi.android.SubscriptionRegisterActivity">
 
@@ -49,6 +49,7 @@
                 <ImageView
                     android:layout_width="210dp"
                     android:layout_height="90dp"
+                    android:padding="@dimen/dimen_10dp"
                     android:layout_gravity="center_horizontal"
                     android:src="@drawable/ic_title_side" />
             </LinearLayout>
@@ -68,16 +69,16 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/name"
                     android:inputType="textCapWords"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/dark_black"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginTop="-14dp"
-                    android:background="@color/whiteThree" />
+                    android:background="@color/black" />
 
                 <EditText
                     android:id="@+id/et_email"
@@ -88,16 +89,16 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/email_address"
                     android:inputType="textEmailAddress"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/dark_black"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginTop="-14dp"
-                    android:background="@color/whiteThree" />
+                    android:background="@color/black" />
 
                 <LinearLayout
                     android:id="@+id/llphoneNum"
@@ -117,7 +118,7 @@
                         app:ccpDialog_backgroundColor="@color/white"
                         app:ccpDialog_showPhoneCode="false"
                         app:ccp_autoFormatNumber="true"
-                        app:ccp_contentColor="@color/greyishBrown"
+                        app:ccp_contentColor="@color/dark_black"
                         app:ccp_hintExampleNumber="false"
                         app:ccp_showFlag="false"
                         app:ccp_showNameCode="false"
@@ -133,10 +134,10 @@
                         android:hint="@string/phone_number"
                         android:inputType="number"
                         android:maxLength="15"
-                        android:textColorHint="@color/whiteThree"
+                        android:textColorHint="@color/black"
                         android:textSize="@dimen/dimen_20dp"
                         android:textStyle="bold"
-                        android:textColor="@color/white"/>
+                        android:textColor="@color/dark_black"/>
 
 
                 </LinearLayout>
@@ -146,7 +147,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/whiteThree" />
+                    android:background="@color/black" />
                 <EditText
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"
@@ -155,16 +156,16 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/white"/>
+                    android:textColor="@color/dark_black"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginTop="4dp"
-                    android:background="@color/whiteThree" />
+                    android:background="@color/black" />
 
 
 
@@ -198,7 +199,7 @@
                     android:layout_gravity="right"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:text="@string/forgot_password"
-                    android:textColor="@color/coolGrey"
+                    android:textColor="@color/dark_black"
                     android:textSize="@dimen/text_regular_medium1"
                     android:visibility="invisible" />
 
@@ -215,7 +216,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:text="@string/already_have_an_account"
-                        android:textColor="@color/coolGrey"
+                        android:textColor="@color/dark_black"
                         android:textSize="@dimen/text_regular_medium1" />
 
                     <com.happi.android.customviews.TypefacedTextViewRegular
