@@ -37,29 +37,31 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
+            android:layout_marginBottom="?attr/actionBarSize"
             android:background="@color/colorWhite">
 
             <include layout="@layout/navigation" />
 
         </com.google.android.material.navigation.NavigationView>
-        <RelativeLayout
+      <!--  <RelativeLayout
             android:id="@+id/rl_bottom_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/btm_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:layout_alignParentBottom="true"
-            android:background="@color/btm_nav"
-            app:itemIconTint="@color/bottom_nav_color"
-            app:itemTextColor="@color/bottom_nav_color"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            app:menu="@menu/bottom_bar" />
 
-        </RelativeLayout>
+
+        </RelativeLayout>-->
 
     </androidx.drawerlayout.widget.DrawerLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true"
+        android:background="@color/btm_nav"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        app:menu="@menu/bottom_bar" />
 
 </RelativeLayout>
