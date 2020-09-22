@@ -2,6 +2,8 @@ package com.happi.android;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import android.util.Log;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
+import com.happi.android.customviews.LogoutAlertDialog;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.UserSubscriptionModel;
 import com.happi.android.utils.AppUtils;
@@ -25,6 +28,7 @@ import com.happi.android.webservice.ApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +37,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class SubscriptionLoginActivity extends BaseActivity {
+public class SubscriptionLoginActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener {
 
 
     private EditText et_email, et_password;
@@ -42,6 +46,7 @@ public class SubscriptionLoginActivity extends BaseActivity {
     private ProgressDialog dialog;
     private CompositeDisposable compositeDisposable;
     private String from = "empty";
+    private boolean isFromSubsc = false;
 
     public static boolean isValidEmail(String email) {
 
@@ -82,6 +87,7 @@ public class SubscriptionLoginActivity extends BaseActivity {
 
 
         compositeDisposable = new CompositeDisposable();
+        isFromSubsc = false;
 
         dialog = new ProgressDialog(SubscriptionLoginActivity.this);
         dialog.setMessage("Please wait.");
@@ -264,46 +270,51 @@ public class SubscriptionLoginActivity extends BaseActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel -> {
-                    List<String> subids = new ArrayList<>();
-                    if (subscriptionResponseModel.getData().size() != 0) {
-                        List<UserSubscriptionModel> subscriptionModelList = subscriptionResponseModel.getData();
-                        for (UserSubscriptionModel item : subscriptionModelList) {
-                            subids.add(item.getSub_id());
-                        }
+                    if (subscriptionResponseModel.isForcibleLogout()) {
+                        isFromSubsc = true;
+                        loginExceededAlertSubscription();
                     }
-                    HappiApplication.setSub_id(subids);
-                    if (!SharedPreferenceUtility.getGuest()) {
-                        if (from != null && from.equals("videoPlayer")) {
-
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
+                    else {
+                        List<String> subids = new ArrayList<>();
+                        if (subscriptionResponseModel.getData().size() != 0) {
+                            List<UserSubscriptionModel> subscriptionModelList = subscriptionResponseModel.getData();
+                            for (UserSubscriptionModel item : subscriptionModelList) {
+                                subids.add(item.getSub_id());
                             }
-                            SubscriptionActivity.currentActivity.finish();
-                            goToVideoPlayerScreen();
+                        }
+                        HappiApplication.setSub_id(subids);
+                        if (!SharedPreferenceUtility.getGuest()) {
+                            if (from != null && from.equals("videoPlayer")) {
 
-                        } else if (from != null && from.equals("channelPlayer")) {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                SubscriptionActivity.currentActivity.finish();
+                                goToVideoPlayerScreen();
+
+                            } else if (from != null && from.equals("channelPlayer")) {
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                SubscriptionActivity.currentActivity.finish();
+                                goToChannelPlayerScreen();
+
+                            } else if (from != null && from.equalsIgnoreCase("showDetails")) {
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                ShowDetailsActivity.currentActivity.finish();
+                                goToShowDetailsScreen();
+
+                            } else {
+                                HappiApplication.setIsNewLoginFromPremiumPage(false);
+                                goToHomePage();
                             }
-                            SubscriptionActivity.currentActivity.finish();
-                            goToChannelPlayerScreen();
-
-                        } else if (from != null && from.equalsIgnoreCase("showDetails")) {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            ShowDetailsActivity.currentActivity.finish();
-                            goToShowDetailsScreen();
-
                         } else {
-                            HappiApplication.setIsNewLoginFromPremiumPage(false);
+                            //is guest
                             goToHomePage();
                         }
-                    } else {
-                        //is guest
-                        goToHomePage();
                     }
-
                 }, throwable -> {
                     if (dialog.isShowing()) {
                         dialog.dismiss();
@@ -312,7 +323,26 @@ public class SubscriptionLoginActivity extends BaseActivity {
                 });
         compositeDisposable.add(subscriptionDisposable);
     }
+    private void loginExceededAlertSubscription() {
+       /* if (dialog.isShowing()) {
+            dialog.dismiss();
+        }*/
+        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+    @Override
+    public void onLogoutClicked() {
+        if (isFromSubsc) {
+            // logoutApiCall();
+        }
+    }
 
+    @Override
+    public void onLogoutAllClicked() {
+        //  logoutAllApiCall();
+    }
     public void setupUI(View view) {
 
         // Set up touch listener for non-text box views to hide keyboard.

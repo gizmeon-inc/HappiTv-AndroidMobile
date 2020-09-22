@@ -349,6 +349,7 @@ public class ApiClient {
                                                                        @Query("device_id") String device_id,
                                                                        @Query("country_code") String country_code,
                                                                        @Query("pubid") String publisher_id);
+        
         @GET("api/GetvideoSubscriptions")
         Observable<VideoSubscriptionResponseModel> getVideoSubscriptions(@Header("access-token") String header,
                                                                          @Query("video_id") Integer video_id,

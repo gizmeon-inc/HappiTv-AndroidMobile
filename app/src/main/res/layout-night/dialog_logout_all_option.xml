@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false"
+    tools:ignore="MissingDefaultResource">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/alert_dark"
+        android:paddingLeft="@dimen/dimen_30dp"
+        android:paddingTop="@dimen/dimen_20dp"
+        android:paddingRight="@dimen/dimen_30dp"
+        android:paddingBottom="@dimen/dimen_20dp">
+
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dimen_8dp"
+            android:gravity="start"
+            android:text="@string/logoutall_dialog"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_msg"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="@dimen/dimen_20dp"
+            android:gravity="end">
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_logoutall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="@string/logoutall_label"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_35dp"
+                android:layout_toRightOf="@+id/tv_logoutall"
+                android:gravity="start"
+                android:text="@string/ok_label"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="15sp" />
+
+
+        </RelativeLayout>
+
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>

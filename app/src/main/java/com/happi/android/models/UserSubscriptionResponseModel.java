@@ -18,6 +18,18 @@ public class UserSubscriptionResponseModel {
     @SerializedName("message")
     @Expose
     private String message;
+    @SerializedName("forcibleLogout")
+    @Expose
+    private boolean forcibleLogout;
+
+    public boolean isForcibleLogout() {
+        return forcibleLogout;
+    }
+
+    public void setForcibleLogout(boolean forcibleLogout) {
+        this.forcibleLogout = forcibleLogout;
+    }
+
 
     public Integer getStatus() {
         return status;

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
@@ -52,6 +54,7 @@ import com.happi.android.common.AdvertisingIdClient;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
+import com.happi.android.customviews.LogoutAlertDialog;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.customviews.ViewPagerCustomDuration;
 import com.happi.android.models.CategoriesHomeListVideoModel;
@@ -82,6 +85,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -94,7 +98,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends BaseActivity implements View.OnClickListener,
+public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,View.OnClickListener,
         VideoList_adapter.itemClickListener,
         ShowList_adapter.itemClickListener,
         ChannelSuggestionAdapter.SuggesteditemClickListener, CategoryListAdapter
@@ -150,6 +154,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     private boolean isFreeShow = false;
     private String showId = "empty";
     String ipAddressFinal = "";
+    private boolean isFromSubsc = false;
 
     int apiErrorCount = 0;
     int adapterEmptyCount = 0;
@@ -210,6 +215,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 uniqueId = getIntent().getIntExtra(ConstantUtils.UNIQUE_ID, 0);
             }
         }
+        isFromSubsc = false;
         wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         sharedPreferences = getSharedPreferences(HappiApplication.getCurrentContext().getString(R.string.USER_PREFERENCES),
@@ -665,7 +671,6 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
     private void checkSubscription() {
 
-
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable subscriptionDisposable = usersService.getUserSubscriptions(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getAdvertisingId(),
@@ -673,20 +678,36 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel -> {
-                    subids.clear();
-                    if (subscriptionResponseModel.getData().size() != 0) {
-                        subscriptionModelList = subscriptionResponseModel.getData();
-                        for (UserSubscriptionModel item : subscriptionModelList) {
-                            subids.add(item.getSub_id());
-                        }
+                    if (subscriptionResponseModel.isForcibleLogout()) {
+                        isFromSubsc = true;
+                        loginExceededAlertSubscription();
                     }
-                    HappiApplication.setSub_id(subids);
+                    else {
+                        subids.clear();
+                        if (subscriptionResponseModel.getData().size() != 0) {
+                            subscriptionModelList = subscriptionResponseModel.getData();
+                            for (UserSubscriptionModel item : subscriptionModelList) {
+                                subids.add(item.getSub_id());
+                            }
+                        }
+                        HappiApplication.setSub_id(subids);
+                    }
+
                 }, throwable -> {
                     // Toast.makeText(HomeActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
                 });
         compositeDisposable.add(subscriptionDisposable);
     }
 
+    private void loginExceededAlertSubscription() {
+       /* if (dialog.isShowing()) {
+            dialog.dismiss();
+        }*/
+        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
 
     private void loadShows() {
 
@@ -1778,7 +1799,88 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
             }
         }
     }
+  /*  private void logoutApiCall() {
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logout(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
 
+                    if (logoutResponseModel.getStatus() == 100) {
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setVideoId(0);
+                      //  SharedPreferenceUtility.setLanguage("");
+                        SharedPreferenceUtility.setNightMode(true);
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+                        et_email.setText("");
+                        et_password.setText("");
+                        et_email.requestFocus();
+
+                    } else {
+
+                        Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+
+                    Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+        compositeDisposable.add(logoutDisposable);
+    }
+
+    private void logoutAllApiCall() {
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logoutAll(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
+
+                    if (logoutResponseModel.getStatus() == 100) {
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setVideoId(0);
+                       // SharedPreferenceUtility.setLanguage("");
+                        SharedPreferenceUtility.setNightMode(true);
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+                        et_email.setText("");
+                        et_password.setText("");
+                        et_email.requestFocus();
+
+                    } else {
+
+                        Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+
+                    Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+        compositeDisposable.add(logoutDisposable);
+    }*/
+    @Override
+    public void onLogoutClicked() {
+        if (isFromSubsc) {
+           // logoutApiCall();
+        }
+    }
+
+    @Override
+    public void onLogoutAllClicked() {
+      //  logoutAllApiCall();
+    }
     @Override
     public void onCategoryItemClickedForCircleView(int adapterPosition) {
         HappiApplication.setRedirect("");

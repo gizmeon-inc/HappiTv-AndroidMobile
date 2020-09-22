@@ -44,6 +44,7 @@ import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.LoginRegisterAlert;
+import com.happi.android.customviews.LogoutAlertDialog;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.exoplayercontroller.EventLogger;
 import com.happi.android.exoplayercontroller.TrackSelectionHelper;
@@ -96,7 +97,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.gujun.android.taggroup.TagGroup;
 
-public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAlert.OnLoginRegisterUserNegative,
+public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,LoginRegisterAlert.OnLoginRegisterUserNegative,
         LoginRegisterAlert.OnLoginRegisterUserNeutral, LoginRegisterAlert.OnLoginRegisterUserPositive {
 
     TagGroup tag_theme;
@@ -193,6 +194,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     private LinearLayout ll_error;
     private ImageView iv_errorimg;
     private TypefacedTextViewRegular tv_errormsg;
+    private boolean isFromSubsc = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -246,6 +248,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         ll_watch_list.setEnabled(false);
         ll_like.setEnabled(false);
         ll_dislike.setEnabled(false);
+        isFromSubsc = false;
 
 
         compositeDisposable = new CompositeDisposable();
@@ -1712,19 +1715,45 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(userSubscriptionResponseModel -> {
-                    List<String> subIdsList = new ArrayList<>();
-                    if (userSubscriptionResponseModel.getData().size() != 0) {
-                        List<UserSubscriptionModel> list = userSubscriptionResponseModel.getData();
-                        for (UserSubscriptionModel item : list) {
-                            subIdsList.add(item.getSub_id());
-                        }
+                    if (userSubscriptionResponseModel.isForcibleLogout()) {
+                        isFromSubsc = true;
+                        loginExceededAlertSubscription();
                     }
-                    HappiApplication.setSub_id(subIdsList);
+                    else {
+                        List<String> subIdsList = new ArrayList<>();
+                        if (userSubscriptionResponseModel.getData().size() != 0) {
+                            List<UserSubscriptionModel> list = userSubscriptionResponseModel.getData();
+                            for (UserSubscriptionModel item : list) {
+                                subIdsList.add(item.getSub_id());
+                            }
+                        }
+                        HappiApplication.setSub_id(subIdsList);
+                    }
                 }, throwable -> {
 
                 });
         compositeDisposable.add(userSubscriptionDisposable);
 
+    }
+    private void loginExceededAlertSubscription() {
+       /* if (dialog.isShowing()) {
+            dialog.dismiss();
+        }*/
+        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+    @Override
+    public void onLogoutClicked() {
+        if (isFromSubsc) {
+            // logoutApiCall();
+        }
+    }
+
+    @Override
+    public void onLogoutAllClicked() {
+        //  logoutAllApiCall();
     }
 
     private void safelyDispose(Disposable... disposables) {

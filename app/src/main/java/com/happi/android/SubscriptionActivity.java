@@ -41,6 +41,7 @@ import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.CustomAlertDialog;
 import com.happi.android.customviews.LoginRegisterAlert;
+import com.happi.android.customviews.LogoutAlertDialog;
 import com.happi.android.customviews.NumberRegistrationAlert;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.PhoneVerificationModel;
@@ -72,7 +73,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static android.view.View.GONE;
 
-public class SubscriptionActivity extends BaseActivity implements CustomAlertDialog.OnOkClick, LoginRegisterAlert.OnLoginRegisterUserPositive,
+public class SubscriptionActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,CustomAlertDialog.OnOkClick, LoginRegisterAlert.OnLoginRegisterUserPositive,
         LoginRegisterAlert.OnLoginRegisterUserNeutral, LoginRegisterAlert.OnLoginRegisterUserNegative,
         NumberRegistrationAlert.OnNumberRegisterUserPositive, NumberRegistrationAlert.OnNumberRegisterUserNegative{
 
@@ -115,6 +116,7 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
     private TextView tv_error;
     private long channel = 0;
     private long video = 0;
+    private boolean isFromSubsc = false;
 
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
@@ -203,6 +205,7 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
             video = SharedPreferenceUtility.getVideoId();
         }
 
+        isFromSubsc = false;
         //number registration
         mAuth = FirebaseAuth.getInstance();
         rl_bottom_sheet = findViewById(R.id.rl_bottom_sheet);
@@ -910,53 +913,59 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel -> {
-                    List<String> subids = new ArrayList<>();
-                    if (subscriptionResponseModel.getData().size() != 0) {
-                        List<UserSubscriptionModel> subscriptionModelList = subscriptionResponseModel.getData();
-                        for (UserSubscriptionModel item : subscriptionModelList) {
-                            subids.add(item.getSub_id());
-                        }
+                    if (subscriptionResponseModel.isForcibleLogout()) {
+                        isFromSubsc = true;
+                        loginExceededAlertSubscription();
                     }
-                    HappiApplication.setSub_id(subids);
-                    //////////////////////////////////IMPORTANT : uncomment for test purposes only ///////////////////////////
+                    else {
+                        List<String> subids = new ArrayList<>();
+                        if (subscriptionResponseModel.getData().size() != 0) {
+                            List<UserSubscriptionModel> subscriptionModelList = subscriptionResponseModel.getData();
+                            for (UserSubscriptionModel item : subscriptionModelList) {
+                                subids.add(item.getSub_id());
+                            }
+                        }
+                        HappiApplication.setSub_id(subids);
+                        //////////////////////////////////IMPORTANT : uncomment for test purposes only ///////////////////////////
                    /* List<String> subscriptionModelListSample = FEApplication.getSub_id();
                     ArrayList<String> subscriptionIdListTest = SharedPreferenceUtility.getSubscriptionItemIdList();
                     if (subscriptionIdListTest.size() != 0) {
                         subscriptionModelListSample.addAll(subscriptionIdListTest);
                     }
                    FEApplication.setSub_id(subscriptionModelListSample);*/
-                    //////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-                    List<String> subscriptionIds = HappiApplication.getSub_id();
-                    if (subscriptionIds.size() != 0) {
-                        ArrayList<String> subscriptionIdList = SharedPreferenceUtility.getSubscriptionItemIdList();
-                        if (subscriptionIdList.size() != 0) {
-                            boolean hasSubscribed = false;
-                            for (String idItem : subscriptionIdList) {
-                                for (String subId : subscriptionIds) {
+                        List<String> subscriptionIds = HappiApplication.getSub_id();
+                        if (subscriptionIds.size() != 0) {
+                            ArrayList<String> subscriptionIdList = SharedPreferenceUtility.getSubscriptionItemIdList();
+                            if (subscriptionIdList.size() != 0) {
+                                boolean hasSubscribed = false;
+                                for (String idItem : subscriptionIdList) {
+                                    for (String subId : subscriptionIds) {
 
-                                    if (idItem.equals(subId)) {
-                                        hasSubscribed = true;
-                                        break;
+                                        if (idItem.equals(subId)) {
+                                            hasSubscribed = true;
+                                            break;
 
+                                        }
                                     }
                                 }
+                                if (hasSubscribed) {
+                                    goToPlayer();
+                                } else {
+                                    goToHomeScreen();
+                                }
                             }
-                            if (hasSubscribed) {
-                                goToPlayer();
-                            } else {
-                                goToHomeScreen();
-                            }
-                        }
 
 
-                    } else {
-                        //subIdList empty
-                        //show premium details page
-                        if (progressDialog.isShowing()) {
-                            progressDialog.dismiss();
+                        } else {
+                            //subIdList empty
+                            //show premium details page
+                            if (progressDialog.isShowing()) {
+                                progressDialog.dismiss();
+                            }
+                            showAlertDialog("Your Subscription is being processed. Please try again after sometime.");
                         }
-                        showAlertDialog("Your Subscription is being processed. Please try again after sometime.");
                     }
                 }, throwable -> {
                     //hideProgressDialog();
@@ -967,7 +976,26 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
                 });
         compositeDisposable.add(subscriptionDisposable);
     }
+    private void loginExceededAlertSubscription() {
+       /* if (dialog.isShowing()) {
+            dialog.dismiss();
+        }*/
+        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+    @Override
+    public void onLogoutClicked() {
+        if (isFromSubsc) {
+            // logoutApiCall();
+        }
+    }
 
+    @Override
+    public void onLogoutAllClicked() {
+        //  logoutAllApiCall();
+    }
     private void goToHomeScreen() {
         if(progressDialog.isShowing()){
             progressDialog.dismiss();

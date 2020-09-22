@@ -22,6 +22,7 @@ import com.happi.android.common.HappiApplication;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.CustomAlertDialog;
+import com.happi.android.customviews.LogoutAlertDialog;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.UserSubscriptionModel;
 import com.happi.android.webservice.ApiClient;
@@ -39,7 +40,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.itemClickListener, CustomAlertDialog.OnOkClick {
+public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,PremiumItemAdapter.itemClickListener, CustomAlertDialog.OnOkClick {
     private List<UserSubscriptionModel> userSubscriptionModelList;
     TypefacedTextViewRegular tv_title;
     TypefacedTextViewRegular tv_error;
@@ -56,6 +57,7 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
     String sku;
     String packageName;
     UserSubscriptionModel uModel;
+    private boolean isFromSubsc = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +93,7 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
         isItemClicked = false;
         sku = "empty";
         packageName= "empty";
+        isFromSubsc = false;
 
         iv_menu.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
@@ -250,27 +253,53 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel ->{
-                    List<String> subids = new ArrayList<>();
-                    if(subscriptionResponseModel.getData().size() != 0){
-                        userSubscriptionModelList = subscriptionResponseModel.getData();
-                        if(userSubscriptionModelList.size() != 0){
-                            for(UserSubscriptionModel model : userSubscriptionModelList){
-                                subids.add(model.getSub_id());
-                            }
-
-                        }
-                        getExpiryDate();
-                    }else{
-                        displayErrorMessage(getString(R.string.no_subs_error));
+                    if (subscriptionResponseModel.isForcibleLogout()) {
+                        isFromSubsc = true;
+                        loginExceededAlertSubscription();
                     }
-                    HappiApplication.setSub_id(subids);
+                    else {
+                        List<String> subids = new ArrayList<>();
+                        if(subscriptionResponseModel.getData().size() != 0){
+                            userSubscriptionModelList = subscriptionResponseModel.getData();
+                            if(userSubscriptionModelList.size() != 0){
+                                for(UserSubscriptionModel model : userSubscriptionModelList){
+                                    subids.add(model.getSub_id());
+                                }
+
+                            }
+                            getExpiryDate();
+                        }else{
+                            displayErrorMessage(getString(R.string.no_subs_error));
+                        }
+                        HappiApplication.setSub_id(subids);
+                    }
+
                     }, throwable -> {
                     displayErrorMessage(getString(R.string.try_again));
                     //Toast.makeText(PremiumActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
                 });
         compositeDisposable.add(subscriptionDisposable);
     }
+    private void loginExceededAlertSubscription() {
+       /* if (dialog.isShowing()) {
+            dialog.dismiss();
+        }*/
+        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+    }
+    @Override
+    public void onLogoutClicked() {
+        if (isFromSubsc) {
+            // logoutApiCall();
+        }
+    }
 
+    @Override
+    public void onLogoutAllClicked() {
+        //  logoutAllApiCall();
+    }
     private void displayErrorMessage(String message) {
         if(progressDialog.isShowing()){
             progressDialog.dismiss();
