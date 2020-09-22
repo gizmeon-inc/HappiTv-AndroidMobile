@@ -38,6 +38,9 @@
     <string name="search">SEARCH</string>
     <string name="search_video">Search Videos</string>
     <string name="search_show">Search</string>
+    <string name="home_label">Home</string>
+    <string name="categories_label">Categories</string>
+    <string name="lang_label">Language</string>
     <string name="search_channel">Search Channels</string>
     <string name="suggested_keyword">Suggested Keyword</string>
     <string name="_05">05</string>

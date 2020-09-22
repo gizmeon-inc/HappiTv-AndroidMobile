@@ -47,5 +47,7 @@
 
     <color name="alert_dark">#424242</color>
     <color name="dark_overlay">#99000000</color>
+    <color name="btm_nav">#141414</color>
+    <color name="dark_splash">#a6a6a6</color>
 
 </resources>

@@ -15,6 +15,7 @@ import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -25,8 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
@@ -34,6 +37,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.happi.android.adapters.BannerAdapter;
 import com.happi.android.adapters.CategoriesHomeListAdapter;
 import com.happi.android.adapters.CategoryCircleViewAdapter;
@@ -156,6 +160,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
     public boolean isRedirectToLive = false;
     public int uniqueId = 0;
     //display metrics
+    public BottomNavigationView btm_navigation;
     private static int width;
     private int modifiedHeight = 0;
     private static int height;
@@ -217,6 +222,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         mSelectedItem = mAnimationItems[0];
         onCreateDrawer();
 
+        btm_navigation = findViewById(R.id.btm_navigation);
         rl_exoplayer_parent = findViewById(R.id.rl_exoplayer_parent);
         rl_toolbar = findViewById(R.id.rl_toolbar);
         rv_watch_free = findViewById(R.id.rv_watch_free);
@@ -243,6 +249,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         userId = SharedPreferenceUtility.getUserId();
 
         layoutManager = new LinearLayoutManager(this);
+        btm_navigation.setOnNavigationItemSelectedListener(navListener);
 
         //get user subscription id list
         subscriptionModelList = new ArrayList<>();
@@ -251,9 +258,10 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         adapterEmptyCount = 0;
 
         // getSessionToken();
-        cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(width, modifiedHeight));
+        // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(width, modifiedHeight));
         apiErrorCount = 0;
         getSessionToken();
+
 
       /*  new Thread(() -> {
             try {
@@ -346,8 +354,44 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
         mRewardedVideoAd.setRewardedVideoAdListener(this);
 
         // Log.e("access-token  : ", " " + FEApplication.getAppToken());
-
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+            Fragment selectedfragment = null;
+            Bundle bundle = new Bundle();
+
+            switch (menuItem.getItemId()) {
+                case R.id.item_home:
+                    currentPage = 0;
+                    mSwipeRefreshLayout.setRefreshing(false);
+                    finish();
+                    startActivity(getIntent());
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    break;
+                case R.id.item_search:
+                    Intent intent1 = new Intent(HomeActivity.this, SearchActivity.class);
+                    //intent.putExtra("search_type", "video");
+                    intent1.putExtra("search_type", "show");
+                    startActivity(intent1);
+
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    break;
+                case R.id.item_categories:
+                    Intent intent2 = new Intent(HomeActivity.this, CategoriesListActivity.class);
+                    startActivity(intent2);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                    break;
+                case R.id.item_lang_selector:
+                    Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+
+            return true;
+        }
+    };
 
     @Override
     protected void onResume() {
@@ -714,7 +758,7 @@ public class HomeActivity extends BaseActivity implements View.OnClickListener,
 
                     if (showResponse.getShowModelList().size() != 0) {
                         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(width, modifiedHeight);
-                        cv_banner.setLayoutParams(rlp);
+                        // cv_banner.setLayoutParams(rlp);
                         //  cv_banner.setPadding(-10,0,-10,0);
                         updateBannerTiles(showResponse.getShowModelList());
                     } else {
