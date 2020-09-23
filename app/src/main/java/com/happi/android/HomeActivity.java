@@ -188,8 +188,8 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+        /*this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);*/
 
         if (SharedPreferenceUtility.isNightMode()) {
 
@@ -255,6 +255,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         userId = SharedPreferenceUtility.getUserId();
 
         layoutManager = new LinearLayoutManager(this);
+        btm_navigation.setSelectedItemId(R.id.item_home);
         btm_navigation.setOnNavigationItemSelectedListener(navListener);
 
         //get user subscription id list
@@ -267,21 +268,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
        // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(width, modifiedHeight));
         apiErrorCount = 0;
         getSessionToken();
-
-
-      /*  new Thread(() -> {
-            try {
-              *//*  AdvertisingIdClient.AdInfo adInfo = AdvertisingIdClient.getAdvertisingIdInfo
-                        (FEApplication.getCurrentContext());
-                advertisingId_fromThread = adInfo.getId();
-                FEApplication.setAdvertisingId_fromThread(advertisingId_fromThread);
-                firstTimeInstallAnalyticsApiCall();*//*
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Advertising_id", "exception : " + e.getMessage());
-            }
-        }).start();*/
-
 
         mSwipeRefreshLayout.setOnRefreshListener(() -> {
 
@@ -365,37 +351,25 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
-            Fragment selectedfragment = null;
-            Bundle bundle = new Bundle();
-
             switch (menuItem.getItemId()) {
                 case R.id.item_home:
-                    currentPage = 0;
-                    mSwipeRefreshLayout.setRefreshing(false);
-                    finish();
-                    startActivity(getIntent());
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    break;
+                   return true;
                 case R.id.item_search:
                     Intent intent1 = new Intent(HomeActivity.this, SearchActivity.class);
-                    //intent.putExtra("search_type", "video");
                     intent1.putExtra("search_type", "show");
                     startActivity(intent1);
-
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    break;
+                    overridePendingTransition(0, 0);
+                    return true;
                 case R.id.item_categories:
                     Intent intent2 = new Intent(HomeActivity.this, CategoriesListActivity.class);
                     startActivity(intent2);
-                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                    break;
+                    overridePendingTransition(0, 0);
+                    return true;
                 case R.id.item_lang_selector:
                     Toast.makeText(HomeActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-                    break;
+                    return true;
             }
-
-
-            return true;
+            return false;
         }
     };
 

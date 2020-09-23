@@ -1,17 +1,23 @@
 package com.happi.android;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.happi.android.adapters.CategoryListAdapter;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.ActivityChooser;
@@ -48,6 +54,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
     private Disposable internetDisposable;
     private CompositeDisposable compositeDisposable;
     SkeletonScreen loadingCategories;
+    public BottomNavigationView btm_navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +91,10 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
         rv_category_list = findViewById(R.id.rv_category_list);
         iv_errorimg = findViewById(R.id.iv_errorimg);
         tv_errormsg = findViewById(R.id.tv_errormsg);
+        btm_navigation = findViewById(R.id.btm_navigation);
+
+        btm_navigation.setSelectedItemId(R.id.item_categories);
+        btm_navigation.setOnNavigationItemSelectedListener(navListener);
 
         compositeDisposable = new CompositeDisposable();
         setupRecyclerview();
@@ -124,6 +135,32 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
                 });
         loadCategoryList();
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+            switch (menuItem.getItemId()) {
+                case R.id.item_home:
+                    Intent intent = new Intent(CategoriesListActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.item_search:
+                    Intent intent1 = new Intent(CategoriesListActivity.this, SearchActivity.class);
+                    intent1.putExtra("search_type", "show");
+                    startActivity(intent1);
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.item_categories:
+                    return true;
+                case R.id.item_lang_selector:
+                    Toast.makeText(CategoriesListActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                    return true;
+            }
+            return false;
+        }
+    };
+
 
     private void loadCategoryList(){
         ApiClient.UsersService usersService = ApiClient.create();

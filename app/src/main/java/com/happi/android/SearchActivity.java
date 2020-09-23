@@ -3,6 +3,8 @@ package com.happi.android;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -10,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -19,7 +22,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.happi.android.adapters.ChannelListAdapter;
 import com.happi.android.adapters.ChannelSearchSuggestionAdapter;
 import com.happi.android.adapters.SearchResultsAdapter;
@@ -86,6 +91,7 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
     ChannelSearchSuggestionAdapter channelSearchSuggestionAdapter;
     ShowSearchSuggestionAdapter showSearchSuggestionAdapter;
     RecyclerView rv_search_suggestion;
+    public BottomNavigationView btm_navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +121,11 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         rv_channel_result = findViewById(R.id.rv_channel_result);
         rv_search_suggestion = findViewById(R.id.rv_search_suggestion);
         pb_progressbar = findViewById(R.id.pb_progressbar);
+        btm_navigation = findViewById(R.id.btm_navigation);
+
+        btm_navigation.setSelectedItemId(R.id.item_search);
+        btm_navigation.setOnNavigationItemSelectedListener(navListener);
+
         userId = SharedPreferenceUtility.getUserId();
 
         Intent intent = getIntent();
@@ -201,6 +212,31 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
             return false;
         });
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+            switch (menuItem.getItemId()) {
+                case R.id.item_home:
+                    Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.item_search:
+                    return true;
+                case R.id.item_categories:
+                    Intent intent2 = new Intent(SearchActivity.this, CategoriesListActivity.class);
+                    startActivity(intent2);
+                    overridePendingTransition(0, 0);
+                    return true;
+                case R.id.item_lang_selector:
+                    Toast.makeText(SearchActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
+                    return true;
+            }
+            return false;
+        }
+    };
+
     private void loadShowSearchResult(String searchKey){
 
         ApiClient.UsersService usersService = ApiClient.create();
