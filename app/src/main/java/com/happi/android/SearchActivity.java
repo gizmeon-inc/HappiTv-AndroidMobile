@@ -539,6 +539,8 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
     protected void onResume() {
         super.onResume();
         HappiApplication.setCurrentContext(this);
+        btm_navigation.setSelectedItemId(R.id.item_search);
+      //  btm_navigation.setOnNavigationItemSelectedListener(navListener);
     }
 
     @Override

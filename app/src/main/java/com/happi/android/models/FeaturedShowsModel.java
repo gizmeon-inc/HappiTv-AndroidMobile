@@ -27,6 +27,8 @@ public class FeaturedShowsModel {
     private String show_name;
     @SerializedName("banner")
     private String banner;
+    @SerializedName("banner2")
+    private String banner2;
     @SerializedName("video_duration")
     private String video_duration;
     @SerializedName("view_count")
@@ -135,6 +137,13 @@ public class FeaturedShowsModel {
 
     public void setBanner(String banner) {
         this.banner = banner;
+    }
+    public String getBanner2() {
+        return banner2;
+    }
+
+    public void setBanner2(String banner2) {
+        this.banner2 = banner2;
     }
 
     public String getVideo_duration() {

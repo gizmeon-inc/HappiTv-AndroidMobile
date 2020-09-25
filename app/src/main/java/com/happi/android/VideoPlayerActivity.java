@@ -104,6 +104,7 @@ import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaLoadOptions;
+import com.google.android.gms.cast.MediaLoadRequestData;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.MediaTrack;
 import com.google.android.gms.cast.framework.CastButtonFactory;
@@ -329,7 +330,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         String studio = getResources().getString(R.string.app_name);
         String imageUrl = ConstantUtils.THUMBNAIL_URL + videoModelz.getThumbnail();
         //   mSelectedMedia = buildMediaInfo(videoModelz.getVideo_title(),token, "Adventure sports TV", "", 333, "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/DesigningForGoogleCast.m3u8",
-        mSelectedMedia = buildMediaInfo(videoModelz.getVideo_title(), token, studio, "", 333, videoModelz.getVideo_name(),
+        mSelectedMedia = buildMediaInfo(videoModelz.getVideo_title(), token, studio, "", 333, videoModelz.getVideo_name().trim(),
                 "application/x-mpegurl", imageUrl, imageUrl, null);
     }
 
@@ -365,7 +366,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-Log.v("okhttp","VIDEOPLAYER>>ONCREATE");
+        Log.v("okhttp","VIDEOPLAYER>>ONCREATE");
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE);
 
@@ -825,7 +826,7 @@ Log.v("okhttp","VIDEOPLAYER>>ONCREATE");
         try {
 
             if ((videoModel.getVideo_name() != null) && (videoModel.getVideo_name().length() > 0)) {
-                Uri videoURI = Uri.parse(videoModel.getVideo_name());
+                Uri videoURI = Uri.parse(videoModel.getVideo_name().trim());
                 // Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
                 // Uri videoURI = Uri.parse("http://34.198.11.177:3001/275/playlist.m3u8");
 
@@ -1190,13 +1191,13 @@ Log.v("okhttp","VIDEOPLAYER>>ONCREATE");
         mCastContext.getSessionManager().addSessionManagerListener(mSessionManagerListener, CastSession.class);
         mCastContext.addCastStateListener(mCastStateListener);
         if (mCastSession == null) {
-          //  Log.v("okhttp","VIDEOPLAYER>>CAST SESS NULL");
+            //  Log.v("okhttp","VIDEOPLAYER>>CAST SESS NULL");
             mCastSession = CastContext.getSharedInstance(this).getSessionManager()
                     .getCurrentCastSession();
         }
 
         if ((mCastSession != null) && mCastSession.isConnected()) {
-         //   Log.v("okhttp","VIDEOPLAYER>>CAST SESS CONN"+mCastSession.isConnected());
+            //   Log.v("okhttp","VIDEOPLAYER>>CAST SESS CONN"+mCastSession.isConnected());
             mMediaRouteButton.setVisibility(View.VISIBLE);
         } else {
             mMediaRouteButton.setVisibility(View.VISIBLE);
@@ -1516,8 +1517,8 @@ Log.v("okhttp","VIDEOPLAYER>>ONCREATE");
     public void onStop() {
         super.onStop();
         //if (Util.SDK_INT > 23) {
-            releasePlayer();
-       // }
+        releasePlayer();
+        // }
         Log.v("okhttp","VIDEOPLAYER>>ONSTOP");
     }
 
@@ -1615,7 +1616,7 @@ Log.v("okhttp","VIDEOPLAYER>>ONCREATE");
 
         RelativeLayout.LayoutParams exo_params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_220dp)
+                (int) getResources().getDimension(R.dimen.dimen_250dp)
         );
         //exo_params.addRule(RelativeLayout.BELOW, R.id.rl_video_title);
         exo_player_view.setLayoutParams(exo_params);

@@ -271,6 +271,8 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
     protected void onResume() {
         super.onResume();
         HappiApplication.setCurrentContext(this);
+        btm_navigation.setSelectedItemId(R.id.item_categories);
+      //  btm_navigation.setOnNavigationItemSelectedListener(navListener);
     }
 
     @Override

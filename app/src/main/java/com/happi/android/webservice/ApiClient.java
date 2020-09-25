@@ -7,6 +7,7 @@ import com.happi.android.models.GetWatchListResponseModel;
 import com.happi.android.models.HomeVideoModel;
 import com.happi.android.models.LikedFlagResponseModel;
 import com.happi.android.models.PublisherModel;
+import com.happi.android.models.RegisterWithEmailResponseModel;
 import com.happi.android.models.ScheduleUpdatedResponseModel;
 import com.happi.android.models.SelectedVideoResponseModel;
 import com.happi.android.models.ShowListResponseModel;
@@ -140,6 +141,14 @@ public class ApiClient {
         @POST("api/createPaymentToken")
         Observable<TokenResponse> getToken(@Header("access-token") String header,
                                            @Body JsonObject jsonObject);
+
+        @POST("registerWithEmail")
+        Observable<RegisterWithEmailResponseModel> RegisterWithEmail(@Body JsonObject registerJson);
+
+        @GET("verifyOtpFromEmail")
+        Observable<LoginResponseModel> verifyOtpFromEmail (@Query("user_id") int user_id,
+                                                           @Query("pubid") String pubid,
+                                                           @Query("otp") String otp);
 
         //===================== CHANNEL =============================
 

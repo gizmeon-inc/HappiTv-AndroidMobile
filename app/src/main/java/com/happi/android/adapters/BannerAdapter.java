@@ -58,7 +58,7 @@ public class BannerAdapter extends PagerAdapter {
             //tv_banner.setText("");
             //tv_banner.setSelected(true);
             Glide.with(mContext)
-                    .load(ConstantUtils.THUMBNAIL_URL + videoList.get(position).getBanner())
+                    .load(ConstantUtils.THUMBNAIL_URL + videoList.get(position).getBanner2())
                     .error(Glide.with(mContext)
                             .load(ContextCompat.getDrawable(mContext, R.drawable.ic_placeholder)))
                     .apply(placeholderOf(R.drawable.ic_placeholder))

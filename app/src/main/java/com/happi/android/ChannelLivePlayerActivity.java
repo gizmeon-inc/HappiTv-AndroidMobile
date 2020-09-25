@@ -628,12 +628,12 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             //  mMediaRouteButton.setVisibility(View.VISIBLE);
             mMediaRouteButton.setVisibility(View.INVISIBLE);
         }
-        if (mAdsManager != null && mIsAdDisplayed) {
+       /* if (mAdsManager != null && mIsAdDisplayed) {
             mAdsManager.resume();
         } else if (exoPlayer != null) {
             resumePlayer();
-        }
-
+        }*/
+        resumePlayer();
         super.onResume();
 
 
@@ -790,14 +790,18 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         if (pHome.getLiveFlag() == 1) {
             isLiveAvailable = true;
             exo_player_view.setVisibility(View.VISIBLE);
+            if (exoPlayer == null) {
+                LIVE_URL = pHome.getLiveLink();
+                getToken(pHome);
+            }
         } else {
             isLiveAvailable = false;
             exo_player_view.setVisibility(GONE);
         }
-        if (/*Util.SDK_INT <= 23 ||*/ exoPlayer == null) {
+        /* if (*//*Util.SDK_INT <= 23 ||*//* exoPlayer == null) {
             if (isLiveAvailable) LIVE_URL = pHome.getLiveLink();
             getToken(pHome);
-        }
+        }*/
 
     }
 
@@ -953,12 +957,13 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 */
 
         //AD INSERTION ***************
-        if (mAdsManager != null && mIsAdDisplayed) {
+       /* if (mAdsManager != null && mIsAdDisplayed) {
             mAdsManager.pause();
         } else {
             releasePlayer();
-        }
+        }*/
         //mRewardedVideoAd.pause(this);
+        releasePlayer();
         super.onPause();
 
     }
@@ -967,7 +972,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         objectHome = pHome;
         //ApiClient.UsersService usersService = ApiClient.create();
         ApiClient.UsersService usersService = ApiClient.createToken();
-        //Disposable tokenDisposable = usersService.getVideoTokenLive(FEApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
+        //Disposable tokenDisposable = usersService.getVideoTokenLive(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
         Disposable tokenDisposable = usersService.getVideoToken(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1276,7 +1281,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         RelativeLayout.LayoutParams exo_params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dimen_220dp));
+                RelativeLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dimen_250dp));
 
         //exo_params.addRule(RelativeLayout.BELOW, R.id.about_layout);
         exo_player_view.setLayoutParams(exo_params);
@@ -1840,12 +1845,18 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             timerSChedule.cancel();
         }
 
-        if(HappiApplication.isIsNewSubscriber()){
-            goToHome();
-        }else{
-            super.onBackPressed();
-            finish();
+        if (isExoPlayerFullscreen) {
+            closeFullscreen();
+        } else {
+            if(HappiApplication.isIsNewSubscriber()){
+                goToHome();
+            }else{
+                super.onBackPressed();
+                finish();
+            }
+
         }
+
     }
 
 

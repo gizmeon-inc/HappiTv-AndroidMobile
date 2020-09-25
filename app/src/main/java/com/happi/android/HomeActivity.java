@@ -172,6 +172,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     private static WifiManager wifiManager;
     private static ConnectivityManager connectivityManager;
     private static SharedPreferences sharedPreferences;
+    private DisplayMetrics displayMetrics;
 
     @Override
     public void onClick(View view) {
@@ -188,8 +189,8 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        /*this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);*/
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
 
         if (SharedPreferenceUtility.isNightMode()) {
 
@@ -265,7 +266,10 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         adapterEmptyCount = 0;
 
         // getSessionToken();
-       // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(width, modifiedHeight));
+        displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        width = displayMetrics.widthPixels;
+       // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(modifiedHeight,width ));
         apiErrorCount = 0;
         getSessionToken();
 
@@ -378,6 +382,8 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         // TODO Auto-generated method stub
 
         HappiApplication.setCurrentContext(this);
+        btm_navigation.setSelectedItemId(R.id.item_home);
+      //  btm_navigation.setOnNavigationItemSelectedListener(navListener);
         /*if (!SharedPreferenceUtility.getGuest()) {
             if(FEApplication.getSub_id().size() == 0) {
                 checkSubscription();

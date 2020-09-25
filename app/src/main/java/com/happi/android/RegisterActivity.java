@@ -92,6 +92,10 @@ public class RegisterActivity extends BaseActivity {
     LinearLayout ll_main_page;
     boolean isOtpScreenOpen = false;
     CountDownTimer otpTimer;
+    private int user_id = 0;
+    private String email = "";
+    private String password = "";
+    private String fbId = "";
 
 
     public static boolean isValidEmail(String email) {
@@ -214,7 +218,13 @@ public class RegisterActivity extends BaseActivity {
                     dialog.show();
                     hideSoftKeyBoard();
                     countryCode = "+" + ccp_picker.getSelectedCountryCode();
-                    sendVerificationCode(et_phone_number.getText().toString().trim(), countryCode);
+                  //  sendVerificationCode(et_phone_number.getText().toString().trim(), countryCode);
+
+                    verified = "1";
+                    c_code = countryCode;
+                    String emailInLowerCase = et_email.getText().toString().trim().toLowerCase();
+                    registerWithEmailApiCall(emailInLowerCase, et_password.getText().toString().trim(), et_name.getText().toString().trim(), "", c_code + et_phone_number.getText().toString().trim(), SharedPreferenceUtility.getAdvertisingId(), "android-phone", "gmail-login", "0", verified, c_code);
+
 
                 }
             }
@@ -232,22 +242,13 @@ public class RegisterActivity extends BaseActivity {
 
 
                 if (otpView.getText() != null && !otpView.getText().toString().trim().isEmpty()) {
-
-
                     if (AppUtils.isOnline()) {
-
-                        String otpEntered = otpView.getText().toString().trim();
-
                         dialog.show();
-                        verifyVerificationCode(otpEntered);
-
                         hideSoftKeyBoard();
+                        verifyOtpFromEmailApiCall(otpView.getText().toString().trim());
                     } else {
-
                         otpView.setEnabled(true);
-
                     }
-
 
                 } else {
                     otpView.requestFocus();
@@ -257,6 +258,7 @@ public class RegisterActivity extends BaseActivity {
                 }
             }
         });
+/*
         otpView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -271,44 +273,274 @@ public class RegisterActivity extends BaseActivity {
                 return false;
             }
         });
+*/
         tv_resend_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                resendVerificationCode(et_phone_number.getText().toString().trim(), countryCode);
+               /* resendVerificationCode(et_phone_number.getText().toString().trim(), countryCode);
                 tv_resend_otp.setEnabled(false);
                 ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline_grey));
-                tv_resend_otp.setTextColor(getResources().getColor(R.color.coolGrey));
+                tv_resend_otp.setTextColor(getResources().getColor(R.color.coolGrey));*/
             }
         });
 
 
     }
+    //verify otp sent to mail
+    private void verifyOtpFromEmailApiCall(String otp) {
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable otpDisposable = usersService.verifyOtpFromEmail(user_id, SharedPreferenceUtility.getPublisher_id(), otp)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(loginResponseModel -> {
+
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                   /* status:
+                    0 - otp incorrect
+                    1 - otp verified ( response will have user data)*/
+                    if (loginResponseModel.getStatus() == 1) {
+                        if (loginResponseModel.getData() != null && !loginResponseModel.getData().isEmpty()) {
+                            SharedPreferenceUtility.setGuest(false);
+
+                            SharedPreferenceUtility.saveUserDetails(
+                                    loginResponseModel.getData().get(0).getUser_id(), loginResponseModel.getData().get(0).getUser_name(), email,
+                                    password, "", "", "", fbId, false, c_code + et_phone_number.getText().toString().trim());
+
+                            isOtpScreenOpen = false;
+                          //  SharedPreferenceUtility.setLanguage("");
+
+                            //handling 3 cases
+                            hideSoftKeyBoard();
+                          //  goToSubscriptionPage();
+                            goToHome();
+                         //   verified = "1";
+                          //  c_code = countryCode;
+                          //  String phoneNo = c_code + et_phone_number.getText().toString().trim();
+
+                          //  String emailAddress = et_email.getText().toString().trim().toLowerCase();
+                         //   registerApiCall(emailAddress, et_password.getText().toString().trim(), et_name.getText().toString().trim(), "", phoneNo, deviceId, "android-phone", "gmail-login", "0", verified, c_code);
+
+
+                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                        } else {
+                            if(loginResponseModel.getMessage() != null && (!loginResponseModel.getMessage().isEmpty())){
+                                alert(loginResponseModel.getMessage());
+                            }
+                        }
+
+
+                    } else {
+                        otpView.setText("");
+                        if(loginResponseModel.getMessage() != null && (!loginResponseModel.getMessage().isEmpty())){
+                            alert(loginResponseModel.getMessage());
+                        }
+                    }
+
+                }, throwable -> {
+
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(RegisterActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
+
+                });
+        compositeDisposable.add(otpDisposable);
+    }
+
+    // register email with api call
+    private void registerWithEmailApiCall(final String email, final String password, final String firstName,
+                                          final String lastName, final String phone, final String deviceId,
+                                          final String deviceTyps, final String loginType, final String fbId,
+                                          final String verified, String c_code) {
+
+        dialog.show();
+        hideSoftKeyBoard();
+
+        //creating the json object to send
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("user_email", email);
+        jsonObject.addProperty("password", password);
+        jsonObject.addProperty("first_name", firstName);
+        jsonObject.addProperty("last_name", lastName);
+        jsonObject.addProperty("phone", phone);
+        jsonObject.addProperty("device_id", deviceId);
+        jsonObject.addProperty("device_type", deviceTyps);
+        jsonObject.addProperty("login_type", loginType);
+        jsonObject.addProperty("facebook_id", fbId);
+        jsonObject.addProperty("verified", verified);
+        jsonObject.addProperty("c_code", c_code);
+        jsonObject.addProperty("country_code", SharedPreferenceUtility.getCountryCode());
+        jsonObject.addProperty("latitude", HappiApplication.getLatitude());
+        jsonObject.addProperty("longitude", HappiApplication.getLongitude());
+        jsonObject.addProperty("pubid", SharedPreferenceUtility.getPublisher_id());
+
+        //  Log.d("CHECKING REG:REG", "country_code "+SharedPreferenceUtility.getCountryCode());
+        //  Log.d("CHECKING  REG:REG", "latitude "+CeyFlixApplication.getLatitude());
+        //   Log.d("CHECKING  REG:REG", "longitude "+CeyFlixApplication.getLongitude());
+
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable videoDisposable = usersService.RegisterWithEmail(jsonObject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(responseModel -> {
+
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    if (responseModel == null) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        Toast.makeText(RegisterActivity.this, "Something went wrong. Please try again after sometime.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        /*status:-
+                        0 - registraion failed
+                        1 - OTP sent to mail
+                        2 - already Registered user*/
+                        if (responseModel.getStatus() == 0) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            alert(responseModel.getMessage());
+                        } else if (responseModel.getStatus() == 1) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            user_id = responseModel.getData().getUser_id();
+                            showOtpVerificationPage();
+                        } else if (responseModel.getStatus() == 2) {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            alert(responseModel.getMessage());
+                        } else {
+                            if (dialog.isShowing()) {
+                                dialog.dismiss();
+                            }
+                            if(responseModel.getMessage() != null && !responseModel.getMessage().isEmpty())
+                                alert(responseModel.getMessage());
+                        }
+                    }
+                }, throwable -> {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(RegisterActivity.this, "Something went wrong. Please try again after sometime.", Toast.LENGTH_SHORT).show();
+
+                });
+        compositeDisposable.add(videoDisposable);
+    }
+
 
     private void sendVerificationCode(String mobile, String countryCode) {
 
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+       /* PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 countryCode + mobile,
                 60,
                 TimeUnit.SECONDS,
                 this,
                 mCallbacks
-        );
+        );*/
     }
 
     private void resendVerificationCode(String mobile, String countryCode) {
 
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+        /*PhoneAuthProvider.getInstance().verifyPhoneNumber(
                 countryCode + mobile,
                 60,
                 TimeUnit.SECONDS,
                 this,
                 mCallbacks,
                 mResendToken
-        );
+        );*/
+    }
+    private void showOtpVerificationPage() {
+        isOtpScreenOpen = true;
+
+        bt_signup.setEnabled(false);
+        et_name.setEnabled(false);
+        et_email.setEnabled(false);
+        et_phone_number.setEnabled(false);
+        ccp_picker.setCcpClickable(false);
+        et_password.setEnabled(false);
+        tv_login.setEnabled(false);
+
+
+        if ((dialog.isShowing())) {
+            dialog.dismiss();
+        }
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rl_otp_screen.getLayoutParams();
+        rl_otp_screen.setLayoutParams(params);
+        rl_otp_verification_screen.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+        setTimer();
+        tv_verfication_code_number.setText(getText(R.string.please_type_verf_code) + " " + et_email.getText().toString().trim().toLowerCase());
+        rl_otp_verification_screen.setVisibility(View.VISIBLE);
+        otpView.setText("");
+        otpView.requestFocus();
+        otpView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
+                    return false;
+                } else if (actionId == EditorInfo.IME_ACTION_DONE
+                        || event == null
+                        || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    //  Log.d("&&&&","enter pressed");
+                    tv_done.performClick();
+                }
+                return false;
+            }
+        });
+    }
+    private void setTimer() {
+        counterdown = 60;
+        minute = 0;
+        minuteTimer = "";
+        downTimer = "";
+
+        otpTimer = new CountDownTimer(62000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                tv_resend_otp.setEnabled(false);
+                minuteTimer = " " + "0" + String.valueOf(minute);
+                if (counterdown > 0) {
+                    if (counterdown < 10) {
+                        downTimer = "0" + String.valueOf(counterdown);
+                    } else {
+                        downTimer = String.valueOf(counterdown);
+                    }
+                } else {
+                    downTimer = "00";
+                }
+                tv_timer.setText(minuteTimer + ":" + downTimer);
+                if (minute > 0) {
+                    --minute;
+                }
+
+                counterdown--;
+            }
+
+            public void onFinish() {
+                tv_timer.setText(" 00:00");
+                tv_resend_otp.setEnabled(true);
+                tv_resend_otp.setTextColor(getResources().getColor(R.color.colorAccent));
+                ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline));
+                tv_resend_otp.setClickable(true);
+            }
+        }.start();
     }
 
     //the callback to detect the verification status
+/*
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
@@ -349,12 +581,24 @@ public class RegisterActivity extends BaseActivity {
             rl_otp_screen.setLayoutParams(params);
             rl_otp_verification_screen.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
             setTimer();
-            String displayText = getResources().getString(R.string.please_type_verf_code) + " " + countryCode + et_phone_number.getText().toString().trim();
-            tv_verfication_code_number.setText(displayText);
+            tv_verfication_code_number.setText(getText(R.string.please_type_verf_code) + " " + et_email.getText().toString().trim().toLowerCase());
             rl_otp_verification_screen.setVisibility(View.VISIBLE);
             otpView.setText("");
             otpView.requestFocus();
-
+            otpView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
+                        return false;
+                    } else if (actionId == EditorInfo.IME_ACTION_DONE
+                            || event == null
+                            || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                        //  Log.d("&&&&","enter pressed");
+                        tv_done.performClick();
+                    }
+                    return false;
+                }
+            });
         }
 
         private void setTimer() {
@@ -420,6 +664,7 @@ public class RegisterActivity extends BaseActivity {
         }
 
     };
+*/
 
     void alert(String message) {
         if (dialog.isShowing()) {
