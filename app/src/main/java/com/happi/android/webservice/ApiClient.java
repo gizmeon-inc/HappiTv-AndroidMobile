@@ -6,6 +6,7 @@ import com.happi.android.models.GetPayperviewVideoListResponseModel;
 import com.happi.android.models.GetWatchListResponseModel;
 import com.happi.android.models.HomeVideoModel;
 import com.happi.android.models.LikedFlagResponseModel;
+import com.happi.android.models.LogoutResponseModel;
 import com.happi.android.models.PublisherModel;
 import com.happi.android.models.RegisterWithEmailResponseModel;
 import com.happi.android.models.ScheduleUpdatedResponseModel;
@@ -318,7 +319,19 @@ public class ApiClient {
                                                 @Query("device_id") String device_id,
                                                 @Query("ipaddress") String ipaddress,
                                                 @Query("version") String version);
+        //Logoutuser?
+        @GET("Logoutuser?")
+        Observable<LogoutResponseModel> logout(@Query("user_id") int user_id,
+                                               @Query("pubid") String publisher_id,
+                                               @Query("device_id") String device_id,
+                                               @Query("ipaddress") String ipaddress);
 
+        //Logoutall
+        @GET("Logoutall?")
+        Observable<LogoutResponseModel> logoutAll(@Query("user_id") int user_id,
+                                                  @Query("pubid") String publisher_id,
+                                                  @Query("device_id") String device_id,
+                                                  @Query("ipaddress") String ipaddress);
 
         @GET("Forgotpassword")
         Observable<BasicResponse> forgotPassword(@Query("user_email") String user_email,

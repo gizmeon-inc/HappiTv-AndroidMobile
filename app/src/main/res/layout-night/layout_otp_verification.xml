@@ -28,7 +28,8 @@
                 android:layout_gravity="center_vertical"
                 android:padding="@dimen/dimen_3dp"
                 android:src="@drawable/ic_back"
-                android:tint="@color/colorPrimaryDark" />
+                android:tint="@color/colorPrimaryDark"
+                android:contentDescription="@string/image_label"/>
 
             <LinearLayout
                 android:id="@+id/rl_logo"
@@ -41,9 +42,9 @@
                     android:id="@+id/iv_logo_text"
                     android:layout_width="@dimen/dimen_150dp"
                     android:layout_height="match_parent"
-                    android:padding="@dimen/dimen_5dp"
                     android:src="@drawable/ic_title_side"
-                    android:layout_gravity="center"/>
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/image_label"/>
 
             </LinearLayout>
 
@@ -115,7 +116,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/dimen_0dp"
             android:layout_weight="0.5"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
             <LinearLayout
                 android:id="@+id/rl_timer"
                 android:layout_width="match_parent"
@@ -129,7 +131,8 @@
                     android:enabled="false"
                     android:text="@string/resend_otp"
                     android:textColor="@color/colorAccent"
-                    android:textSize="@dimen/dimen_15dp" />
+                    android:textSize="15sp"
+                    android:visibility="invisible"/>
 
                 <TextView
                     android:id="@+id/tv_timer"
@@ -138,15 +141,17 @@
                     android:fontFamily="sans-serif-black"
                     android:text="  00:00"
                     android:textColor="@color/colorAccent"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:layout_weight="1"
             android:layout_width="match_parent"
-            android:gravity="center|end"
-            android:layout_height="0dp">
+            android:gravity="top|center_horizontal"
+            android:layout_height="0dp"
+            android:paddingTop="@dimen/dimen_10dp">
 
             <LinearLayout
                 android:layout_marginEnd="30dp"
@@ -154,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_outline_grey"
-                android:layout_alignParentLeft="true">
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/tv_resend_otp"
                     android:layout_width="wrap_content"
@@ -165,14 +170,14 @@
                     android:layout_marginRight="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_10dp"
                     android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:text="  Resend  "/>
+                    android:text="  Resend  " />
             </LinearLayout>
             <LinearLayout
-                android:layout_marginEnd="30dp"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/dimen_130dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_outline"
-                android:layout_alignParentRight="true">
+
+                android:gravity="center">
                 <TextView
                     android:id="@+id/tv_done"
                     android:layout_width="wrap_content"
@@ -184,7 +189,7 @@
                     android:layout_marginRight="@dimen/dimen_15dp"
                     android:layout_marginTop="@dimen/dimen_10dp"
                     android:layout_marginBottom="@dimen/dimen_10dp"
-                    android:text="  Done  "/>
+                    android:text="  Done  " />
             </LinearLayout>
 
 
