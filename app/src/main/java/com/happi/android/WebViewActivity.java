@@ -37,6 +37,9 @@ public class WebViewActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_web_view);
 
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         WebView wv_layout = findViewById(R.id.wv_layout);
         ImageView iv_menu = findViewById(R.id.iv_menu);
         ImageView iv_back = findViewById(R.id.iv_back);
@@ -87,5 +90,12 @@ public class WebViewActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         HappiApplication.setCurrentContext(this);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

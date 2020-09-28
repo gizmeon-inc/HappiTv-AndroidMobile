@@ -176,7 +176,8 @@ public class PopularChannelsActivity extends BaseActivity implements ChannelSugg
     public void onSuggestedItemClicked(int adapterPosition) {
 
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, channelsListAdapter.getItem(adapterPosition).getChannelId());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
 
     }
 
@@ -215,5 +216,12 @@ public class PopularChannelsActivity extends BaseActivity implements ChannelSugg
                 subscription.dispose();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

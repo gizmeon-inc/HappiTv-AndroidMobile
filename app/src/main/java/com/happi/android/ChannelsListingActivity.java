@@ -170,7 +170,7 @@ public class ChannelsListingActivity extends BaseActivity implements ChannelList
 /*
     private void setupViewPager(ViewPager viewPager) {
         TabAdapter adapter = new TabAdapter(
-                FEApplication.getCurrentContext(), getSupportFragmentManager(), tabLayout.getTabCount());
+                HappiApplication.getCurrentContext(), getSupportFragmentManager(), tabLayout.getTabCount());
         adapter.addFragment(otherfragment, "Live Channels");
         adapter.addFragment(youtubefragment, "YouTube Channels");
         viewPager.setAdapter(adapter);

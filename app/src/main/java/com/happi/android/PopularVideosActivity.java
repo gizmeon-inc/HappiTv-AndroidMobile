@@ -69,6 +69,9 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
         }
         setContentView(R.layout.activity_popular_videos);
 
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
@@ -260,7 +263,8 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
     public void onItemClicked(int adapterPosition) {
 
         ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoList_adapter.getItem(adapterPosition).getShow_id());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView, final AnimationItem item) {
@@ -295,6 +299,8 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 
     private void safelyDispose(Disposable... disposables) {
@@ -309,7 +315,8 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
     public void onShowsItemClicked(int adapterPosition) {
         SharedPreferenceUtility.setShowId(showList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, showList_adapter.getItem(adapterPosition).getShow_id());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
 
     }
 }

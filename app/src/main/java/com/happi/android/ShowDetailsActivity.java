@@ -196,6 +196,8 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
     private TypefacedTextViewRegular tv_errormsg;
     private boolean isFromSubsc = false;
 
+    //bottom navigation view
+    private RelativeLayout rl_btm_navigation_show;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,6 +215,9 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_show_details);
+
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
 
         currentActivity = this;
 
@@ -307,6 +312,9 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
         ll_play_overlap = findViewById(R.id.ll_play_overlap);
 
         pb_trailer.setVisibility(View.GONE);
+
+        rl_btm_navigation_show = findViewById(R.id.rl_btm_navigation_show);
+        rl_btm_navigation_show.setVisibility(View.VISIBLE);
 
         rl_toolbar = findViewById(R.id.rl_toolbar);
         rl_details = findViewById(R.id.rl_details);
@@ -1571,6 +1579,7 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
 
         rl_player.setLayoutParams(params);
         rl_details.setLayoutParams(params);
+        rl_btm_navigation_show.setVisibility(View.GONE);
         rl_toolbar.setVisibility(View.GONE);
         sc_meta.setVisibility(View.GONE);
 
@@ -1611,7 +1620,7 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
         rl_player.setVisibility(View.VISIBLE);
         rl_toolbar.setVisibility(View.VISIBLE);
         sc_meta.setVisibility(View.VISIBLE);
-
+        rl_btm_navigation_show.setVisibility(View.VISIBLE);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -1668,8 +1677,8 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
     }
 
     private void backNavigation() {
-       /* if(FEApplication.getRedirect() != null){
-            if(FEApplication.getRedirect().equals("category")){
+       /* if(HappiApplication.getRedirect() != null){
+            if(HappiApplication.getRedirect().equals("category")){
                 startActivity(new Intent(this, CategoryViewActivity.class));
             }else{
                 startActivity(new Intent(this, CategoryViewActivity.class));
@@ -1687,15 +1696,17 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
             startActivity(new Intent(this,HomeActivity.class));
         }*/
         isFromWatchList = false;
-        if (isExoPlayerFullscreen)
+        if (isExoPlayerFullscreen) {
             closeFullscreen();
-        else {
+        }else {
 
             releasePlayer();
             if (exoPlayer != null) {
                 exoPlayer.stop();
             }
             super.onBackPressed();
+            finish();
+            overridePendingTransition(0,0);
         }
 
     }

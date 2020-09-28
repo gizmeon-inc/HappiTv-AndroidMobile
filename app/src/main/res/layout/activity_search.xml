@@ -6,13 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".SearchActivity">
+    tools:context=".SearchActivity"
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_searchbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_50dp"
         android:layout_margin="@dimen/dimen_8dp"
+        android:background="@color/white"
         app:cardCornerRadius="@dimen/dimen_2dp"
         app:cardElevation="@dimen/dimen_2dp"
         app:cardMaxElevation="@dimen/dimen_2dp">
@@ -33,21 +36,23 @@
             <EditText
                 android:id="@+id/et_search"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="@dimen/dimen_50dp"
-                android:maxLength="30"
+                android:layout_weight="1"
                 android:backgroundTint="@android:color/transparent"
                 android:hint="@string/enter_search_text"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:paddingLeft="@dimen/dimen_8dp" />
+                android:maxLength="30"
+                android:paddingLeft="@dimen/dimen_8dp"
+                android:windowSoftInputMode="adjustPan"
+                android:textColor="@color/dark_black"/>
 
             <ProgressBar
                 android:id="@+id/pb_progressbar"
                 android:layout_width="@dimen/dimen_50dp"
                 android:layout_height="@dimen/dimen_50dp"
                 android:padding="@dimen/dimen_8dp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
         </LinearLayout>
 
@@ -57,11 +62,24 @@
         android:id="@+id/rv_search_suggestion"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="?attr/actionBarSize"
         android:layout_below="@id/cv_searchbar"
         android:layout_marginLeft="@dimen/dimen_10dp"
         android:layout_marginRight="@dimen/dimen_10dp">
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <!--  <com.google.android.material.bottomnavigation.BottomNavigationView
+          android:id="@+id/btm_navigation"
+          android:layout_width="match_parent"
+          android:layout_height="?attr/actionBarSize"
+          android:layout_alignParentBottom="true"
+          android:background="@color/btm_nav"
+          app:itemIconTint="@color/bottom_nav_color"
+          app:itemTextColor="@color/bottom_nav_color"
+          app:layout_scrollFlags="scroll|enterAlways|snap"
+          app:menu="@menu/bottom_bar" />-->
+
 
 
     <ImageView
@@ -83,30 +101,39 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dimen_5dp"
         android:padding="@dimen/dimen_10dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textColor="@color/error_tint"/>
 
     <com.happi.android.recyclerview.GridRecyclerView
         android:id="@+id/rv_search_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:layout_below="@id/cv_searchbar"
         android:clipToPadding="false"
         android:paddingLeft="@dimen/dimen_7dp"
         android:paddingRight="@dimen/dimen_7dp"
         android:paddingBottom="@dimen/dimen_10dp"
-        android:visibility="gone" />
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:visibility="gone"/>
 
     <com.happi.android.recyclerview.GridRecyclerView
         android:id="@+id/rv_channel_result"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/cv_searchbar"
-        android:background="@color/white"
         android:clipToPadding="false"
         android:paddingLeft="@dimen/dimen_7dp"
         android:paddingRight="@dimen/dimen_7dp"
         android:paddingBottom="@dimen/dimen_10dp"
-        android:visibility="gone" />
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:visibility="gone"/>
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
 
 </RelativeLayout>

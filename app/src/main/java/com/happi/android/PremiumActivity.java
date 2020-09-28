@@ -75,6 +75,10 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_premium);
+
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         progressDialog = new ProgressDialog(this, R.style.MyTheme);
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -224,7 +228,7 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
                         .subscribe(sessionTokenResponseModel -> {
 
                             HappiApplication.setAppToken(sessionTokenResponseModel.getToken());
-                            SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());                            //  FEApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
+                            SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());                            //  HappiApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
 
 
                             //Test AdIDs
@@ -326,7 +330,9 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
     public void onBackPressed() {
         //goToHome();
         super.onBackPressed();
-        finish();    }
+        finish();
+        overridePendingTransition(0,0);
+    }
 
     @Override
     protected void onDestroy() {

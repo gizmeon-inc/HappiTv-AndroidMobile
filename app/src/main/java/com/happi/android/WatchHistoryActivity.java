@@ -170,7 +170,9 @@ public class WatchHistoryActivity extends BaseActivity implements VideoList_adap
     public void onItemClicked(int adapterPosition) {
 
         ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoList_adapterNew.getItem(adapterPosition).getVideo_id());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+        overridePendingTransition(0,0);
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView, final AnimationItem item) {
@@ -208,5 +210,12 @@ public class WatchHistoryActivity extends BaseActivity implements VideoList_adap
                 subscription.dispose();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

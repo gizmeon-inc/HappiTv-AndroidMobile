@@ -44,7 +44,8 @@
                 android:inputType="text"
                 android:maxLength="30"
                 android:paddingLeft="@dimen/dimen_8dp"
-                android:windowSoftInputMode="adjustPan"/>
+                android:windowSoftInputMode="adjustPan"
+                android:textColor="@color/whiteThree"/>
 
             <ProgressBar
                 android:id="@+id/pb_progressbar"
@@ -68,7 +69,7 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+  <!--  <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/btm_navigation"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -77,7 +78,7 @@
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:menu="@menu/bottom_bar" />
+        app:menu="@menu/bottom_bar" />-->
 
 
 
@@ -100,7 +101,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dimen_5dp"
         android:padding="@dimen/dimen_10dp"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textColor="@color/error_tint"/>
 
     <com.happi.android.recyclerview.GridRecyclerView
         android:id="@+id/rv_search_result"
@@ -125,6 +127,13 @@
         android:paddingBottom="@dimen/dimen_10dp"
         android:layout_marginBottom="?attr/actionBarSize"
         android:visibility="gone"/>
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
 
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -427,7 +427,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/play_now"
                             android:textAllCaps="true"
-                            android:textColor="@color/black"
+                            android:textColor="@color/whiteTwo"
                             android:textSize="@dimen/dimen_15dp" />
                     </LinearLayout>
                     <LinearLayout
@@ -475,7 +475,7 @@
                             android:layout_width="@dimen/dimen_18dp"
                             android:layout_height="@dimen/dimen_18dp"
                             android:src="@drawable/ic_play_now"
-                            android:tint="@color/black"
+                            android:tint="@color/colorWhite"
                             android:layout_marginRight="@dimen/dimen_5dp"/>
                         <TextView
                             android:id="@+id/tv_play_now_overlap"
@@ -483,7 +483,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/play_now"
                             android:textAllCaps="true"
-                            android:textColor="@color/black"
+                            android:textColor="@color/whiteTwo"
                             android:textSize="@dimen/dimen_15dp" />
                     </LinearLayout>
 
@@ -535,14 +535,7 @@
                         android:textColor="@color/orange"/>
 
                 </LinearLayout>
-                <!-- <TextView
-                     android:id="@+id/tv_description"
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="@dimen/dimen_5dp"
-                     android:textColor="@color/white"
-                     android:textSize="@dimen/dimen_12dp"
-                     android:visibility="gone" />-->
+
 
             </LinearLayout>
 
@@ -592,5 +585,12 @@
 
     </ScrollView>
 
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation_show"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
 
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
 </RelativeLayout>

@@ -40,7 +40,8 @@
         android:layout_centerHorizontal="true"
         android:text=""
         android:gravity="center"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:textColor="@color/error_tint"/>
     <!-- <LinearLayout
          android:id="@+id/ll_error"
          android:layout_width="match_parent"
@@ -82,6 +83,14 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
 
 
 </RelativeLayout>

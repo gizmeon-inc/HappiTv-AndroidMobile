@@ -5,8 +5,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_black"
-    tools:context=".VideoPlayerActivity">
+    android:background="@color/dark_black">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -38,7 +37,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="start"
             android:layout_marginBottom="?attr/actionBarSize"
-            android:background="@color/colorWhite">
+            android:background="@color/dark_black">
 
             <include layout="@layout/navigation" />
 
@@ -53,7 +52,7 @@
         </RelativeLayout>-->
 
     </androidx.drawerlayout.widget.DrawerLayout>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
+   <!-- <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/btm_navigation"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -62,6 +61,14 @@
         app:itemIconTint="@color/bottom_nav_color"
         app:itemTextColor="@color/bottom_nav_color"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:menu="@menu/bottom_bar" />
+        app:menu="@menu/bottom_bar" />-->
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
 
 </RelativeLayout>

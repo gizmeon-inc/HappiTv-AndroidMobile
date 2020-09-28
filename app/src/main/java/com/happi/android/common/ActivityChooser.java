@@ -2,11 +2,12 @@ package com.happi.android.common;
 
 import android.content.Intent;
 
+import com.happi.android.CategoriesListActivity;
 import com.happi.android.CategoryViewActivity;
 import com.happi.android.ChannelLivePlayerActivity;
 import com.happi.android.ChannelScheduleActivity;
 import com.happi.android.HomeActivity;
-import com.happi.android.R;
+import com.happi.android.SearchActivity;
 import com.happi.android.ShowDetailsActivity;
 import com.happi.android.ShowVideoActivity;
 import com.happi.android.VideoPlayerActivity;
@@ -26,7 +27,7 @@ public class ActivityChooser {
                 isSameClass("HomeActivity");
 
                 intent = new Intent(HappiApplication.getCurrentActivity(), HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
             case ConstantUtils.VIDEO_PLAYER_ACTIVITY:
@@ -36,7 +37,7 @@ public class ActivityChooser {
                         VideoPlayerActivity.class);
                 int videoId = (int) intentData;
                 intent.putExtra(ConstantUtils.VIDEO_DETAILS, videoId);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
             case ConstantUtils.CATEGORYVIEW_ACTIVITY:
@@ -48,7 +49,7 @@ public class ActivityChooser {
                 String category = (String) intentData;
                 intent.putExtra(ConstantUtils.CATEGORY_DETAILS, category);
 
-              //  intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
             case ConstantUtils.SHOWSVIDEO_ACTIVITY:
@@ -60,7 +61,7 @@ public class ActivityChooser {
                 String show = (String) intentData;
                 intent.putExtra(ConstantUtils.SHOW_DETAILS, show);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
             case ConstantUtils.CHANNEL_SCHEDULE_ACTIVITY:
@@ -73,16 +74,17 @@ public class ActivityChooser {
                 //String thumbnail = (String) imageThumbnail;
                 intent.putExtra(ConstantUtils.CHANNEL_ID, channel_id);
 
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
             case ConstantUtils.SHOW_DETAILS_ACTIVITY:
-                isSameClass("ShowDetailsActivity");
+                // isSameClass("ShowDetailsActivity");
 
                 intent = new Intent(HappiApplication.getCurrentActivity(),
                         ShowDetailsActivity.class);
                 String showId = (String) intentData;
-                intent.putExtra(ConstantUtils.SHOW_ID,showId);
-              //  intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.putExtra(ConstantUtils.SHOW_ID, showId);
+                //intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
         }
@@ -100,9 +102,10 @@ public class ActivityChooser {
         switch (key) {
 
             case ConstantUtils.CHANNEL_HOME_ACTIVITY:
-               // intent = new Intent(FEApplication.getCurrentActivity(), ChannelHomeActivity.class);
+                // intent = new Intent(HappiApplication.getCurrentActivity(), ChannelHomeActivity.class);
                 intent = new Intent(HappiApplication.getCurrentActivity(), ChannelLivePlayerActivity.class);
                 intent.putExtra(ConstantUtils.CHANNEL_ID, channelID);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
         }
@@ -110,7 +113,9 @@ public class ActivityChooser {
         if (intent != null) {
 
             HappiApplication.getCurrentActivity().startActivity(intent);
-            HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            //HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            HappiApplication.getCurrentActivity().overridePendingTransition(0, 0);
+            ;
         }
     }
 
@@ -118,5 +123,47 @@ public class ActivityChooser {
         if (className.equals(HappiApplication.getCurrentActivity().getClass().getSimpleName())) {
             HappiApplication.getCurrentActivity().finish();
         }
+    }
+
+
+    public static void goToSelectedActivity(int key) {
+
+        Intent intent = null;
+
+        switch (key) {
+
+
+            case ConstantUtils.HOME_ACTIVITY:
+                isSameClass("HomeActivity");
+
+                intent = new Intent(HappiApplication.getCurrentActivity(), HomeActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                break;
+
+            case ConstantUtils.SEARCH_ACTIVITY:
+                isSameClass("SearchActivity");
+
+                intent = new Intent(HappiApplication.getCurrentActivity(),
+                        SearchActivity.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                break;
+            case ConstantUtils.CATEGORIES_LIST_ACTIVITY:
+                isSameClass("CategoriesListActivity");
+
+                intent = new Intent(HappiApplication.getCurrentActivity(),
+                        CategoriesListActivity.class);
+
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                break;
+
+        }
+
+        if (intent != null) {
+
+            HappiApplication.getCurrentActivity().startActivity(intent);
+        }
+
+
     }
 }

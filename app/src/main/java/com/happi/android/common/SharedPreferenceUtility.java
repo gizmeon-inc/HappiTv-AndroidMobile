@@ -420,4 +420,15 @@ public class SharedPreferenceUtility {
         editor.putString("SubscriptionItemIdList", str.toString());
         editor.commit();
     }
+
+
+    public static void setCurrentBottomMenuIndex(int menu_id) {
+        SharedPreferences.Editor editor = getSharedPreferenceInstance().edit();
+        editor.putInt("menu_id", menu_id);
+        editor.commit();
+    }
+
+    public static int getCurrentBottomMenu() {
+        return getSharedPreferenceInstance().getInt("menu_id", -1);
+    }
 }

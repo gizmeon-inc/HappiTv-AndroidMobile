@@ -384,7 +384,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
 
         HappiApplication.setCurrentContext(this);
-        SharedPreferenceUtility.getAdvertisingId();
+        onCreateBottomNavigationView();
+
         if (SharedPreferenceUtility.getAdvertisingId().isEmpty()) {
             new AdvertisingIdAsyncTask().execute();
         }
@@ -1661,6 +1662,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             } else {
                 super.onBackPressed();
                 finish();
+                overridePendingTransition(0,0);
             }
 
         }

@@ -431,7 +431,7 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
 
 
                             HappiApplication.setAppToken(sessionTokenResponseModel.getToken());
-                            SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());                       //     FEApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
+                            SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());                       //     HappiApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
 
                                /* if (!isGuest) {
                                     HappiApplication.setIsNewLoginFromPremiumPage(false);

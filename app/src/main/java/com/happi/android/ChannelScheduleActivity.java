@@ -233,7 +233,7 @@ public class ChannelScheduleActivity extends BaseActivity implements View.OnClic
                         rv_channel_schedule.setVisibility(View.GONE);
                         progressDialog.dismiss();
 
-                        // Toast.makeText(FEApplication.getCurrentContext(),"NO DATA",Toast.LENGTH_LONG).show();
+                        // Toast.makeText(HappiApplication.getCurrentContext(),"NO DATA",Toast.LENGTH_LONG).show();
 
                     }
 

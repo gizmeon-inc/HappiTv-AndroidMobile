@@ -83,6 +83,10 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_watch_list);
+
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
@@ -140,7 +144,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                WatchListActivity.super.onBackPressed();
+                onBackPressed();
             }
         });
 
@@ -390,7 +394,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
        /* if( SharedPreferenceUtility.getGuest()){
             displayErrorLayout("No Data");
         }else{
-            if(FEApplication.getAppToken()== null || FEApplication.getAppToken().isEmpty()){
+            if(HappiApplication.getAppToken()== null || HappiApplication.getAppToken().isEmpty()){
                 getSessionToken();
             }else{
                 if (!pageContext.isEmpty()) {
@@ -512,7 +516,8 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     public void onShowItemClicked(int adapterPosition) {
         SharedPreferenceUtility.setShowId(watchListAdapter.getItem(adapterPosition).getShow_id()+"+");
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, watchListAdapter.getItem(adapterPosition).getShow_id()+"+");
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
         if(pageContext.equalsIgnoreCase("Watch List")){
             watchListAdapter.notifyDataSetChanged();
         }
@@ -521,5 +526,12 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     @Override
     public void onShowItemLongClick(int adapterPosition) {
         showAlert(watchListAdapter.getItem(adapterPosition).getShow_name(), watchListAdapter.getItem(adapterPosition).getShow_id(), adapterPosition);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

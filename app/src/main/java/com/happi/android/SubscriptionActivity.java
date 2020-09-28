@@ -167,6 +167,8 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         setContentView(R.layout.activity_subscription);
 
         HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         currentActivity = this;
 
         progressDialog = new ProgressDialog(SubscriptionActivity.this);
@@ -927,12 +929,12 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                         }
                         HappiApplication.setSub_id(subids);
                         //////////////////////////////////IMPORTANT : uncomment for test purposes only ///////////////////////////
-                   /* List<String> subscriptionModelListSample = FEApplication.getSub_id();
+                   /* List<String> subscriptionModelListSample = HappiApplication.getSub_id();
                     ArrayList<String> subscriptionIdListTest = SharedPreferenceUtility.getSubscriptionItemIdList();
                     if (subscriptionIdListTest.size() != 0) {
                         subscriptionModelListSample.addAll(subscriptionIdListTest);
                     }
-                   FEApplication.setSub_id(subscriptionModelListSample);*/
+                   HappiApplication.setSub_id(subscriptionModelListSample);*/
                         //////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         List<String> subscriptionIds = HappiApplication.getSub_id();
@@ -1046,6 +1048,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         }else{
             super.onBackPressed();
             finish();
+            overridePendingTransition(0,0);
         }
     }
 }

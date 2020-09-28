@@ -105,7 +105,7 @@ public class LiveScheduleActivity extends BaseActivity implements LiveScheduleDa
         iv_error = findViewById(R.id.iv_error);
         tv_error = findViewById(R.id.tv_error);
 
-      //  FEApplication.setIsDatePickerClicked(false);
+      //  HappiApplication.setIsDatePickerClicked(false);
 
         showProgressDialog();
         iv_back.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +125,7 @@ public class LiveScheduleActivity extends BaseActivity implements LiveScheduleDa
         Intent intentChannel = new Intent(LiveScheduleActivity.this, ChannelLivePlayerActivity.class);
         startActivity(intentChannel);
         LiveScheduleActivity.super.finish();
+        overridePendingTransition(0,0);
     }
     public String getDate(Date current){
         String today = "";
@@ -324,9 +325,9 @@ public class LiveScheduleActivity extends BaseActivity implements LiveScheduleDa
             rv_date_list.smoothScrollToPosition(adapterPosition);
         }
 
-       // FEApplication.setIsDatePickerClicked(true);
+       // HappiApplication.setIsDatePickerClicked(true);
         dateSelected(adapterPosition);
-       // FEApplication.setIsDatePickerClicked(false);
+       // HappiApplication.setIsDatePickerClicked(false);
     }
 
     @Override
@@ -384,10 +385,10 @@ public class LiveScheduleActivity extends BaseActivity implements LiveScheduleDa
 
             selectedDateposition = layoutPosition;
 
-           // FEApplication.setIsDatePickerClicked(true);
+           // HappiApplication.setIsDatePickerClicked(true);
             showProgressDialog();
             dateSelected(layoutPosition);
-           // FEApplication.setIsDatePickerClicked(false);
+           // HappiApplication.setIsDatePickerClicked(false);
         }
 
       //  dateList

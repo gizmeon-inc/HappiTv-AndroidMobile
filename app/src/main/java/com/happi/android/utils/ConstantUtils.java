@@ -13,6 +13,17 @@ public class ConstantUtils {
     public static final int CHANNEL_SCHEDULE_ACTIVITY = 9;
     public static final int SHOW_DETAILS_ACTIVITY = 10;
 
+    public static final int CATEGORIES_LIST_ACTIVITY = 11;
+    public static final int CATEGORY_VIEW_ACTIVITY = 12;
+    public static final int CHANNEL_LIVE_PLAYER_ACTIVITY = 13;
+    public static final int PAYPERVIEW_VIDEO_LIST_ACTIVITY = 14;
+    public static final int PREMIUM_ACTIVITY = 15;
+    public static final int SEARCH_ACTIVITY = 16;
+    public static final int SETTINGS_ACTIVITY = 17;
+    public static final int SUBSCRIPTION_ACTIVITY = 18;
+    public static final int WATCHLIST_ACTIVITY = 19;
+    public static final int WEBVIEW_ACTIVITY = 20;
+
 
     public static final String IP_BASE_URL = "https://extreme-ip-lookup.com/";
 

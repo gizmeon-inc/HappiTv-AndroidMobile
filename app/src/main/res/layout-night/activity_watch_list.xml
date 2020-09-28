@@ -43,7 +43,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:padding="@dimen/dimen_10dp"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:textColor="@color/error_tint"/>
         </LinearLayout>
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -65,5 +66,13 @@
 
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -9,7 +9,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +22,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.happi.android.ChannelsListingActivity;
 import com.happi.android.HomeActivity;
 import com.happi.android.LiveVideoListingActivity;
@@ -36,6 +38,7 @@ import com.happi.android.WatchListActivity;
 import com.happi.android.WebViewActivity;
 import com.happi.android.customviews.AboutUsDialogClass;
 import com.happi.android.customviews.TypefacedTextViewRegular;
+import com.happi.android.utils.ConstantUtils;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -47,7 +50,7 @@ public class BaseActivity extends AppCompatActivity {
 
     public Boolean isDrawerOpened = false;
     public TypefacedTextViewRegular tv_user;
-
+    public BottomNavigationView btm_navigation;
 
 
     @Override
@@ -55,6 +58,49 @@ public class BaseActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
 
+    }
+
+    public void updateMenuItem(int index) {
+        Menu menu = btm_navigation.getMenu();
+        menu.getItem(index).setChecked(true);
+    }
+
+    public int getMenuItem() {
+        return btm_navigation.getSelectedItemId();
+    }
+
+    protected void onCreateBottomNavigationView() {
+
+        btm_navigation = findViewById(R.id.btm_navigation);
+        BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()) {
+                    case R.id.item_home:
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        ActivityChooser.goToSelectedActivity(ConstantUtils.HOME_ACTIVITY);
+                        return true;
+                    case R.id.item_search:
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(1);
+                        ActivityChooser.goToSelectedActivity(ConstantUtils.SEARCH_ACTIVITY);
+                        return true;
+                    case R.id.item_categories:
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(2);
+                        ActivityChooser.goToSelectedActivity(ConstantUtils.CATEGORIES_LIST_ACTIVITY);
+                        return true;
+                    case R.id.item_lang_selector:
+                        // SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
+                        Toast.makeText(HappiApplication.getCurrentContext(), "Coming soon", Toast.LENGTH_SHORT).show();
+                        return false;
+                    // return true;
+                }
+
+                return false;
+            }
+        };
+        btm_navigation.setOnNavigationItemSelectedListener(navListener);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
     }
 
     protected void onCreateDrawer() {
@@ -83,17 +129,17 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
 
-         tv_user = findViewById(R.id.tv_user);
-         setUserName();
+        tv_user = findViewById(R.id.tv_user);
+        setUserName();
 
 
         LinearLayout ll_contact_us = findViewById(R.id.ll_contact_us);
         ll_contact_us.setOnClickListener(v -> {
-
+            drawer.closeDrawer(findViewById(R.id.navigation));
             AboutUsDialogClass aboutUsDialogClass =
                     new AboutUsDialogClass(HappiApplication.getCurrentActivity());
             Objects.requireNonNull(aboutUsDialogClass.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             aboutUsDialogClass.show();
         });
 
@@ -109,27 +155,27 @@ public class BaseActivity extends AppCompatActivity {
 
         LinearLayout ll_home = findViewById(R.id.ll_home);
         ll_home.setOnClickListener(v -> {
-
+            drawer.closeDrawer(findViewById(R.id.navigation));
             finish();
             goToHomePage();
-            drawer.closeDrawer(findViewById(R.id.navigation));
+           // drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_channels = findViewById(R.id.ll_channels);
         ll_channels.setVisibility(View.GONE);
         LinearLayout ll_new = findViewById(R.id.ll_new);
         ll_channels.setOnClickListener(v -> {
-
+            drawer.closeDrawer(findViewById(R.id.navigation));
             goToChannels();
             ll_new.setVisibility(View.INVISIBLE);
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_live = findViewById(R.id.ll_live);
         ll_live.setOnClickListener(v -> {
-             //Toast.makeText(FEApplication.getCurrentContext(),"Coming Soon",Toast.LENGTH_SHORT).show();
-            goToLive();
+            //Toast.makeText(HappiApplication.getCurrentContext(),"Coming Soon",Toast.LENGTH_SHORT).show();
             drawer.closeDrawer(findViewById(R.id.navigation));
+            goToLive();
         });
 
 
@@ -141,17 +187,18 @@ public class BaseActivity extends AppCompatActivity {
         });*/
         LinearLayout ll_premium = findViewById(R.id.ll_premium);
         ll_premium.setOnClickListener(v -> {
-
-            goToPremium();
             drawer.closeDrawer(findViewById(R.id.navigation));
+            goToPremium();
+           // drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_favourite = findViewById(R.id.ll_favourite);
         ll_favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToShowListingPage("Favourites");
                 drawer.closeDrawer(findViewById(R.id.navigation));
+                goToShowListingPage("Favourites");
+               // drawer.closeDrawer(findViewById(R.id.navigation));
             }
         });
 
@@ -159,16 +206,18 @@ public class BaseActivity extends AppCompatActivity {
         ll_watch_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToShowListingPage("Watch List");
                 drawer.closeDrawer(findViewById(R.id.navigation));
+                goToShowListingPage("Watch List");
+                //drawer.closeDrawer(findViewById(R.id.navigation));
             }
         });
         LinearLayout ll_payperview_list = findViewById(R.id.ll_payperview_list);
         ll_payperview_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToShowPayPerViewPage();
                 drawer.closeDrawer(findViewById(R.id.navigation));
+                goToShowPayPerViewPage();
+                //drawer.closeDrawer(findViewById(R.id.navigation));
             }
         });
       /*  LinearLayout ll_watch_history = findViewById(R.id.ll_watch_history);
@@ -180,23 +229,25 @@ public class BaseActivity extends AppCompatActivity {
 
         LinearLayout ll_terms = findViewById(R.id.ll_terms);
         ll_terms.setOnClickListener(v -> {
-           // Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-            goToWebView("T");
+            // Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
             drawer.closeDrawer(findViewById(R.id.navigation));
+            goToWebView("T");
+            //drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_privacy = findViewById(R.id.ll_privacy);
         ll_privacy.setOnClickListener(v -> {
             //Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-            goToWebView("P");
             drawer.closeDrawer(findViewById(R.id.navigation));
+            goToWebView("P");
+            //drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_settings = findViewById(R.id.ll_settings);
         ll_settings.setOnClickListener(v -> {
-
-            goToSettings();
             drawer.closeDrawer(findViewById(R.id.navigation));
+            goToSettings();
+            //drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_logout = findViewById(R.id.ll_logout);
@@ -208,79 +259,91 @@ public class BaseActivity extends AppCompatActivity {
         });
     }
 
-   public void setUserName(){
-       if (!SharedPreferenceUtility.getUserName().isEmpty()) {
-           tv_user.setText(SharedPreferenceUtility.getUserName());
+    public void setUserName() {
+        if (!SharedPreferenceUtility.getUserName().isEmpty()) {
+            tv_user.setText(SharedPreferenceUtility.getUserName());
 
-       }
-   }
+        }
+    }
 
     private void goToLoginPage() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), LoginActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
         finish();
     }
 
     private void goToHomePage() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), HomeActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
 
     private void goToChannels() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), ChannelsListingActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
-   /* private void goToSchedule() {
-        Intent intent = new Intent(FEApplication.getCurrentContext(), ScheduleActivity.class);
-        startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-    }*/
+    /* private void goToSchedule() {
+         Intent intent = new Intent(HappiApplication.getCurrentContext(), ScheduleActivity.class);
+         startActivity(intent);
+         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+     }*/
     private void goToPremium() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), PremiumActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
 
     }
 
     private void goToWatchHistory() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), WatchHistoryActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
 
     private void goToWebView(String value) {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), WebViewActivity.class);
         intent.putExtra("web_view_select", value);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
 
     private void goToSettings() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), SettingsActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
 
     private void goToLive() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), LiveVideoListingActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
-    private void goToShowListingPage(String pageContext){
+
+    private void goToShowListingPage(String pageContext) {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), WatchListActivity.class);
         intent.putExtra("pageContext", pageContext);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
 
-    private void goToShowPayPerViewPage(){
+    private void goToShowPayPerViewPage() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), PayPerViewVideoListActivity.class);
         startActivity(intent);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0, 0);
     }
 
     private void logoutPrompt() {
@@ -290,7 +353,7 @@ public class BaseActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("yes", (dialog, which) -> {
 
-                    SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false,"");
+                    SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
                     SharedPreferenceUtility.setGuest(false);
                     SharedPreferenceUtility.setChannelId(0);
                     SharedPreferenceUtility.setVideoId(0);
@@ -358,7 +421,7 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if(networkReceiver!=null) {
+        if (networkReceiver != null) {
             unregisterReceiver(networkReceiver);
         }
         super.onPause();
@@ -388,14 +451,14 @@ public class BaseActivity extends AppCompatActivity {
                     // we're connected
                 } else {
 
-                    if (!(FEApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
+                    if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
 
-                        Intent noInternetIntent = new Intent(FEApplication.getCurrentContext(),
+                        Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
                                 NoInternetActivity.class);
                         startActivity(noInternetIntent);
                     } else {
 
-                        Toast.makeText(FEApplication.getCurrentContext(), "No internet", Toast
+                        Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
                                 .LENGTH_SHORT).show();
                     }
                 }

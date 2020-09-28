@@ -37,8 +37,8 @@ public class FormatAdUrl {
         int height = 480;
         int width = 640;
         DisplayMetrics displayMetrics = new DisplayMetrics();
-//        if (FEApplication.getCurrentActivity() != null) {
-//            FEApplication.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics
+//        if (HappiApplication.getCurrentActivity() != null) {
+//            HappiApplication.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics
 //                    (displayMetrics);
 //            height = displayMetrics.heightPixels;
 //            width = displayMetrics.widthPixels;
@@ -134,8 +134,8 @@ public class FormatAdUrl {
         int height = 480;
         int width = 640;
         DisplayMetrics displayMetrics = new DisplayMetrics();
-//        if (FEApplication.getCurrentActivity() != null) {
-//            FEApplication.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics
+//        if (HappiApplication.getCurrentActivity() != null) {
+//            HappiApplication.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics
 //                    (displayMetrics);
 //            height = displayMetrics.heightPixels;
 //            width = displayMetrics.widthPixels;

@@ -11,6 +11,7 @@ import com.happi.android.models.ShowModel;
 import com.happi.android.webservice.AnalyticsApi;
 import com.google.android.gms.ads.MobileAds;
 import com.google.gson.JsonObject;
+import com.splunk.mint.Mint;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -54,6 +55,7 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     public static boolean isDatePickerClicked = false;
 
 
+    //getter and setter
     //getter and setter
     private static boolean hasUpdatedReceipt;
 
@@ -200,7 +202,7 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     }
 
     public static void setPublisher_id(String publisher_id) {
-        FEApplication.publisher_id = publisher_id;
+        HappiApplication.publisher_id = publisher_id;
     }*/
 
     public static Context getCurrentContext() {
@@ -246,7 +248,7 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     }
 
     public static void setCountryCode(String countryCode) {
-        FEApplication.countryCode = countryCode;
+        HappiApplication.countryCode = countryCode;
     }*/
 
     public static String getRegion() {
@@ -270,6 +272,7 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
         super.onCreate();
 
         mContext = getApplicationContext();
+        Mint.initAndStartSession(mContext, "ff793cd0");
         appLifecycleHandlerthis = new AppLifecycleHandler(this::onAppBackgrounded);
         registerLifecycleHandler(appLifecycleHandlerthis);
 

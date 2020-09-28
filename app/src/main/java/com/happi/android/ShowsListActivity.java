@@ -155,7 +155,8 @@ public class ShowsListActivity extends BaseActivity implements ShowsAdapter.item
         ActivityChooser.goToActivity(ConstantUtils.SHOWSVIDEO_ACTIVITY, showsAdapter
                 .getItem(adapterPosition).getShow_id() + ";" + showsAdapter.getItem
                 (adapterPosition).getShow_name());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView, final AnimationItem item) {
@@ -193,5 +194,12 @@ public class ShowsListActivity extends BaseActivity implements ShowsAdapter.item
                 subscription.dispose();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

@@ -45,6 +45,9 @@ public class SettingsActivity extends BaseActivity {
         }
         setContentView(R.layout.activity_settings);
 
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         ImageView iv_menu = findViewById(R.id.iv_menu);
         ImageView iv_back = findViewById(R.id.iv_back);
         ImageView iv_logo_text = findViewById(R.id.iv_logo_text);
@@ -118,7 +121,8 @@ public class SettingsActivity extends BaseActivity {
                     .class);
             intent.putExtra("from","settings");
             startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+           // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            overridePendingTransition(0,0);
         });
 
         /*int currentNightMode =
@@ -199,5 +203,12 @@ public class SettingsActivity extends BaseActivity {
                 subscription.dispose();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

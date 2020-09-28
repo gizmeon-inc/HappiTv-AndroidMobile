@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".VideoPlayerActivity">
+    android:background="@color/white">
 
     <androidx.drawerlayout.widget.DrawerLayout
         android:id="@+id/drawer_layout"
@@ -24,22 +24,51 @@
             android:id="@+id/rl_exoplayer_parent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="?attr/actionBarSize">
+            android:layout_marginTop="?attr/actionBarSize"
+            android:layout_marginBottom="?attr/actionBarSize">
 
             <include layout="@layout/content_home" />
         </RelativeLayout>
 
+
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigation"
-            android:layout_width="350dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@color/colorWhite">
+            android:layout_marginBottom="?attr/actionBarSize"
+            android:background="@color/white">
 
             <include layout="@layout/navigation" />
 
         </com.google.android.material.navigation.NavigationView>
+        <!--  <RelativeLayout
+              android:id="@+id/rl_bottom_toolbar"
+              android:layout_width="match_parent"
+              android:layout_height="?attr/actionBarSize">
+
+
+
+          </RelativeLayout>-->
 
     </androidx.drawerlayout.widget.DrawerLayout>
+    <!-- <com.google.android.material.bottomnavigation.BottomNavigationView
+         android:id="@+id/btm_navigation"
+         android:layout_width="match_parent"
+         android:layout_height="?attr/actionBarSize"
+         android:layout_alignParentBottom="true"
+         android:background="@color/btm_nav"
+         app:itemIconTint="@color/bottom_nav_color"
+         app:itemTextColor="@color/bottom_nav_color"
+         app:layout_scrollFlags="scroll|enterAlways|snap"
+         app:menu="@menu/bottom_bar" />-->
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -77,6 +77,10 @@ public class PayPerViewVideoListActivity extends BaseActivity implements PayPerV
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_watch_list);
+
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
@@ -296,7 +300,15 @@ public class PayPerViewVideoListActivity extends BaseActivity implements PayPerV
     public void onShowItemClicked(int adapterPosition) {
         SharedPreferenceUtility.setVideoId(payPerViewVideoListAdapter.getItem(adapterPosition).getVideo_id());
         ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, payPerViewVideoListAdapter.getItem(adapterPosition).getVideo_id());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
             payPerViewVideoListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

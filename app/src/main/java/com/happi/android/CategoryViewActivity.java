@@ -72,7 +72,10 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
         }
         setContentView(R.layout.activity_category_view);
 
-        //categoryId = FEApplication.getCategoryId();
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
+        //categoryId = HappiApplication.getCategoryId();
 
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -133,8 +136,8 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
     }
 
     private void backNavigation(){
-       /* if(FEApplication.getRedirect() != null){
-            String redirect = FEApplication.getRedirect();
+       /* if(HappiApplication.getRedirect() != null){
+            String redirect = HappiApplication.getRedirect();
             if(redirect.equals("home")){
                 startActivity(new Intent(this,HomeActivity.class));
             }else{
@@ -144,6 +147,8 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
             super.onBackPressed();
         }*/
         super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
     private void getShowByproducer(String prodName){
 
@@ -340,9 +345,9 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
     public void onShowsItemClicked(int adapterPosition) {
        /* Intent showIntent = new Intent(CategoryViewActivity.this, ShowDetailsActivity.class);
         ShowModel showModel  = showList_adapter.getItem(adapterPosition);
-        FEApplication.setIsFeaturedShow(false);
-        FEApplication.setShowModel(showModel);
-        FEApplication.setRedirect("category");
+        HappiApplication.setIsFeaturedShow(false);
+        HappiApplication.setShowModel(showModel);
+        HappiApplication.setRedirect("category");
         startActivity(showIntent);
         finish();*/
        SharedPreferenceUtility.setShowId(showList_adapter.getItem(adapterPosition).getShow_id());

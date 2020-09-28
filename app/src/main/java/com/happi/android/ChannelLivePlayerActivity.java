@@ -274,7 +274,10 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_channel_home);
+
         HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         if(SharedPreferenceUtility.getAdvertisingId().isEmpty()){
             new AdvertisingIdAsyncTask().execute();
         }
@@ -1853,6 +1856,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             }else{
                 super.onBackPressed();
                 finish();
+                overridePendingTransition(0,0);
             }
 
         }

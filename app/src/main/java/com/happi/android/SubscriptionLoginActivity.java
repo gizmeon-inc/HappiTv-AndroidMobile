@@ -8,8 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,6 +25,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.core.content.ContextCompat;
 
 import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.AlertDialogRegisterScreen;
@@ -77,6 +77,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
     LinearLayout ll_resend;
     boolean isOtpScreenOpen = false;
     private int user_id = 0;
+
     public static boolean isValidEmail(String email) {
 
         String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -278,7 +279,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
 
                     } else if (loginResponseModel.getStatus() == 101) {
 
-                        user_id =loginResponseModel.getData().get(0).getUser_id();
+                        user_id = loginResponseModel.getData().get(0).getUser_id();
                         showOtpVerificationPage();
 
                     } else if (loginResponseModel.getStatus() == 102) {
@@ -294,7 +295,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                         }
                         Toast.makeText(SubscriptionLoginActivity.this, "Internal Server Error", Toast
                                 .LENGTH_SHORT).show();
-                    }else {
+                    } else {
                         if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
@@ -313,6 +314,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                 });
         compositeDisposable.add(loginDisposable);
     }
+
     void alert(String message) {
 
         if (dialog.isShowing()) {
@@ -324,6 +326,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         exitAppDialogClass.show();
     }
+
     private void showOtpVerificationPage() {
         isOtpScreenOpen = true;
         btLogin.setEnabled(false);
@@ -361,6 +364,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         });
 
     }
+
     //verify otp sent to mail
     private void verifyOtpFromEmailApiCall(String otp) {
         ApiClient.UsersService usersService = ApiClient.create();
@@ -395,7 +399,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                             dialog.dismiss();
                         }
                         otpView.setText("");
-                        if(loginResponseModel.getMessage() != null && (!loginResponseModel.getMessage().isEmpty())){
+                        if (loginResponseModel.getMessage() != null && (!loginResponseModel.getMessage().isEmpty())) {
                             alert(loginResponseModel.getMessage());
                         }
                     }
@@ -424,7 +428,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
 
 
                             HappiApplication.setAppToken(sessionTokenResponseModel.getToken());
-                            SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());                       //     FEApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
+                            SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());                       //     HappiApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
 
                             checkSubscription();
 
@@ -515,6 +519,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                 });
         compositeDisposable.add(subscriptionDisposable);
     }
+
     private void loginExceededAlertSubscription() {
         if (dialog.isShowing()) {
             dialog.dismiss();
@@ -525,6 +530,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         alertDialog.setCancelable(false);
         alertDialog.show();
     }
+
     @Override
     public void onLogoutClicked() {
         logoutApiCall();
@@ -534,6 +540,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
     public void onLogoutAllClicked() {
         logoutAllApiCall();
     }
+
     private void logoutApiCall() {
         dialog.show();
         ApiClient.UsersService usersService = ApiClient.create();
@@ -619,6 +626,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
 
         compositeDisposable.add(logoutDisposable);
     }
+
     public void setupUI(View view) {
 
         // Set up touch listener for non-text box views to hide keyboard.
@@ -642,15 +650,15 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
 
     private void hideSoftKeyBoard() {
 
-        try{
+        try {
             InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
             assert imm != null;
             if (imm.isAcceptingText()) { // verify if the soft keyboard is open
                 imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
                 // imm.hideSoftInputFromWindow(btLogin.getWindowToken(), 0);
             }
-        }catch(Exception ex){
-            Log.e("Exception"," "+ex.getMessage());
+        } catch (Exception ex) {
+            Log.e("Exception", " " + ex.getMessage());
         }
     }
 
@@ -685,18 +693,20 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         }
     }
 
-    private void goToVideoPlayerScreen(){
+    private void goToVideoPlayerScreen() {
         Intent intent = new Intent(SubscriptionLoginActivity.this, VideoPlayerActivity.class);
         startActivity(intent);
         finish();
     }
-    private void goToChannelPlayerScreen(){
+
+    private void goToChannelPlayerScreen() {
         //Intent intent = new Intent(SubscriptionLoginActivity.this, ChannelHomeActivity.class);
         Intent intent = new Intent(SubscriptionLoginActivity.this, ChannelLivePlayerActivity.class);
         startActivity(intent);
         finish();
     }
-    private void goToShowDetailsScreen(){
+
+    private void goToShowDetailsScreen() {
         Intent showIntent = new Intent(SubscriptionLoginActivity.this, ShowDetailsActivity.class);
         startActivity(showIntent);
         finish();

@@ -32,6 +32,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    repositories {
+        mavenCentral()
+        maven { url 'https://mint.splunk.com/gradle/' }
+        google()
+        jcenter()
+    }
 }
 
 
@@ -97,5 +103,6 @@ dependencies {
 
     //switch
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
-
+//splunk mint crashlytics
+    implementation 'com.splunk.mint:mint:5.0.0'
 }

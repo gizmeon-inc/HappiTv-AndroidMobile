@@ -19,6 +19,7 @@ public class NotificationManagerActivity extends Activity {
         String notification_id = intent.getStringExtra("notification_id");
 
         ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, notification_id);
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
     }
 }

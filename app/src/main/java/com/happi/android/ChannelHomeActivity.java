@@ -642,7 +642,8 @@ public class ChannelHomeActivity extends BaseActivity implements View.OnClickLis
     public void goToHome() {
         Intent intentH = new Intent(ChannelHomeActivity.this, HomeActivity.class);
         startActivity(intentH);
-
+        finish();
+        overridePendingTransition(0,0);
     }
 
     private void showProgressDialog() {
@@ -967,7 +968,7 @@ public class ChannelHomeActivity extends BaseActivity implements View.OnClickLis
         objectHome = pHome;
         //ApiClient.UsersService usersService = ApiClient.create();
         ApiClient.UsersService usersService = ApiClient.createToken();
-        //Disposable tokenDisposable = usersService.getVideoTokenLive(FEApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
+        //Disposable tokenDisposable = usersService.getVideoTokenLive(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
         Disposable tokenDisposable = usersService.getVideoToken(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1877,6 +1878,7 @@ public class ChannelHomeActivity extends BaseActivity implements View.OnClickLis
         }else{
             super.onBackPressed();
             finish();
+            overridePendingTransition(0,0);
         }
     }
 

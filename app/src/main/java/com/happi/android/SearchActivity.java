@@ -22,9 +22,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.happi.android.adapters.ChannelListAdapter;
 import com.happi.android.adapters.ChannelSearchSuggestionAdapter;
 import com.happi.android.adapters.SearchResultsAdapter;
@@ -91,7 +89,6 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
     ChannelSearchSuggestionAdapter channelSearchSuggestionAdapter;
     ShowSearchSuggestionAdapter showSearchSuggestionAdapter;
     RecyclerView rv_search_suggestion;
-    public BottomNavigationView btm_navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +106,9 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         }
         setContentView(R.layout.activity_search);
 
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
@@ -121,15 +121,17 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         rv_channel_result = findViewById(R.id.rv_channel_result);
         rv_search_suggestion = findViewById(R.id.rv_search_suggestion);
         pb_progressbar = findViewById(R.id.pb_progressbar);
-        btm_navigation = findViewById(R.id.btm_navigation);
 
-        btm_navigation.setSelectedItemId(R.id.item_search);
-        btm_navigation.setOnNavigationItemSelectedListener(navListener);
 
         userId = SharedPreferenceUtility.getUserId();
 
         Intent intent = getIntent();
-        search_type = intent.getStringExtra("search_type");
+        if(getIntent() != null && (getIntent().getStringExtra("search_type") != null  && !getIntent().getStringExtra("search_type").isEmpty())){
+            search_type = intent.getStringExtra("search_type");
+        }else{
+            search_type = "show";
+        }
+
         setupRecyclerview();
 
         if(search_type.equals("show")){
@@ -212,30 +214,6 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
             return false;
         });
     }
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-            switch (menuItem.getItemId()) {
-                case R.id.item_home:
-                    Intent intent = new Intent(SearchActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.item_search:
-                    return true;
-                case R.id.item_categories:
-                    Intent intent2 = new Intent(SearchActivity.this, CategoriesListActivity.class);
-                    startActivity(intent2);
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.item_lang_selector:
-                    Toast.makeText(SearchActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-                    return true;
-            }
-            return false;
-        }
-    };
 
     private void loadShowSearchResult(String searchKey){
 
@@ -499,7 +477,8 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         SharedPreferenceUtility.setShowId(showList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY,
                 showList_adapter.getItem(adapterPosition).getShow_id());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
     }
 
     @Override
@@ -507,7 +486,8 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
 
         ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, searchResultsAdapter
                 .getItem(adapterPosition).getVideo_id());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
     }
 
     @Override
@@ -515,7 +495,8 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
 
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY,
                 channelListAdapter.getItem(adapterPosition).getChannelId());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+      //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
     }
 
 
@@ -539,8 +520,8 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
     protected void onResume() {
         super.onResume();
         HappiApplication.setCurrentContext(this);
-        btm_navigation.setSelectedItemId(R.id.item_search);
-      //  btm_navigation.setOnNavigationItemSelectedListener(navListener);
+        SharedPreferenceUtility.setCurrentBottomMenuIndex(1);
+        updateMenuItem(1);
     }
 
     @Override
@@ -588,5 +569,12 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         pb_progressbar.setVisibility(View.VISIBLE);
         et_search.setText(searchKey);
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 }

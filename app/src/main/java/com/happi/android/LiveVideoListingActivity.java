@@ -60,6 +60,9 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
         }
         setContentView(R.layout.activity_live_video);
 
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
@@ -225,5 +228,10 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
         }
     }
 
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
+    }
 }

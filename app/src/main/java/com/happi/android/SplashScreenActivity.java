@@ -294,7 +294,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                             HappiApplication.setAppToken(sessionTokenResponseModel.getToken());
                             SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());
 
-                      //      FEApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
+                      //      HappiApplication.setPublisher_id(sessionTokenResponseModel.getPublisher_id());
 
                             //Test AdIDs
                             // SharedPreferenceUtility.setAdMobPubIds("ca-app-pub-3940256099942544/6300978111", "ca-app-pub-3940256099942544/5224354917","ca-app-pub-3940256099942544/1033173712","ca-app-pub-3940256099942544~3347511713", "1", "1","24534e1901884e398f1253216226017e","b195f8dd8ded45fe847ad89ed1d016da","1");
@@ -432,7 +432,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
                         SharedPreferenceUtility.setCountryCode(addresses.get(0).getCountryCode());
                        // SharedPreferenceUtility.setCity(addresses.get(0));
-                        //FEApplication.setCountryCode("US");
+                        //HappiApplication.setCountryCode("US");
                         if(addresses.get(0).getLocality() != null){
                             HappiApplication.setCity(addresses.get(0).getLocality());
                         }else if(addresses.get(0).getSubAdminArea() != null){
@@ -442,7 +442,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                         }else{
                             HappiApplication.setCity(addresses.get(0).getCountryName());
                         }
-                       // FEApplication.setCity(addresses.get(0).getLocality());
+                       // HappiApplication.setCity(addresses.get(0).getLocality());
                         HappiApplication.setRegion(addresses.get(0).getAdminArea());
                         HappiApplication.setCountry(addresses.get(0).getCountryName());
                     }
@@ -485,7 +485,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                 .subscribe(ipAddressModel -> {
 
                     SharedPreferenceUtility.setCountryCode(ipAddressModel.getCountryCode());
-                    //FEApplication.setCountryCode("US");
+                    //HappiApplication.setCountryCode("US");
                     HappiApplication.setCity(ipAddressModel.getCity());
                     HappiApplication.setLatitude(ipAddressModel.getLat());
                     HappiApplication.setLongitude(ipAddressModel.getLon());

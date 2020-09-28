@@ -54,7 +54,6 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
     private Disposable internetDisposable;
     private CompositeDisposable compositeDisposable;
     SkeletonScreen loadingCategories;
-    public BottomNavigationView btm_navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +70,9 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_categories);
+
+        HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
 
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -91,10 +93,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
         rv_category_list = findViewById(R.id.rv_category_list);
         iv_errorimg = findViewById(R.id.iv_errorimg);
         tv_errormsg = findViewById(R.id.tv_errormsg);
-        btm_navigation = findViewById(R.id.btm_navigation);
 
-        btm_navigation.setSelectedItemId(R.id.item_categories);
-        btm_navigation.setOnNavigationItemSelectedListener(navListener);
 
         compositeDisposable = new CompositeDisposable();
         setupRecyclerview();
@@ -135,32 +134,6 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
                 });
         loadCategoryList();
     }
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-
-            switch (menuItem.getItemId()) {
-                case R.id.item_home:
-                    Intent intent = new Intent(CategoriesListActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.item_search:
-                    Intent intent1 = new Intent(CategoriesListActivity.this, SearchActivity.class);
-                    intent1.putExtra("search_type", "show");
-                    startActivity(intent1);
-                    overridePendingTransition(0, 0);
-                    return true;
-                case R.id.item_categories:
-                    return true;
-                case R.id.item_lang_selector:
-                    Toast.makeText(CategoriesListActivity.this, "Coming soon", Toast.LENGTH_SHORT).show();
-                    return true;
-            }
-            return false;
-        }
-    };
-
 
     private void loadCategoryList(){
         ApiClient.UsersService usersService = ApiClient.create();
@@ -241,7 +214,8 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, categoryList_adapter
                 .getItem(adapterPosition).getCategoryid() + ";" + categoryList_adapter.getItem
                 (adapterPosition).getCategory());
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+      //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(0,0);
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView, final AnimationItem item) {
@@ -271,13 +245,16 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
     protected void onResume() {
         super.onResume();
         HappiApplication.setCurrentContext(this);
-        btm_navigation.setSelectedItemId(R.id.item_categories);
-      //  btm_navigation.setOnNavigationItemSelectedListener(navListener);
+        SharedPreferenceUtility.setCurrentBottomMenuIndex(2);
+        updateMenuItem(2);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
+
     }
 
     private void safelyDispose(Disposable... disposables) {

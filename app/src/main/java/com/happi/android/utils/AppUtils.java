@@ -117,7 +117,7 @@ public class AppUtils {
 
        /* Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         long epoch = currentCalendar.getTimeInMillis() / 1000L;
-        String device_id = Settings.Secure.getString(FEApplication.getCurrentContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        String device_id = Settings.Secure.getString(HappiApplication.getCurrentContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         JsonObject eventDetails = new JsonObject();
         eventDetails.addProperty("device_id",device_id);
