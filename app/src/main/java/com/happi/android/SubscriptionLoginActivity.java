@@ -234,7 +234,8 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        Intent intent = new Intent(SubscriptionLoginActivity.this, HomeActivity.class);
+       // Intent intent = new Intent(SubscriptionLoginActivity.this, HomeActivity.class);
+        Intent intent = new Intent(SubscriptionLoginActivity.this, MainHomeActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();

@@ -241,7 +241,8 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
-        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        //Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        Intent intent = new Intent(LoginActivity.this, MainHomeActivity.class);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();

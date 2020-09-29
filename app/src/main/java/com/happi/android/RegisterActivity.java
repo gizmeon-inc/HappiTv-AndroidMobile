@@ -817,7 +817,8 @@ public class RegisterActivity extends BaseActivity {
     }
 
     private void goToHome() {
-        Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+        //Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
+        Intent intent = new Intent(RegisterActivity.this, MainHomeActivity.class);
         intent.putExtra("from", "register");
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

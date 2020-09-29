@@ -6,6 +6,7 @@ import com.happi.android.models.GetPayperviewVideoListResponseModel;
 import com.happi.android.models.GetWatchListResponseModel;
 import com.happi.android.models.HomeVideoModel;
 import com.happi.android.models.LikedFlagResponseModel;
+import com.happi.android.models.LiveScheduleResponse;
 import com.happi.android.models.LogoutResponseModel;
 import com.happi.android.models.PublisherModel;
 import com.happi.android.models.RegisterWithEmailResponseModel;
@@ -163,6 +164,10 @@ public class ApiClient {
         Observable<ChannelListResponse> getChannels(@Header("access-token") String header,
                                                     @Query("country_code") String country_code,
                                                     @Query("pubid") String publisher_id);
+        //liveSchedule?channelid=275
+        @GET("api/liveSchedule")
+        Observable<LiveScheduleResponse> getLiveSchedule(@Header("access-token") String header,
+                                                         @Query("channelid") int channel_id);
 
         @GET("api/PopularChannels")
         Observable<ChannelListResponse> PopularChannels(@Header("access-token") String header,

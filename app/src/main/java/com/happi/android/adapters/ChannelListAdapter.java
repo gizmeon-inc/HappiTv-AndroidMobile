@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.happi.android.HomeActivity;
+import com.happi.android.MainHomeActivity;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -81,8 +82,10 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 .into(holder.iv_thumbnail);
         Log.d("LOGO",ConstantUtils.CHANNEL_NEW_THUMBNAIL + cModel.getLogo());
         if(activity != null) {
-            if (((HomeActivity) activity).isRedirectToLive) {
-                if (((HomeActivity) activity).channelId != 0 && (((HomeActivity) activity).channelId == cModel.getChannelId())) {
+            //if (((HomeActivity) activity).isRedirectToLive) {
+            if (((MainHomeActivity) activity).isRedirectToLive) {
+              //  if (((HomeActivity) activity).channelId != 0 && (((HomeActivity) activity).channelId == cModel.getChannelId())) {
+                if (((MainHomeActivity) activity).channelId != 0 && (((MainHomeActivity) activity).channelId == cModel.getChannelId())) {
                     SharedPreferenceUtility.setChannelTimeZone(cModel.getTimezone());
                     redirect.onRedirectionToLive(cModel);
                 }

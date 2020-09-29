@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import com.happi.android.HomeActivity;
 import com.happi.android.LoginActivity;
+import com.happi.android.MainHomeActivity;
 import com.happi.android.R;
 import com.happi.android.utils.ConstantUtils;
 
@@ -70,7 +71,8 @@ public class NotifyService extends IntentService {
                 if(SharedPreferenceUtility.getIsLiveVisible() && (SharedPreferenceUtility.getChannelId() == channel_id)){
 
                 }else {
-                    notifyIntent = new Intent(this, HomeActivity.class);
+                   // notifyIntent = new Intent(this, HomeActivity.class);
+                    notifyIntent = new Intent(this, MainHomeActivity.class);
                 }
             }else{
                 notifyIntent = new Intent(this, LoginActivity.class);

@@ -27,6 +27,7 @@ import com.happi.android.ChannelsListingActivity;
 import com.happi.android.HomeActivity;
 import com.happi.android.LiveVideoListingActivity;
 import com.happi.android.LoginActivity;
+import com.happi.android.MainHomeActivity;
 import com.happi.android.NoInternetActivity;
 import com.happi.android.PayPerViewVideoListActivity;
 import com.happi.android.PremiumActivity;
@@ -275,7 +276,8 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     private void goToHomePage() {
-        Intent intent = new Intent(HappiApplication.getCurrentContext(), HomeActivity.class);
+        //Intent intent = new Intent(HappiApplication.getCurrentContext(), HomeActivity.class);
+        Intent intent = new Intent(HappiApplication.getCurrentContext(), MainHomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

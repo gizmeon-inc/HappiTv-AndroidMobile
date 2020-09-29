@@ -239,7 +239,8 @@ public class LanguageSelectionCheckboxActivity extends BaseActivity {
                         LanguageSelectionCheckboxActivity.super.onBackPressed();
                     } else if (from.equals("register")) {
 
-                        Intent intent = new Intent(LanguageSelectionCheckboxActivity.this, HomeActivity.class);
+                       // Intent intent = new Intent(LanguageSelectionCheckboxActivity.this, HomeActivity.class);
+                        Intent intent = new Intent(LanguageSelectionCheckboxActivity.this, MainHomeActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                         startActivity(intent);
                         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

@@ -1004,7 +1004,8 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         if(progressDialog.isShowing()){
             progressDialog.dismiss();
         }
-        Intent intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
+        //Intent intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
+        Intent intent = new Intent(SubscriptionActivity.this, MainHomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
@@ -1027,10 +1028,12 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
              //   intent = new Intent(SubscriptionActivity.this, ChannelHomeActivity.class);
                 intent = new Intent(SubscriptionActivity.this, ChannelLivePlayerActivity.class);
             }else{
-                intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
+               // intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
+                intent = new Intent(SubscriptionActivity.this, MainHomeActivity.class);
             }
         }else{
-            intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
+           // intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
+            intent = new Intent(SubscriptionActivity.this, MainHomeActivity.class);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);

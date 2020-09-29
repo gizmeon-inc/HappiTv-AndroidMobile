@@ -640,7 +640,8 @@ public class ChannelHomeActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void goToHome() {
-        Intent intentH = new Intent(ChannelHomeActivity.this, HomeActivity.class);
+        //Intent intentH = new Intent(ChannelHomeActivity.this, HomeActivity.class);
+        Intent intentH = new Intent(ChannelHomeActivity.this, MainHomeActivity.class);
         startActivity(intentH);
         finish();
         overridePendingTransition(0,0);

@@ -316,7 +316,8 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
     }
 
     public void goToHome() {
-        Intent intentH = new Intent(PremiumActivity.this, HomeActivity.class);
+        //Intent intentH = new Intent(PremiumActivity.this, HomeActivity.class);
+        Intent intentH = new Intent(PremiumActivity.this, MainHomeActivity.class);
         intentH.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intentH);
         overridePendingTransition(0,0);

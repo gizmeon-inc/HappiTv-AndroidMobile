@@ -645,7 +645,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     }
 
     public void goToHome() {
-        Intent intentH = new Intent(ChannelLivePlayerActivity.this, HomeActivity.class);
+        Intent intentH = new Intent(ChannelLivePlayerActivity.this, MainHomeActivity.class);
+       // Intent intentH = new Intent(ChannelLivePlayerActivity.this, HomeActivity.class);
         intentH.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intentH);
         finish();

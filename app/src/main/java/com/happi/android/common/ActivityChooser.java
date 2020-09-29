@@ -7,6 +7,7 @@ import com.happi.android.CategoryViewActivity;
 import com.happi.android.ChannelLivePlayerActivity;
 import com.happi.android.ChannelScheduleActivity;
 import com.happi.android.HomeActivity;
+import com.happi.android.MainHomeActivity;
 import com.happi.android.SearchActivity;
 import com.happi.android.ShowDetailsActivity;
 import com.happi.android.ShowVideoActivity;
@@ -24,9 +25,11 @@ public class ActivityChooser {
 
 
             case ConstantUtils.HOME_ACTIVITY:
-                isSameClass("HomeActivity");
+               // isSameClass("HomeActivity");
+                isSameClass("MainHomeActivity");
 
-                intent = new Intent(HappiApplication.getCurrentActivity(), HomeActivity.class);
+                //intent = new Intent(HappiApplication.getCurrentActivity(), HomeActivity.class);
+                intent = new Intent(HappiApplication.getCurrentActivity(), MainHomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
@@ -134,9 +137,11 @@ public class ActivityChooser {
 
 
             case ConstantUtils.HOME_ACTIVITY:
-                isSameClass("HomeActivity");
+               // isSameClass("HomeActivity");
+                isSameClass("MainHomeActivity");
 
-                intent = new Intent(HappiApplication.getCurrentActivity(), HomeActivity.class);
+               // intent = new Intent(HappiApplication.getCurrentActivity(), HomeActivity.class);
+                intent = new Intent(HappiApplication.getCurrentActivity(), MainHomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 

@@ -644,7 +644,8 @@ public class SubscriptionRegisterActivity extends BaseActivity {
     }
     private void goToHomeScreen(){
         HappiApplication.setIsNewLoginFromPremiumPage(false);
-        Intent intent = new Intent(SubscriptionRegisterActivity.this, HomeActivity.class);
+        //Intent intent = new Intent(SubscriptionRegisterActivity.this, HomeActivity.class);
+        Intent intent = new Intent(SubscriptionRegisterActivity.this, MainHomeActivity.class);
         intent.putExtra("from", "register");
         startActivity(intent);
         finish();

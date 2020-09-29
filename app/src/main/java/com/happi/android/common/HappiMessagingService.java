@@ -24,6 +24,7 @@ import com.happi.android.ChannelLivePlayerActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.happi.android.HomeActivity;
+import com.happi.android.MainHomeActivity;
 import com.happi.android.R;
 import com.happi.android.VideoPlayerActivity;
 import com.happi.android.utils.ConstantUtils;
@@ -67,7 +68,8 @@ public class HappiMessagingService extends FirebaseMessagingService {
             intent.putExtra(ConstantUtils.CHANNEL_ID, Integer.parseInt(id));
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(HomeActivity.class);
+            //stackBuilder.addParentStack(HomeActivity.class);
+            stackBuilder.addParentStack(MainHomeActivity.class);
             //stackBuilder.addParentStack(ChannelHomeActivity.class);
             stackBuilder.addParentStack(ChannelLivePlayerActivity.class);
             stackBuilder.addNextIntent(intent);
@@ -115,7 +117,8 @@ public class HappiMessagingService extends FirebaseMessagingService {
             intent.putExtra(ConstantUtils.VIDEO_DETAILS, Integer.parseInt(id));
 
             TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-            stackBuilder.addParentStack(HomeActivity.class);
+            //stackBuilder.addParentStack(HomeActivity.class);
+            stackBuilder.addParentStack(MainHomeActivity.class);
             stackBuilder.addParentStack(VideoPlayerActivity.class);
             stackBuilder.addNextIntent(intent);
 

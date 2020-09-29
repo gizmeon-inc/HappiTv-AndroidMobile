@@ -19,9 +19,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/dimen_10dp"
-                android:paddingRight="@dimen/dimen_10dp">
+                android:layout_height="match_parent">
 
                 <!--ERROR-LAYOUT-->
                 <LinearLayout
@@ -31,7 +29,9 @@
                     android:layout_marginTop="@dimen/dimen_250dp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp">
 
                     <ImageView
                         android:id="@+id/iv_errorimg"
@@ -49,6 +49,69 @@
 
                 </LinearLayout>
 
+                <!--LIVE-PLAYER-->
+                <RelativeLayout
+                    android:id="@+id/rl_player_live"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_200dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
+                    android:gravity="center">
+
+                    <com.google.android.exoplayer2.ui.PlayerView
+                        android:id="@+id/exo_player_view_home"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:controller_layout_id="@layout/live_play_back_control"
+                        app:resize_mode="fill"/>
+                    <ProgressBar
+                        android:id="@+id/pb_live"
+                        android:layout_width="@dimen/dimen_36dp"
+                        android:layout_height="@dimen/dimen_36dp"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+
+                <!--LIVE-SCHEDULE-->
+                <LinearLayout
+                    android:id="@+id/ll_live_guide"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/dimen_10dp"
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:layout_below="@+id/rl_player_live"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp">
+
+                    <com.happi.android.customviews.TypefacedTextViewSemiBold
+                        android:id="@+id/tv_live_guide"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="@string/live_guide"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_regular_medium1" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_30dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_right_arrow_blue"
+                        android:tint="@color/colorPrimaryDark"
+                        android:visibility="invisible"/>
+
+                </LinearLayout>
+                <com.happi.android.recyclerview.GridRecyclerView
+                    android:id="@+id/rv_live_schedule_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_live_guide"
+                    android:visibility="visible"
+                    android:paddingLeft="@dimen/dimen_10dp"/>
 
                 <!--CATEGORIES-->
                 <LinearLayout
@@ -58,7 +121,10 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/dimen_10dp"
-                    android:paddingBottom="@dimen/dimen_10dp">
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:layout_below="@+id/rv_live_schedule_list"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp">
 
                     <com.happi.android.customviews.TypefacedTextViewSemiBold
                         android:id="@+id/tv_categories"
@@ -85,7 +151,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_category_list"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"/>
                 <!--WATCH-FOR-FREE-->
                 <LinearLayout
                     android:id="@+id/ll_watch_free"
@@ -96,7 +164,9 @@
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/dimen_10dp"
                     android:paddingBottom="@dimen/dimen_10dp"
-                    android:visibility="gone">
+                    android:visibility="gone"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp">
 
                     <com.happi.android.customviews.TypefacedTextViewSemiBold
                         android:id="@+id/tv_watch_free"
@@ -123,7 +193,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_watch_free"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"/>
 
                 <!--NEW RELEASE-->
                 <LinearLayout
@@ -134,7 +206,9 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/dimen_10dp"
-                    android:paddingBottom="@dimen/dimen_10dp">
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp">
 
                     <com.happi.android.customviews.TypefacedTextViewSemiBold
                         android:id="@+id/tv_popular_videos"
@@ -161,7 +235,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_popular_videos"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"/>
 
                 <!--LIVE-->
                 <LinearLayout
@@ -173,7 +249,9 @@
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/dimen_10dp"
                     android:paddingBottom="@dimen/dimen_10dp"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp">
 
                     <com.happi.android.customviews.TypefacedTextViewSemiBold
                         android:id="@+id/tv_live"
@@ -202,7 +280,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_popular_live"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"/>
 
 
                 <!--TOP-TEN-CATEGORY-->
@@ -213,7 +293,9 @@
                     android:layout_below="@+id/rv_live"
                     android:layout_marginBottom="@dimen/dimen_7dp"
                     android:nestedScrollingEnabled="false"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    android:paddingLeft="@dimen/dimen_10dp"
+                    android:paddingRight="@dimen/dimen_10dp"/>
 
             </RelativeLayout>
         </androidx.core.widget.NestedScrollView>

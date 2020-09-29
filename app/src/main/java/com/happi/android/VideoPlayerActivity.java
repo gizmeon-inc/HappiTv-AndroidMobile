@@ -1658,7 +1658,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void goToHome() {
-        Intent intentH = new Intent(VideoPlayerActivity.this, HomeActivity.class);
+       // Intent intentH = new Intent(VideoPlayerActivity.this, HomeActivity.class);
+        Intent intentH = new Intent(VideoPlayerActivity.this, MainHomeActivity.class);
         intentH.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intentH);
         finish();
