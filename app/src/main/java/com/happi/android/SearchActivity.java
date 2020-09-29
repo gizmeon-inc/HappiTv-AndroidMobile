@@ -147,11 +147,11 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
             et_search.setHint(R.string.search_channel);
             loadSearchSuggestions("channel");
         }
-
-        iv_back.setOnClickListener(v -> {
-
-            //back pressed
-            SearchActivity.super.onBackPressed();
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
         });
 
         et_search.addTextChangedListener(new TextWatcher() {

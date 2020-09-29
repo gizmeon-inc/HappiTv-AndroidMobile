@@ -61,7 +61,7 @@ public class SubscriptionForgotPasswordActivity extends BaseActivity {
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_subscription_forgot_password);
-
+        HappiApplication.setCurrentContext(this);
         LinearLayout ll_parent = findViewById(R.id.ll_parent);
         setupUI(ll_parent);
 

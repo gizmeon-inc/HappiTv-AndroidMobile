@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/dark_black"
     android:focusableInTouchMode="true">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,6 +23,7 @@
                 android:paddingLeft="@dimen/dimen_10dp"
                 android:paddingRight="@dimen/dimen_10dp">
 
+                <!--ERROR-LAYOUT-->
                 <LinearLayout
                     android:id="@+id/ll_error_home"
                     android:layout_width="match_parent"
@@ -48,57 +49,54 @@
 
                 </LinearLayout>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="220dp"
-                    android:layout_marginTop="@dimen/dimen_5dp"
-                    android:layout_marginBottom="@dimen/dimen_5dp"
-                    app:cardCornerRadius="@dimen/dimen_7dp"
-                    app:cardElevation="@dimen/dimen_0dp"
-                    app:cardMaxElevation="@dimen/dimen_0dp"
-                    app:cardPreventCornerOverlap="false">
 
-                    <FrameLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-
-                        <com.happi.android.customviews.ViewPagerCustomDuration
-                            android:id="@+id/vp_viewpager"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
-
-                        <com.google.android.material.tabs.TabLayout
-                            android:id="@+id/tl_tablayout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="@dimen/dimen_38dp"
-                            android:layout_gravity="bottom|end"
-                            android:layout_marginRight="@dimen/dimen_10dp"
-                            app:tabBackground="@drawable/tab_selector"
-                            app:tabIndicatorHeight="0dp" />
-
-                    </FrameLayout>
-                </androidx.cardview.widget.CardView>
-
-
-                <com.happi.android.recyclerview.GridRecyclerView
-                    android:id="@+id/rv_shows"
+                <!--CATEGORIES-->
+                <LinearLayout
+                    android:id="@+id/ll_category_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/rv_live"
-                    android:visibility="gone" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingTop="@dimen/dimen_10dp"
+                    android:paddingBottom="@dimen/dimen_10dp">
 
-                <!--Watch for free-->
+                    <com.happi.android.customviews.TypefacedTextViewSemiBold
+                        android:id="@+id/tv_categories"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="@string/categories"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="@dimen/text_regular_medium1" />
+
+                    <ImageView
+                        android:layout_width="@dimen/dimen_30dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_right_arrow_blue"
+                        android:tint="@color/colorPrimaryDark" />
+
+                </LinearLayout>
+
+                <com.happi.android.recyclerview.GridRecyclerView
+                    android:id="@+id/rv_category_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ll_category_list"
+                    android:visibility="visible" />
+                <!--WATCH-FOR-FREE-->
                 <LinearLayout
                     android:id="@+id/ll_watch_free"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/cv_banner"
+                    android:layout_below="@+id/rv_category_list"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/dimen_10dp"
-                    android:visibility="gone"
-                    android:paddingBottom="@dimen/dimen_10dp">
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:visibility="gone">
 
                     <com.happi.android.customviews.TypefacedTextViewSemiBold
                         android:id="@+id/tv_watch_free"
@@ -127,7 +125,7 @@
                     android:layout_below="@id/ll_watch_free"
                     android:visibility="gone" />
 
-                <!--VIDEOS-->
+                <!--NEW RELEASE-->
                 <LinearLayout
                     android:id="@+id/ll_popular_videos"
                     android:layout_width="match_parent"
@@ -174,8 +172,8 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:paddingTop="@dimen/dimen_10dp"
-                    android:visibility="visible"
-                    android:paddingBottom="@dimen/dimen_10dp">
+                    android:paddingBottom="@dimen/dimen_10dp"
+                    android:visibility="visible">
 
                     <com.happi.android.customviews.TypefacedTextViewSemiBold
                         android:id="@+id/tv_live"
@@ -184,18 +182,18 @@
                         android:layout_weight="1"
                         android:singleLine="true"
                         android:text="@string/live_now"
-                        android:visibility="visible"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_regular_medium1" />
+                        android:textSize="@dimen/text_regular_medium1"
+                        android:visibility="visible" />
 
                     <ImageView
                         android:layout_width="@dimen/dimen_30dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="end"
                         android:scaleType="centerCrop"
-                        android:visibility="visible"
                         android:src="@drawable/ic_right_arrow_blue"
-                        android:tint="@color/colorPrimaryDark" />
+                        android:tint="@color/colorPrimaryDark"
+                        android:visibility="visible" />
 
                 </LinearLayout>
 
@@ -205,89 +203,14 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ll_popular_live"
                     android:visibility="visible" />
-                <!--CATEGORIES-->
-                <LinearLayout
-                    android:id="@+id/ll_category_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/rv_live"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/dimen_10dp"
-                    android:paddingBottom="@dimen/dimen_10dp">
 
-                    <com.happi.android.customviews.TypefacedTextViewSemiBold
-                        android:id="@+id/tv_categories"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:singleLine="true"
-                        android:text="@string/categories"
-                        android:textColor="@color/colorPrimary"
-                        android:textSize="@dimen/text_regular_medium1" />
-
-                    <ImageView
-                        android:layout_width="@dimen/dimen_30dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="end"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_right_arrow_blue"
-                        android:tint="@color/colorPrimaryDark" />
-
-                </LinearLayout>
-
-                <com.happi.android.recyclerview.GridRecyclerView
-                    android:id="@+id/rv_category_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/ll_category_list"
-                    android:visibility="visible" />
-
-                <!--CHANNELS-->
-                <LinearLayout
-                    android:id="@+id/ll_popular_channels"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/rv_category_list"
-                    android:gravity="center_vertical"
-                    android:visibility="invisible"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/dimen_10dp"
-                    android:paddingBottom="@dimen/dimen_10dp">
-
-                    <com.happi.android.customviews.TypefacedTextViewSemiBold
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:singleLine="true"
-                        android:textColor="@color/colorPrimary"
-                        android:text="@string/trending_channels"
-                        android:textSize="@dimen/text_regular_medium1" />
-
-                    <ImageView
-                        android:layout_width="@dimen/dimen_30dp"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="end"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_right_arrow_blue"
-                        android:tint="@color/colorPrimaryDark" />
-
-                </LinearLayout>
-
-                <com.happi.android.recyclerview.GridRecyclerView
-                    android:id="@+id/rv_more_channels"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_below="@+id/ll_popular_channels"
-                    android:layout_marginBottom="@dimen/dimen_7dp"
-                    android:visibility="invisible" />
 
                 <!--TOP-TEN-CATEGORY-->
                 <com.happi.android.recyclerview.GridRecyclerView
                     android:id="@+id/rv_categories_home_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_below="@+id/rv_category_list"
+                    android:layout_below="@+id/rv_live"
                     android:layout_marginBottom="@dimen/dimen_7dp"
                     android:nestedScrollingEnabled="false"
                     android:visibility="visible" />

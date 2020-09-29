@@ -92,6 +92,7 @@ public class ActivityChooser {
         if (intent != null) {
 
             HappiApplication.getCurrentActivity().startActivity(intent);
+            HappiApplication.getCurrentActivity().overridePendingTransition(0,0);
         }
     }
 
@@ -115,7 +116,6 @@ public class ActivityChooser {
             HappiApplication.getCurrentActivity().startActivity(intent);
             //HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             HappiApplication.getCurrentActivity().overridePendingTransition(0, 0);
-            ;
         }
     }
 
@@ -160,10 +160,24 @@ public class ActivityChooser {
         }
 
         if (intent != null) {
-
+            isPlayerOrSubscription(HappiApplication.getCurrentActivity().getClass().getSimpleName());
             HappiApplication.getCurrentActivity().startActivity(intent);
+            HappiApplication.getCurrentActivity().overridePendingTransition(0, 0);
         }
 
 
+    }
+
+    public static void isPlayerOrSubscription(String className) {
+        switch (className) {
+
+
+                case "VideoPlayerActivity":
+                case "ChannelLivePlayerActivity":
+                case "SubscriptionActivity":
+                    HappiApplication.getCurrentActivity().finish();
+                    break;
+
+        }
     }
 }

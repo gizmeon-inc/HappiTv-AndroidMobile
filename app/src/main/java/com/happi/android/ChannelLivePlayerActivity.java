@@ -363,8 +363,10 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                 Intent scheduleIntent = new Intent(ChannelLivePlayerActivity.this, LiveScheduleActivity.class);
                 scheduleIntent.putExtra("channel_id",String.valueOf(CHANNEL_ID));
                 scheduleIntent.putExtra("schedule_list", (Serializable)liveScheduleList);
+                scheduleIntent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(scheduleIntent);
                 ChannelLivePlayerActivity.this.finish();
+                overridePendingTransition(0,0);
 
             }
         });
@@ -379,7 +381,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(timerSChedule != null) {
+               /* if(timerSChedule != null) {
                     timerSChedule.cancel();
                 }
                 if(HappiApplication.isIsNewSubscriber()){
@@ -387,8 +389,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                 }else{
                     ChannelLivePlayerActivity.super.onBackPressed();
                     finish();
-                }
-
+                }*/
+                onBackPressed();
             }
         });
         progressDialog = new ProgressDialog(this, R.style.MyTheme);
@@ -644,7 +646,10 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
     public void goToHome() {
         Intent intentH = new Intent(ChannelLivePlayerActivity.this, HomeActivity.class);
+        intentH.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intentH);
+        finish();
+        overridePendingTransition(0,0);
 
     }
 
@@ -1235,8 +1240,10 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         SharedPreferenceUtility.setChannelId(CHANNEL_ID);
         Intent intent = new Intent(ChannelLivePlayerActivity.this, SubscriptionActivity.class);
         intent.putExtra("from", "channelPlayer");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
+        overridePendingTransition(0,0);
     }
 
 

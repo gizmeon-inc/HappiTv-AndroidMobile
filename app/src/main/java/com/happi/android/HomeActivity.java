@@ -17,7 +17,6 @@ import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -28,10 +27,8 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
@@ -39,7 +36,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.android.material.tabs.TabLayout;
+import com.google.gson.JsonObject;
 import com.happi.android.adapters.BannerAdapter;
 import com.happi.android.adapters.CategoriesHomeListAdapter;
 import com.happi.android.adapters.CategoryCircleViewAdapter;
@@ -62,22 +65,13 @@ import com.happi.android.models.CategoryModel;
 import com.happi.android.models.ChannelModel;
 import com.happi.android.models.FeaturedShowsModel;
 import com.happi.android.models.ShowModel;
-import com.happi.android.models.ShowsResponseModel;
 import com.happi.android.models.UserSubscriptionModel;
-import com.happi.android.models.VideoModel;
 import com.happi.android.recyclerview.AnimationItem;
 import com.happi.android.recyclerview.GridRecyclerView;
 import com.happi.android.utils.AppUtils;
 import com.happi.android.utils.ConstantUtils;
 import com.happi.android.webservice.AnalyticsApi;
 import com.happi.android.webservice.ApiClient;
-import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardItem;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
-import com.google.android.gms.ads.reward.RewardedVideoAdListener;
-import com.google.android.material.tabs.TabLayout;
-import com.google.gson.JsonObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -98,7 +92,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,View.OnClickListener,
+public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener, View.OnClickListener,
         VideoList_adapter.itemClickListener,
         ShowList_adapter.itemClickListener,
         ChannelSuggestionAdapter.SuggesteditemClickListener, CategoryListAdapter
@@ -111,26 +105,23 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     VideoList_adapter videoList_adapter;
     ShowList_adapter freeShowList_adapter;
-    ShowsAdapter showsAdapter;
     CategoryListAdapter categoryList_adapter;
     ChannelSuggestionAdapter channelListAdapter;
     ChannelListAdapter liveChannelsAdapter;
     RecyclerView.LayoutManager layoutManager;
     private CompositeDisposable compositeDisposable;
-    TypefacedTextViewRegular tv_errormsg;
-    ImageView iv_errorimg;
-    RelativeLayout rl_exoplayer_parent;
-    RelativeLayout rl_toolbar;
+    //error layout
+    private LinearLayout ll_error_home;
+    private TypefacedTextViewRegular tv_errormsg;
+    private ImageView iv_errorimg;
 
-    SkeletonScreen loadingVideos, loadingCategories, loadingChannels, loadingShows, loadingLive, loadingFreeShows;
-    LinearLayout ll_popular_channels, ll_category_list, ll_popular_videos, ll_popular_shows,
+    SkeletonScreen loadingVideos, loadingCategories, loadingChannels, loadingLive, loadingFreeShows;
+    LinearLayout ll_popular_channels, ll_category_list, ll_popular_videos,
             ll_popular_live, ll_watch_free;
-    GridRecyclerView rv_video_grid, rv_category_list, rv_more_channels, rv_categories_home_list,
-            rv_shows, rv_live, rv_watch_free;
+    GridRecyclerView rv_video_grid, rv_category_list, rv_more_channels, rv_categories_home_list, rv_live, rv_watch_free;
     CardView cv_banner;
 
     ImageView iv_search;
-    private AnimationItem[] mAnimationItems;
     private AnimationItem mSelectedItem;
     int currentPage = 0;
     private int userId = 0;
@@ -219,17 +210,18 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
         compositeDisposable = new CompositeDisposable();
 
-        mAnimationItems = getAnimationItems();
+        AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
         onCreateDrawer();
 
-        rl_exoplayer_parent = findViewById(R.id.rl_exoplayer_parent);
-        rl_toolbar = findViewById(R.id.rl_toolbar);
+        RelativeLayout rl_exoplayer_parent = findViewById(R.id.rl_exoplayer_parent);
+        RelativeLayout rl_toolbar = findViewById(R.id.rl_toolbar);
         rv_watch_free = findViewById(R.id.rv_watch_free);
+        ll_error_home = findViewById(R.id.ll_error_home);
         tv_errormsg = findViewById(R.id.tv_errormsg);
         iv_errorimg = findViewById(R.id.iv_errorimg);
-        rv_shows = findViewById(R.id.rv_shows);
+        ll_error_home.setVisibility(View.GONE);
         rv_live = findViewById(R.id.rv_live);
         rv_video_grid = findViewById(R.id.rv_video_grid);
         rv_category_list = findViewById(R.id.rv_category_list);
@@ -260,7 +252,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
-       // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(modifiedHeight,width ));
+        // cv_banner.setLayoutParams(new RelativeLayout.LayoutParams(modifiedHeight,width ));
         apiErrorCount = 0;
         getSessionToken();
 
@@ -270,7 +262,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             mSwipeRefreshLayout.setRefreshing(false);
             finish();
             startActivity(getIntent());
-          //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             overridePendingTransition(0, 0);
             //setupRecyclerView();
         });
@@ -279,6 +271,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
             Intent intent = new Intent(HomeActivity.this, SearchActivity.class);
             intent.putExtra("search_type", "show");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
 
             //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -298,6 +291,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, PopularVideosActivity.class);
                 intent.putExtra("title", "watchFree");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
 
                 //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -307,17 +301,19 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         ll_popular_live.setOnClickListener(v -> {
 
             Intent intent = new Intent(HappiApplication.getCurrentContext(), LiveVideoListingActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
 
-           // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             overridePendingTransition(0, 0);
         });
 
         ll_category_list.setOnClickListener(v -> {
 
             Intent intent = new Intent(HomeActivity.this, CategoriesListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-          //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             overridePendingTransition(0, 0);
         });
 
@@ -325,6 +321,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
             Intent intent = new Intent(HomeActivity.this, PopularVideosActivity.class);
             intent.putExtra("title", "newRelease");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
 
             //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
@@ -334,9 +331,10 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         ll_popular_channels.setOnClickListener(v -> {
 
             Intent intent = new Intent(HomeActivity.this, PopularChannelsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
 
-          //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
             overridePendingTransition(0, 0);
         });
 
@@ -359,10 +357,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         updateMenuItem(0);
 
         setUserName();
-        /*if (!SharedPreferenceUtility.getGuest()) {
-            ll_watch_free.setVisibility(View.GONE);
-            rv_watch_free.setVisibility(View.GONE);
-        }*/
 
         if (!homeLoaded) {
 
@@ -415,21 +409,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     private void setupRecyclerView() {
 
-        rv_shows.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        showsAdapter = new ShowsAdapter(getApplicationContext(), this::onShowItemClicked, false);
-        rv_shows.setAdapter(showsAdapter);
-
-        loadingShows = Skeleton.bind(rv_shows)
-                .adapter(showsAdapter)
-                .load(R.layout.loading_shows_horizontal)
-                .color(R.color.colorLine)
-                .shimmer(true)
-                .angle(30)
-                .count(30)
-                .duration(1000)
-                .frozen(false)
-                .show();
-
+        ll_error_home.setVisibility(View.GONE);
         //-----------------------------------------live----------------------------------------------------//
         rv_live.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         liveChannelsAdapter = new ChannelListAdapter(getApplicationContext(),
@@ -464,28 +444,22 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                 .show();
 
         //-----------------------------------------------watch for free---------------------------------------------------------//
-        if (SharedPreferenceUtility.getGuest()) {
+        ll_watch_free.setVisibility(View.VISIBLE);
+        rv_watch_free.setVisibility(View.VISIBLE);
 
-            ll_watch_free.setVisibility(View.VISIBLE);
-            rv_watch_free.setVisibility(View.VISIBLE);
-
-            rv_watch_free.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-            freeShowList_adapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, false);
-            rv_watch_free.setAdapter(freeShowList_adapter);
-            loadingFreeShows = Skeleton.bind(rv_watch_free)
-                    .adapter(freeShowList_adapter)
-                    .load(R.layout.loading_videos_horizontal)
-                    .color(R.color.colorLine)
-                    .shimmer(true)
-                    .angle(30)
-                    .count(30)
-                    .duration(1000)
-                    .frozen(false)
-                    .show();
-        } else {
-            ll_watch_free.setVisibility(View.GONE);
-            rv_watch_free.setVisibility(View.GONE);
-        }
+        rv_watch_free.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        freeShowList_adapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, false);
+        rv_watch_free.setAdapter(freeShowList_adapter);
+        loadingFreeShows = Skeleton.bind(rv_watch_free)
+                .adapter(freeShowList_adapter)
+                .load(R.layout.loading_videos_horizontal)
+                .color(R.color.colorLine)
+                .shimmer(true)
+                .angle(30)
+                .count(30)
+                .duration(1000)
+                .frozen(false)
+                .show();
 
         //--------------------------------------------------------------------------------------------------------------------//
 
@@ -527,7 +501,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                 .frozen(false)
                 .show();
 
-        List<VideoModel> newModel = new ArrayList<>();
         pager = findViewById(R.id.vp_viewpager);
         pagerAdapter = new BannerAdapter(getApplicationContext(), this::onBannerItemClicked);
         pager.setAdapter(pagerAdapter);
@@ -561,29 +534,14 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                             //SharedPreferenceUtility.setAdMobPubIds(sessionTokenResponseModel.getBanner_id(), sessionTokenResponseModel.getRewarded_id(),sessionTokenResponseModel.getInterstitial_id(),sessionTokenResponseModel.getApp_id(),sessionTokenResponseModel.getRewarded_status(),sessionTokenResponseModel.getInterstitial_status(),sessionTokenResponseModel.getMopub_interstitial_id(),sessionTokenResponseModel.getMopub_banner_id(),"0");
 
                             SharedPreferenceUtility.setAdMobPubIds(sessionTokenResponseModel.getBanner_id(), sessionTokenResponseModel.getRewarded_id(), sessionTokenResponseModel.getInterstitial_id(), sessionTokenResponseModel.getApp_id(), sessionTokenResponseModel.getRewarded_status(), sessionTokenResponseModel.getInterstitial_status(), sessionTokenResponseModel.getMopub_interstitial_id(), sessionTokenResponseModel.getMopub_banner_id(), sessionTokenResponseModel.getMopub_interstitial_status(), sessionTokenResponseModel.getMopub_rect_banner_id());
-                            // SharedPreferenceUtility.setAdMobPubIds(sessionTokenResponseModel.getBanner_id(), sessionTokenResponseModel.getRewarded_id(),sessionTokenResponseModel.getInterstitial_id(),sessionTokenResponseModel.getApp_id(),sessionTokenResponseModel.getRewarded_status(),sessionTokenResponseModel.getInterstitial_status(),sessionTokenResponseModel.getMopub_interstitial_id(),"3936806750b3468fa4dff17bfe7a912a",sessionTokenResponseModel.getMopub_interstitial_status());
 
-                            //analytics
-                            //  firstTimeInstallAnalyticsApiCall();
-                            //  appLaunchAnalyticsApiCall();
 
-                           /* if (!SharedPreferenceUtility.getGuest()) {
-                                checkSubscription();
-                            } else {
-                                Log.d("HOME", "");
-                            }*/
                             if (!SharedPreferenceUtility.getGuest()) {
                                 checkSubscription();
                             }
                             getFeaturedVideos();
                             categoryApiCall();
-
-                            if (SharedPreferenceUtility.getGuest()) {
-                                watchForFreeShowList();
-                            } else {
-                                ll_watch_free.setVisibility(View.GONE);
-                                rv_watch_free.setVisibility(View.GONE);
-                            }
+                            watchForFreeShowList();
                             newReleases();
                             liveNow();
                             loadCategoriesHomeList();
@@ -605,7 +563,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                         });
         compositeDisposable.add(tokenDisposable);
     }
-    //SharedPreferenceUtility.getUserId()
 
     private void checkSubscription() {
 
@@ -619,8 +576,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                     if (subscriptionResponseModel.isForcibleLogout()) {
                         isFromSubsc = true;
                         loginExceededAlertSubscription();
-                    }
-                    else {
+                    } else {
                         subids.clear();
                         if (subscriptionResponseModel.getData().size() != 0) {
                             subscriptionModelList = subscriptionResponseModel.getData();
@@ -638,72 +594,10 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     }
 
     private void loginExceededAlertSubscription() {
-       /* if (dialog.isShowing()) {
-            dialog.dismiss();
-        }*/
         LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();
-    }
-
-    private void loadShows() {
-
-        //isSearch = false;
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable showsDisposable = usersService.getShows(HappiApplication.getAppToken(),
-                SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(showsResponseModel -> {
-
-                    if (showsResponseModel.getData().size() != 0) {
-
-                        if (showsResponseModel.getData().size() >= 10) {
-                            updateShows(showsResponseModel.getData().subList(0, 10));
-                        } else {
-                            updateShows(showsResponseModel.getData());
-                        }
-                    } else {
-
-                        //  ll_popular_shows.setVisibility(View.GONE);
-                        rv_shows.setVisibility(View.GONE);
-                    }
-
-                }, throwable -> {
-
-                    displayErrorLayout(getString(R.string.server_error));
-                });
-        compositeDisposable.add(showsDisposable);
-    }
-
-    private void loadLiveList() {
-
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable liveDisposable =
-                usersService.GetPopularLiveVideos(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id()
-                )
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(channelListResponse -> {
-                            if (channelListResponse.getData().isEmpty()) {
-
-                                ll_popular_live.setVisibility(View.GONE);
-                                rv_live.setVisibility(View.GONE);
-                            } else {
-
-                                if (channelListResponse.getData().size() >= 10) {
-                                    updateLiveVideos(channelListResponse.getData().subList(0, 10));
-                                } else {
-                                    updateLiveVideos(channelListResponse.getData());
-                                }
-                            }
-
-                        }, throwable -> {
-
-                            displayErrorLayout(getString(R.string.server_error));
-                        });
-        compositeDisposable.add(liveDisposable);
     }
 
     private void getFeaturedVideos() {
@@ -717,7 +611,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
                     if (showResponse.getShowModelList().size() != 0) {
                         RelativeLayout.LayoutParams rlp = new RelativeLayout.LayoutParams(width, modifiedHeight);
-                       // cv_banner.setLayoutParams(rlp);
+                        // cv_banner.setLayoutParams(rlp);
                         //  cv_banner.setPadding(-10,0,-10,0);
                         updateBannerTiles(showResponse.getShowModelList());
                     } else {
@@ -754,15 +648,12 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                     }
                 }, throwable -> {
                     apiErrorCount++;
-                    // Log.e("HOME HOME", "FREE error");
-                    // Log.w("KKK###","free");
                 });
         compositeDisposable.add(showDisposable);
     }
 
     private void newReleases() {
 
-        //isSearch = false;
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getPublisher_id())
@@ -808,6 +699,9 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                             updateLiveVideos(channelListResponse.getData());
                         }
 
+                    } else {
+                        rv_live.setVisibility(View.GONE);
+                        ll_popular_live.setVisibility(View.GONE);
                     }
 
                 }, throwable -> {
@@ -848,9 +742,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                     }
 
                 }, throwable -> {
-                    // Log.w("KKK###","cat");
                     apiErrorCount++;
-                    // Log.e("HOME HOME", "THEMES error");
                     Toast.makeText(HomeActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
 
                 });
@@ -860,80 +752,15 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             HappiApplication.setIsFromLink(false);
             Intent show = new Intent(HomeActivity.this, ShowDetailsActivity.class);
             show.putExtra(ConstantUtils.SHOW_ID, showId);
+            show.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(show);
-            overridePendingTransition(0,0);
+            overridePendingTransition(0, 0);
             showId = "empty";
         }
     }
 
-/*
-    private void loadCategories() {
-
-        //isSearch = false;
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.GetCategories(HappiApplication.getAppToken(),
-                SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(categoryListResponseModel -> {
-
-                    if (categoryListResponseModel.getData().size() != 0) {
-
-                        if (categoryListResponseModel.getData().size() >= 10) {
-
-                            updateCategoryList(categoryListResponseModel.getData().subList(0,10));
-                        } else {
-
-                            updateCategoryList(categoryListResponseModel.getData());
-                        }
-                    } else {
-
-                        ll_category_list.setVisibility(View.GONE);
-                        rv_category_list.setVisibility(View.GONE);
-                    }
-                    //loadSuggestedChannels();
-                }, throwable -> {
-
-                    displayErrorLayout(getString(R.string.server_error));
-                });
-        compositeDisposable.add(videoDisposable);
-    }
-*/
-
-    private void loadSuggestedChannels() {
-
-        //isSearch = false;
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable =
-                usersService.PopularChannels(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(channelListResponse -> {
-
-                            if (channelListResponse.getData().size() != 0) {
-
-                                if (channelListResponse.getData().size() >= 10) {
-
-                                    populateSuggestion(channelListResponse.getData().subList(0, 10));
-                                } else {
-                                    populateSuggestion(channelListResponse.getData());
-                                }
-                            } else {
-
-                                ll_popular_channels.setVisibility(View.GONE);
-                                rv_more_channels.setVisibility(View.GONE);
-                            }
-                            loadCategoriesHomeList();
-                        }, throwable -> {
-
-                            displayErrorLayout(getString(R.string.server_error));
-                        });
-        compositeDisposable.add(videoDisposable);
-    }
-
     private void loadCategoriesHomeList() {
 
-        //isSearch = false;
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable homeVideoDisposable = usersService.GetHomeVideo(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getPublisher_id())
@@ -988,43 +815,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         }
     }
 
-    private boolean checkIfAdapterEmpty() {
-        adapterEmptyCount = 0;
-       /* if(pagerAdapter!= null && pagerAdapter.isEmpty()){
-            adapterEmptyCount++;
-        }else if(freeShowList_adapter!= null && freeShowList_adapter.isEmpty()){
-            adapterEmptyCount++;
-        }else if(videoList_adapter!= null && videoList_adapter.isEmpty()){
-            adapterEmptyCount++;
-        }else if(liveChannelsAdapter!=null && liveChannelsAdapter.isEmpty()){
-            adapterEmptyCount++;
-        }else if(categoryList_adapter!=null && categoryList_adapter.isEmpty()){
-            adapterEmptyCount++;
-        }else if(!homeLoaded){
-            adapterEmptyCount++;
-        }
-        return adapterEmptyCount != 0;*/
-
-        if (pagerAdapter == null || pagerAdapter.isEmpty()) {
-            adapterEmptyCount++;
-        } else if (SharedPreferenceUtility.getGuest()) {
-            if (freeShowList_adapter == null || freeShowList_adapter.isEmpty()) {
-                adapterEmptyCount++;
-            }
-        } else if (videoList_adapter == null || videoList_adapter.isEmpty()) {
-            adapterEmptyCount++;
-        } else if (liveChannelsAdapter == null || liveChannelsAdapter.isEmpty()) {
-            adapterEmptyCount++;
-            // }else if(categoryList_adapter==null || categoryList_adapter.isEmpty()){
-        } else if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {
-            adapterEmptyCount++;
-        } else if (!homeLoaded) {
-            adapterEmptyCount++;
-        }
-        return adapterEmptyCount != 0;
-    }
-
-    //private void updateBannerTiles(List<VideoModel> videoModel) {
     private void updateBannerTiles(List<FeaturedShowsModel> showModel) {
 
         if (showModel.size() > 5) {
@@ -1033,23 +823,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             pagerAdapter.addAll(showModel);
         }
         pagerAdapter.notifyDataSetChanged();
-    }
-
-    private void updateShows(List<ShowsResponseModel.ShowData> showData) {
-
-        showsAdapter.clearAll();
-        showsAdapter.addAll(showData);
-        loadingShows.hide();
-        SnapHelper snapHelper;
-        snapHelper = new GravitySnapHelper(Gravity.START);
-        snapHelper.attachToRecyclerView(rv_shows);
-        showsAdapter.notifyDataSetChanged();
-        runLayoutAnimation(rv_shows, mSelectedItem);
-        if (showsAdapter.isEmpty()) {
-
-            rv_shows.setVisibility(View.GONE);
-        }
-        //return true;
     }
 
     private void updateLiveVideos(List<ChannelModel> channelData) {
@@ -1063,14 +836,13 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         liveChannelsAdapter.notifyDataSetChanged();
         runLayoutAnimation(rv_live, mSelectedItem);
         if (liveChannelsAdapter.isEmpty()) {
-
             rv_live.setVisibility(View.GONE);
+            ll_popular_live.setVisibility(View.GONE);
         }
 
         //return true;
     }
 
-    //private void updateVideoDataList(List<VideoModel> videoModelList) {
     private void updateVideoDataList(List<ShowModel> videoModelList) {
 
         videoList_adapter.clearAll();
@@ -1083,6 +855,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         runLayoutAnimation(rv_video_grid, mSelectedItem);
         if (videoList_adapter.isEmpty()) {
 
+            ll_popular_videos.setVisibility(View.GONE);
             rv_video_grid.setVisibility(View.GONE);
         }
 
@@ -1101,6 +874,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         runLayoutAnimation(rv_watch_free, mSelectedItem);
         if (freeShowList_adapter.isEmpty()) {
 
+            ll_watch_free.setVisibility(View.GONE);
             rv_watch_free.setVisibility(View.GONE);
         }
 
@@ -1118,29 +892,12 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
         if (circleViewAdapter.isEmpty()) {
 
+            ll_category_list.setVisibility(View.GONE);
             rv_category_list.setVisibility(View.GONE);
         } else {
             homeLoaded = true;
         }
 
-    }
-
-    private void populateSuggestion(List<ChannelModel> data) {
-
-        channelListAdapter.clearAll();
-        channelListAdapter.addAll(data);
-        loadingChannels.hide();
-        channelListAdapter.notifyDataSetChanged();
-        SnapHelper snapHelper;
-        snapHelper = new GravitySnapHelper(Gravity.START);
-        snapHelper.attachToRecyclerView(rv_more_channels);
-        runLayoutAnimation(rv_more_channels, mSelectedItem);
-        if (channelListAdapter.isEmpty()) {
-
-            rv_more_channels.setVisibility(View.GONE);
-        }
-
-        //return true;
     }
 
     private void populateCategoryHomeList(List<CategoriesHomeListVideoModel> categoriesHomeListVideoModelList) {
@@ -1155,203 +912,24 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     }
 
 
-
-    /*@SuppressLint("CheckResult")
-    private void setLandingPage(){
-
-        ApiClient.UsersService backendApi = ApiClient.create();
-        List<Observable<?>> requests = new ArrayList<>();
-
-        requests.add(backendApi.GetFeaturedvideo(HappiApplication.getAppToken(), userId,
-                HappiApplication.getCountryCode()));
-        requests.add(backendApi.getShows(HappiApplication.getAppToken()));
-        requests.add(backendApi.GetPopularLiveVideos(HappiApplication.getAppToken(),
-                HappiApplication.getCountryCode()));
-        requests.add(backendApi.PopularVideos(HappiApplication.getAppToken(), userId,
-                HappiApplication.getCountryCode()));
-        requests.add(backendApi.GetCategories(HappiApplication.getAppToken(),
-                HappiApplication.getCountryCode()));
-        requests.add(backendApi.PopularChannels(HappiApplication.getAppToken(),
-                HappiApplication.getCountryCode()));
-        requests.add(backendApi.GetHomeVideo(userId,
-                HappiApplication.getCountryCode()));
-
-        Observable.zip(requests, new Function<Object[], Object>() {
-            @Override
-            public Object apply(Object[] objects) throws Exception {
-
-                Log.e("TAG",">>>>>>0 "+objects[0]);
-                Log.e("TAG",">>>>>>1 "+objects[1]);
-                Log.e("TAG",">>>>>>2 "+objects[2]);
-                Log.e("TAG",">>>>>>3 "+objects[3]);
-                Log.e("TAG",">>>>>>4 "+objects[4]);
-                Log.e("TAG",">>>>>>5 "+objects[5]);
-                Log.e("TAG",">>>>>>6 "+objects[6]);
-
-                if (objects[0] instanceof VideoResponse) {
-                    Log.e("TAG",">>>>>> "+objects[0]);
-                    VideoResponse videoResponse = (VideoResponse)objects[0];
-                    if (videoResponse.getData().size() != 0) {
-
-                        updateBannerTiles(videoResponse.getData());
-                        Log.e("TAG",">>>>>> 0 Updated");
-                    } else {
-                        cv_banner.setVisibility(View.GONE);
-                    }
-
-                }
-                if(objects[1] instanceof ShowsResponseModel){
-                    Log.e("TAG",">>>>>> "+objects[1]);
-                    ShowsResponseModel showsResponseModel = (ShowsResponseModel)objects[1];
-                    if (showsResponseModel.getData().size() != 0) {
-
-                        updateShows(showsResponseModel.getData().subList(0, 10));
-                        Log.e("TAG",">>>>>> 1 Updated");
-                    } else {
-
-                        ll_popular_shows.setVisibility(View.GONE);
-                        rv_shows.setVisibility(View.GONE);
-                    }
-
-                }
-
-                if(objects[2] instanceof ChannelListResponse){
-                    Log.e("TAG",">>>>>> "+objects[2]);
-                    ChannelListResponse channelListResponse = (ChannelListResponse)objects[2];
-                    if (channelListResponse.getData().isEmpty()) {
-
-                        ll_popular_live.setVisibility(View.GONE);
-                        rv_live.setVisibility(View.GONE);
-                    } else {
-
-                        updateLiveVideos(channelListResponse.getData());
-                        Log.e("TAG",">>>>>> 2 Updated");
-                    }
-
-                }
-                if(objects[3] instanceof VideoResponse){
-                    Log.e("TAG",">>>>>> "+objects[3]);
-                    VideoResponse videoResponse = (VideoResponse)objects[3];
-                    if (videoResponse.getData().size() != 0) {
-
-                        updateVideoDataList(videoResponse.getData().subList(0, 10));
-                        Log.e("TAG",">>>>>> 3 Updated");
-                    } else {
-
-                        ll_popular_videos.setVisibility(View.GONE);
-                        rv_video_grid.setVisibility(View.GONE);
-                    }
-
-                }
-                if(objects[4] instanceof CategoryListResponseModel){
-                    Log.e("TAG",">>>>>> "+objects[4]);
-                    CategoryListResponseModel categoryListResponseModel = (CategoryListResponseModel)objects[4];
-                    if (categoryListResponseModel.getData().size() != 0) {
-
-                        updateCategoryList(categoryListResponseModel.getData());
-                        Log.e("TAG",">>>>>> 4 Updated");
-                    } else {
-
-                        ll_category_list.setVisibility(View.GONE);
-                        rv_category_list.setVisibility(View.GONE);
-                    }
-
-                }
-                if(objects[5] instanceof ChannelListResponse){
-                    Log.e("TAG",">>>>>> "+objects[5]);
-                    ChannelListResponse channelListResponse = (ChannelListResponse)objects[5];
-                    if (channelListResponse.getData().size() != 0) {
-
-                        populateSuggestion(channelListResponse.getData().subList(0, 10));
-                        Log.e("TAG",">>>>>> 5 Updated");
-                    } else {
-
-                        ll_popular_channels.setVisibility(View.GONE);
-                        rv_more_channels.setVisibility(View.GONE);
-                    }
-
-                }
-                if(objects[6] instanceof CategorisHomeListResponseModel){
-                    Log.e("TAG",">>>>>> "+objects[6]);
-                    CategorisHomeListResponseModel categorisHomeListResponseModel = (CategorisHomeListResponseModel)objects[6];
-                    if (categorisHomeListResponseModel.getCategoriesList().size() != 0) {
-
-                        if (categorisHomeListResponseModel.getCategoriesList().size() >= 10) {
-                            populateCategoryHomeList(categorisHomeListResponseModel.getCategoriesList().subList(0,
-                                    10));
-                        } else {
-                            populateCategoryHomeList(categorisHomeListResponseModel
-                                    .getCategoriesList());
-                        }
-                        Log.e("TAG",">>>>>> 6 Updated");
-                    } else {
-
-                        rv_categories_home_list.setVisibility(View.GONE);
-                    }
-                }
-
-
-                return new Object();
-            }
-        })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                // After all requests had been performed the next observer will receive the Object, returned from Function
-                .subscribe(
-                        // Will be triggered if all requests will end successfully (4xx and 5xx also are successful requests too)
-                        new Consumer<Object>() {
-                            @Override
-                            public void accept(Object o) throws Exception {
-                                Log.e("OBJECT",">>>>>> "+o);
-                            }
-                        },
-
-                        // Will be triggered if any error during requests will happen
-                        new Consumer<Throwable>() {
-                            @Override
-                            public void accept(Throwable e) throws Exception {
-                                //Do something on error completion of requests
-                            }
-                        }
-                );
-    }*/
-
     private void displayErrorLayout(String message) {
-        if (apiErrorCount > 4) {
+        if (apiErrorCount == 6) {
             cv_banner.setVisibility(View.GONE);
             rv_more_channels.setVisibility(View.GONE);
             rv_video_grid.setVisibility(View.GONE);
             rv_category_list.setVisibility(View.GONE);
             rv_live.setVisibility(View.GONE);
-            rv_shows.setVisibility(View.GONE);
             rv_categories_home_list.setVisibility(View.GONE);
             ll_popular_channels.setVisibility(View.GONE);
             ll_category_list.setVisibility(View.GONE);
             ll_popular_videos.setVisibility(View.GONE);
             ll_popular_live.setVisibility(View.GONE);
-            //  ll_popular_shows.setVisibility(View.GONE);
 
+            ll_error_home.setVisibility(View.VISIBLE);
             iv_errorimg.setVisibility(View.VISIBLE);
             tv_errormsg.setVisibility(View.VISIBLE);
             tv_errormsg.setText(message);
         }
-
-       /* cv_banner.setVisibility(View.GONE);
-        rv_more_channels.setVisibility(View.GONE);
-        rv_video_grid.setVisibility(View.GONE);
-        rv_category_list.setVisibility(View.GONE);
-        rv_live.setVisibility(View.GONE);
-        rv_shows.setVisibility(View.GONE);
-        rv_categories_home_list.setVisibility(View.GONE);
-        ll_popular_channels.setVisibility(View.GONE);
-        ll_category_list.setVisibility(View.GONE);
-        ll_popular_videos.setVisibility(View.GONE);
-        ll_popular_live.setVisibility(View.GONE);
-        //  ll_popular_shows.setVisibility(View.GONE);
-
-        iv_errorimg.setVisibility(View.VISIBLE);
-        tv_errormsg.setVisibility(View.VISIBLE);
-        tv_errormsg.setText(message);*/
     }
 
     private void runLayoutAnimation(final RecyclerView recyclerView, final AnimationItem item) {
@@ -1374,7 +952,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     protected void onPause() {
         super.onPause();
         timer.cancel();
-        //releasePlayer();
     }
 
     public void onBackPressed() {
@@ -1391,7 +968,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // isFreeShow = false;
         safelyDispose(compositeDisposable);
     }
 
@@ -1405,31 +981,18 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onShowsItemClicked(int adapterPosition) {
-        /*Intent showIntent = new Intent(HomeActivity.this, ShowDetailsActivity.class);
-        ShowModel showModel  = freeShowList_adapter.getItem(adapterPosition);
-        HappiApplication.setIsFeaturedShow(false);
-        HappiApplication.setShowModel(showModel);
-        SharedPreferenceUtility.setShowId(showModel.getShow_id());
-        HappiApplication.setRedirect("");
-        showIntent.putExtra("from","home");
-        startActivity(showIntent);
-        finish();*/
         HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(freeShowList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, freeShowList_adapter.getItem(adapterPosition).getShow_id());
-        //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         overridePendingTransition(0, 0);
     }
 
     @Override
     public void onItemClicked(int adapterPosition) {
-        //releasePlayer();
-        // ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoList_adapter.getItem(adapterPosition).getShow_id());
         HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(videoList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, videoList_adapter.getItem(adapterPosition).getShow_id());
-      //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         overridePendingTransition(0, 0);
 
@@ -1437,7 +1000,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onCategoryItemClicked(int adapterPosition) {
-        //releasePlayer();
         HappiApplication.setRedirect("");
         HappiApplication.setCategoryId(categoryList_adapter.getItem(adapterPosition).getCategoryid()
                 + ";" + categoryList_adapter.getItem(adapterPosition).getCategory());
@@ -1445,32 +1007,22 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                 .getItem(adapterPosition).getCategoryid() + ";" + categoryList_adapter.getItem
                 (adapterPosition).getCategory());
 
-       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         overridePendingTransition(0, 0);
     }
 
     @Override
     public void onSuggestedItemClicked(int adapterPosition) {
-        // releasePlayer();
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, channelListAdapter.getItem(adapterPosition).getChannelId());
-
-      //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         overridePendingTransition(0, 0);
     }
 
     @Override
     public void onBannerItemClicked(int adapterPosition) {
-        // releasePlayer();
-
-
-//       ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, pagerAdapter.getItem
-//                (adapterPosition).getVideo_id());
         HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(pagerAdapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, pagerAdapter.getItem(adapterPosition).getShow_id());
-       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
         overridePendingTransition(0, 0);
 
@@ -1478,12 +1030,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onShowItemClicked(int adapterPosition) {
-
-//        ActivityChooser.goToActivity(ConstantUtils.SHOWSVIDEO_ACTIVITY, showsAdapter
-//                .getItem(adapterPosition).getShow_id() + ";" + showsAdapter.getItem
-//                (adapterPosition).getShow_name());
-//
-//        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
     }
 
@@ -1520,8 +1066,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     public void onRewardedVideoAdClosed() {
 
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, commonVideoOrChannelId);
-       // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
         overridePendingTransition(0, 0);
 
 
@@ -1560,10 +1104,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
 
-        //  String adId = HappiApplication.getAdvertisingId_fromThread();
-        //  Log.e("ADID***",": "+adId+", session: "+SharedPreferenceUtility.getSession_Id());
-
-
         boolean isExist = sharedPreferences.contains("isFirstTimeInstall");
         if (!isExist) {
             SharedPreferenceUtility.setIsFirstTimeInstall(true);
@@ -1580,17 +1120,14 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             if (ipAddress.isEmpty()) {
                 ipAddress = getNetworkIP();
             }
-            // Log.e("1234###","ipAddress: "+ipAddress);
             String userAgent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
             String deviceId = SharedPreferenceUtility.getAdvertisingId();
-            //  Log.e("1234###","userAgent: "+userAgent);
 
             JsonObject details = new JsonObject();
             details.addProperty("timestamp", String.valueOf(epoch));
             details.addProperty("user_id", String.valueOf(SharedPreferenceUtility.getUserId()));
             details.addProperty("device_id", deviceId);
             details.addProperty("device_type", "Android");
-            //  details.addProperty("session_id", "");
             details.addProperty("latitude", String.valueOf(HappiApplication.getLatitude()));
             details.addProperty("longitude", String.valueOf(HappiApplication.getLongitude()));
             details.addProperty("country", HappiApplication.getCountry());
@@ -1610,12 +1147,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             details.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
 
 
-            /*AnalyticsApi.AnalyticsService analyticsService = AnalyticsApi.create();
-            Disposable analyticsDisposable = analyticsService.firstTimeInstall(details)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe();
-            compositeDisposable.add(analyticsDisposable);*/
             try {
                 Log.e("000##", " FRST: " + "api about to call");
                 AnalyticsApi.AnalyticsServiceScalar analyticsServiceScalar = AnalyticsApi.createScalar();
@@ -1671,7 +1202,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         if (isMobileData) {
             ipAddress = getMobileIpAddress();
         }
-        //Log.e("1234###","ipAddressFinal: "+ipAddressFinal);
         return ipAddress;
     }
 
@@ -1746,88 +1276,19 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             }
         }
     }
-  /*  private void logoutApiCall() {
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable logoutDisposable = usersService.logout(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
-                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(logoutResponseModel -> {
 
-                    if (logoutResponseModel.getStatus() == 100) {
-                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
-                        SharedPreferenceUtility.setGuest(false);
-                        SharedPreferenceUtility.setChannelId(0);
-                        SharedPreferenceUtility.setVideoId(0);
-                      //  SharedPreferenceUtility.setLanguage("");
-                        SharedPreferenceUtility.setNightMode(true);
-                        HappiApplication.setSub_id(new ArrayList<>());
-
-                        et_email.setText("");
-                        et_password.setText("");
-                        et_email.requestFocus();
-
-                    } else {
-
-                        Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
-                        Log.e("Logout", "api call failed");
-                    }
-
-                }, throwable -> {
-
-                    Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
-                    Log.e("Logout", "api call failed");
-                });
-
-        compositeDisposable.add(logoutDisposable);
-    }
-
-    private void logoutAllApiCall() {
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable logoutDisposable = usersService.logoutAll(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
-                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(logoutResponseModel -> {
-
-                    if (logoutResponseModel.getStatus() == 100) {
-                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
-                        SharedPreferenceUtility.setGuest(false);
-                        SharedPreferenceUtility.setChannelId(0);
-                        SharedPreferenceUtility.setVideoId(0);
-                       // SharedPreferenceUtility.setLanguage("");
-                        SharedPreferenceUtility.setNightMode(true);
-                        HappiApplication.setSub_id(new ArrayList<>());
-
-                        et_email.setText("");
-                        et_password.setText("");
-                        et_email.requestFocus();
-
-                    } else {
-
-                        Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
-                        Log.e("Logout", "api call failed");
-                    }
-
-                }, throwable -> {
-
-                    Toast.makeText(HappiApplication.getCurrentContext(), "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
-                    Log.e("Logout", "api call failed");
-                });
-
-        compositeDisposable.add(logoutDisposable);
-    }*/
     @Override
     public void onLogoutClicked() {
         if (isFromSubsc) {
-           // logoutApiCall();
+            // logoutApiCall();
         }
     }
 
     @Override
     public void onLogoutAllClicked() {
-      //  logoutAllApiCall();
+        //  logoutAllApiCall();
     }
+
     @Override
     public void onCategoryItemClickedForCircleView(int adapterPosition) {
         HappiApplication.setRedirect("");
@@ -1837,7 +1298,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                 .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
                 (adapterPosition).getCategory());
 
-      //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
     }
 
@@ -1857,23 +1317,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         }
     }
 
-
-
-
-
-
-
-
-    /*   private void ipAddressApiCall(){
-        ApiClient.IpAddressApiService ipAddressApiService = ApiClient.createIPService();
-        Disposable ipAddrDisposable = ipAddressApiService.fetchIPAddress()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(responseModel ->{
-                    HappiApplication.setIpAddress(responseModel.getQuery());
-                },throwable -> {});
-        compositeDisposable.add(ipAddrDisposable);
-    }*/
 
     //async task for advertising id
     public static class AdvertisingIdAsyncTask extends AsyncTask<Void, Void, Void> {

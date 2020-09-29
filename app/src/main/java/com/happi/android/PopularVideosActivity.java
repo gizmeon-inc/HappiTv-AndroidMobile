@@ -109,8 +109,12 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
         compositeDisposable = new CompositeDisposable();
         setupRecyclerview();
 
-        iv_back.setOnClickListener(v ->
-                PopularVideosActivity.super.onBackPressed());
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
 
     }
 

@@ -18,7 +18,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_toolbar">
+        android:layout_below="@+id/rl_toolbar"
+        android:layout_marginBottom="?attr/actionBarSize">
         <LinearLayout
             android:id="@+id/ll_error"
             android:layout_width="match_parent"

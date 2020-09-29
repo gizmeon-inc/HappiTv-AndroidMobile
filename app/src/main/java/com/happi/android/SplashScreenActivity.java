@@ -24,6 +24,7 @@ import com.happi.android.common.BaseActivity;
 import com.happi.android.common.LocationTrack;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.utils.AppUtils;
+import com.happi.android.utils.ConstantUtils;
 import com.happi.android.webservice.ApiClient;
 
 import java.text.ParseException;
@@ -53,11 +54,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     LocationTrack locationTrack;
     //===============================================
 
-   // private String appKey="111";
-   // private String bundleId="999";
 
-     private String appKey="happifilms";
-     private String bundleId="com.happifilms.androidtest";
+
 
     CompositeDisposable compositeDisposable;
     String showId = "empty";
@@ -125,7 +123,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
     private void getPubID() {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable pubidDisposable = usersService.getPubID( appKey,bundleId)
+        Disposable pubidDisposable = usersService.getPubID(ConstantUtils.appKey,ConstantUtils.bundleId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(publisherModel ->{
@@ -152,8 +150,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
     private void setCredentials()
     {
-        SharedPreferenceUtility.setAppkey(appKey);
-        SharedPreferenceUtility.setBundleId(bundleId);
+        SharedPreferenceUtility.setAppkey(ConstantUtils.appKey);
+        SharedPreferenceUtility.setBundleId(ConstantUtils.bundleId);
     }
     private void goToLoginPage() {
         Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
@@ -285,7 +283,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
         ApiClient.TokenService tokenService = ApiClient.token();
         Disposable tokenDisposable =
-                tokenService.getSessionToken(SharedPreferenceUtility.getUserId(),appKey,bundleId)
+                tokenService.getSessionToken(SharedPreferenceUtility.getUserId(),ConstantUtils.appKey,ConstantUtils.bundleId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(sessionTokenResponseModel -> {

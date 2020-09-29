@@ -81,8 +81,7 @@ public class WebViewActivity extends BaseActivity {
         });
 
         iv_back.setOnClickListener(v -> {
-
-            super.onBackPressed();
+            onBackPressed();
         });
     }
 

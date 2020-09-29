@@ -100,7 +100,7 @@ public class BaseActivity extends AppCompatActivity {
             }
         };
         btm_navigation.setOnNavigationItemSelectedListener(navListener);
-        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
     }
 
     protected void onCreateDrawer() {
@@ -276,6 +276,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void goToHomePage() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -283,6 +284,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void goToChannels() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), ChannelsListingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -296,6 +298,7 @@ public class BaseActivity extends AppCompatActivity {
      }*/
     private void goToPremium() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), PremiumActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -304,6 +307,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void goToWatchHistory() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), WatchHistoryActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -312,6 +316,7 @@ public class BaseActivity extends AppCompatActivity {
     private void goToWebView(String value) {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), WebViewActivity.class);
         intent.putExtra("web_view_select", value);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -319,6 +324,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void goToSettings() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), SettingsActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -326,6 +332,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void goToLive() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), LiveVideoListingActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -334,6 +341,7 @@ public class BaseActivity extends AppCompatActivity {
     private void goToShowListingPage(String pageContext) {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), WatchListActivity.class);
         intent.putExtra("pageContext", pageContext);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);
@@ -341,6 +349,7 @@ public class BaseActivity extends AppCompatActivity {
 
     private void goToShowPayPerViewPage() {
         Intent intent = new Intent(HappiApplication.getCurrentContext(), PayPerViewVideoListActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         // overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0, 0);

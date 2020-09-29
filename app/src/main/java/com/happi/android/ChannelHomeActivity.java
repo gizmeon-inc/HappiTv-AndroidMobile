@@ -376,7 +376,7 @@ public class ChannelHomeActivity extends BaseActivity implements View.OnClickLis
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(timerSChedule != null) {
+                /*if(timerSChedule != null) {
                     timerSChedule.cancel();
                 }
                 if(HappiApplication.isIsNewSubscriber()){
@@ -384,8 +384,8 @@ public class ChannelHomeActivity extends BaseActivity implements View.OnClickLis
                 }else{
                     ChannelHomeActivity.super.onBackPressed();
                     finish();
-                }
-
+                }*/
+                onBackPressed();
             }
         });
         progressDialog = new ProgressDialog(this, R.style.MyTheme);

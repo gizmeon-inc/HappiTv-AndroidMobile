@@ -98,8 +98,13 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
         compositeDisposable = new CompositeDisposable();
         setupRecyclerview();
 
-        iv_back.setOnClickListener(v ->
-                CategoriesListActivity.super.onBackPressed());
+        iv_back.setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View view) {
+                                           onBackPressed();
+                                       }
+                                   });
+
     }
 
     private void setupRecyclerview() {

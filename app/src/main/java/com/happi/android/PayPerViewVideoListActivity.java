@@ -127,7 +127,7 @@ public class PayPerViewVideoListActivity extends BaseActivity implements PayPerV
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PayPerViewVideoListActivity.super.onBackPressed();
+                onBackPressed();
             }
         });
 

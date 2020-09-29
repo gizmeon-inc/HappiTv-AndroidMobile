@@ -45,7 +45,7 @@
                 android:maxLength="30"
                 android:paddingLeft="@dimen/dimen_8dp"
                 android:windowSoftInputMode="adjustPan"
-                android:textColor="@color/dark_black"/>
+                android:textColor="@color/black"/>
 
             <ProgressBar
                 android:id="@+id/pb_progressbar"
@@ -69,16 +69,6 @@
 
     </androidx.recyclerview.widget.RecyclerView>
 
-    <!--  <com.google.android.material.bottomnavigation.BottomNavigationView
-          android:id="@+id/btm_navigation"
-          android:layout_width="match_parent"
-          android:layout_height="?attr/actionBarSize"
-          android:layout_alignParentBottom="true"
-          android:background="@color/btm_nav"
-          app:itemIconTint="@color/bottom_nav_color"
-          app:itemTextColor="@color/bottom_nav_color"
-          app:layout_scrollFlags="scroll|enterAlways|snap"
-          app:menu="@menu/bottom_bar" />-->
 
 
 
@@ -102,7 +92,8 @@
         android:layout_marginTop="@dimen/dimen_5dp"
         android:padding="@dimen/dimen_10dp"
         android:visibility="gone"
-        android:textColor="@color/error_tint"/>
+        android:textColor="@color/error_tint"
+        android:layout_marginBottom="?attr/actionBarSize"/>
 
     <com.happi.android.recyclerview.GridRecyclerView
         android:id="@+id/rv_search_result"

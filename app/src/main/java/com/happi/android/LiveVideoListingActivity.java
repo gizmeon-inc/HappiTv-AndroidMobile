@@ -92,7 +92,7 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
         iv_back.setOnClickListener(v -> {
 
             //backPressed
-            LiveVideoListingActivity.super.onBackPressed();
+            onBackPressed();
         });
     }
 

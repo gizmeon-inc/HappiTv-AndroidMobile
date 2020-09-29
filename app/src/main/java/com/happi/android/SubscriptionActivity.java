@@ -401,7 +401,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             public void onClick(View v) {
                 SubscriptionActivity.super.onBackPressed();
                 finish();
-
+                overridePendingTransition(0,0);
             }
         });
 
@@ -832,6 +832,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         if(getIntent() != null && ((getIntent().getStringExtra("from") != null) && (!getIntent().getStringExtra("from").isEmpty()))){
             intent.putExtra("from" , getIntent().getStringExtra("from"));
         }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
     private void goToRegisterScreen(){
@@ -839,6 +840,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         if(getIntent() != null && ((getIntent().getStringExtra("from") != null) && (!getIntent().getStringExtra("from").isEmpty()))){
             intent.putExtra("from" , getIntent().getStringExtra("from"));
         }
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
     }
 
@@ -1003,8 +1005,10 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             progressDialog.dismiss();
         }
         Intent intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
+        overridePendingTransition(0,0);
     }
 
     private void goToPlayer() {
@@ -1028,9 +1032,10 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         }else{
             intent = new Intent(SubscriptionActivity.this, HomeActivity.class);
         }
-
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
+        overridePendingTransition(0,0);
     }
 
     @Override
@@ -1050,5 +1055,11 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             finish();
             overridePendingTransition(0,0);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        HappiApplication.setCurrentContext(this);
     }
 }

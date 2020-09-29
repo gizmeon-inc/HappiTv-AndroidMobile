@@ -37,8 +37,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
 import com.happi.android.adapters.ShowList_adapter;
-import com.happi.android.adapters.VideoListAdapter_New;
-import com.happi.android.adapters.VideoList_adapter;
 import com.happi.android.cast.ExpandedControlsActivity;
 import com.happi.android.common.ActivityChooser;
 import com.happi.android.common.AdvertisingIdAsyncTask;
@@ -104,7 +102,6 @@ import com.google.android.gms.cast.Cast;
 import com.google.android.gms.cast.CastDevice;
 import com.google.android.gms.cast.MediaInfo;
 import com.google.android.gms.cast.MediaLoadOptions;
-import com.google.android.gms.cast.MediaLoadRequestData;
 import com.google.android.gms.cast.MediaMetadata;
 import com.google.android.gms.cast.MediaTrack;
 import com.google.android.gms.cast.framework.CastButtonFactory;
@@ -145,7 +142,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class VideoPlayerActivity extends BaseActivity implements View.OnClickListener,
-        VideoList_adapter.itemClickListener, AdErrorEvent.AdErrorListener, AdEvent.AdEventListener, Cast.MessageReceivedCallback,
+        AdErrorEvent.AdErrorListener, AdEvent.AdEventListener, Cast.MessageReceivedCallback,
         ShowList_adapter.itemClickListener {
 
     private String token = "";
@@ -180,8 +177,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private CheckBox iv_heart;
     private GridRecyclerView rv_more_videos;
     private TypefacedTextViewRegular tv_errormsg;
-    private NestedScrollView sv_scrollview;
-    private VideoListAdapter_New videoList_adapterNew;
     private ShowList_adapter showsAdapter;
     private CompositeDisposable compositeDisposable;
     private SkeletonScreen loadingChannels;
@@ -240,6 +235,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private TypefacedTextViewRegular tv_video_desc;
     private boolean isVideoDescVisible = false;
     private boolean isVideoDescAvailable = false;
+    //bottom navigation view
+    private RelativeLayout rl_btm_navigation_video;
 
     public void loadRemoteMedia() {
         Log.e("CAST", "loadRemoteMedia called");
@@ -415,6 +412,10 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
 
+        rl_btm_navigation_video = findViewById(R.id.rl_btm_navigation_video);
+        rl_btm_navigation_video.setVisibility(View.VISIBLE);
+
+
         userId = SharedPreferenceUtility.getUserId();
         Intent intent = getIntent();
         videoId = intent.getIntExtra(ConstantUtils.VIDEO_DETAILS, 0);
@@ -440,7 +441,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         rv_more_videos = findViewById(R.id.rv_more_videos);
         tv_errormsg = findViewById(R.id.tv_errormsg);
-        sv_scrollview = findViewById(R.id.sv_scrollview);
 
         //video description
         rl_video_metadata = findViewById(R.id.rl_video_metadata);
@@ -504,22 +504,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (timerSChedule != null) {
-                    timerSChedule.cancel();
-                }
-                releasePlayer();
-                if (exoPlayer != null) {
-                    exoPlayer.stop();
-
-                }
-
-
-                if (HappiApplication.isIsNewSubscriber()) {
-                    goToHome();
-                } else {
-                    VideoPlayerActivity.super.onBackPressed();
-                    finish();
-                }
+               onBackPressed();
             }
         });
 
@@ -1364,6 +1349,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         //Intent intent = new Intent(VideoPlayerActivity.this, PremiumVideoDetailsActivity.class);
         Intent intent = new Intent(VideoPlayerActivity.this, SubscriptionActivity.class);
         intent.putExtra("from", "videoPlayer");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
         overridePendingTransition(0, 0);
@@ -1597,6 +1583,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         rl_exoplayer_parent.setPadding(0, 0, 0, 0);
 
         rl_exoplayer_parent.setLayoutParams(params);
+
+        rl_btm_navigation_video.setVisibility(View.GONE);
         rl_toolbar.setVisibility(View.GONE);
         ll_video_actions.setVisibility(View.GONE);
         rl_video_grid.setVisibility(View.GONE);
@@ -1631,6 +1619,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         rl_exoplayer_parent.setPadding(0, 0, 0, 0);
 
         rl_exoplayer_parent.setLayoutParams(params);
+        rl_btm_navigation_video.setVisibility(View.VISIBLE);
         rl_toolbar.setVisibility(View.VISIBLE);
         ll_video_actions.setVisibility(View.GONE);
         rl_video_grid.setVisibility(View.VISIBLE);
@@ -1670,8 +1659,10 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     public void goToHome() {
         Intent intentH = new Intent(VideoPlayerActivity.this, HomeActivity.class);
+        intentH.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intentH);
         finish();
+        overridePendingTransition(0,0);
     }
 
     @Override
@@ -1734,14 +1725,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         };
     }
 
-    @Override
-    public void onItemClicked(int adapterPosition) {
-
-        videoId = videoList_adapterNew.getItem(adapterPosition).getVideo_id();
-        ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoId);
-
-
-    }
 
     @Override
     public void onAdEvent(AdEvent adEvent) {
@@ -1853,7 +1836,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         HappiApplication.setShowId(showsAdapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, showsAdapter.getItem(adapterPosition).getShow_id());
         finish();
-
     }
 
     private void callAddErrorAnalyticsApi(String errorCode, String errorMessage) {

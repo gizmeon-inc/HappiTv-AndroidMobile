@@ -23,7 +23,8 @@
         android:layout_below="@+id/rl_toolbar"
         android:gravity="center_horizontal"
         android:padding="@dimen/dimen_5dp"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <WebView
             android:id="@+id/wv_subscription"
@@ -42,7 +43,8 @@
         android:layout_below="@+id/rl_toolbar"
         android:layout_gravity="center"
         android:background="@color/dark_black"
-        android:visibility="gone">
+        android:visibility="gone"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <ImageView
             android:layout_width="@dimen/dimen_300dp"
@@ -59,7 +61,8 @@
         android:id="@+id/rl_btm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <include layout="@layout/bottom_sheet" />
     </RelativeLayout>
@@ -67,7 +70,8 @@
     <RelativeLayout
         android:id="@+id/rl_otp_screen"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <include layout="@layout/layout_otp_verification"></include>
 

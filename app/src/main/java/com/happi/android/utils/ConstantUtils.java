@@ -40,6 +40,9 @@ public class ConstantUtils {
     public static final String policyDayUrl = "https://web.fantastic-entertainment.com/policyDarkMode";
     public static final String policyNightUrl = "https://web.fantastic-entertainment.com/policyDarkMode";
 
+    //appkey, bundle id
+    public static final String appKey="happifilms";
+    public static final String bundleId="com.happifilms.androidtest";
     //Urls
     public static final String VIDEO_DETAILS = "video_details";
     public static final String CATEGORY_DETAILS = "category_details";

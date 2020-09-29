@@ -18,12 +18,13 @@
         android:id="@+id/rl_exoplayer_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <include layout="@layout/content_video_player" />
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/rl_btm_navigation"
+        android:id="@+id/rl_btm_navigation_video"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true">

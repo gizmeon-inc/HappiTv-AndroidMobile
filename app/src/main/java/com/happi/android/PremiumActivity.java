@@ -126,10 +126,11 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
 
         }
 
-        iv_back.setOnClickListener(v -> {
-          //  goToHome();
-            PremiumActivity.super.onBackPressed();
-            finish();
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
         });
 
         btn_cancel.setOnClickListener(v -> {
@@ -316,7 +317,9 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
 
     public void goToHome() {
         Intent intentH = new Intent(PremiumActivity.this, HomeActivity.class);
+        intentH.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intentH);
+        overridePendingTransition(0,0);
 
     }
     private void safelyDispose(Disposable... disposables) {
@@ -370,5 +373,11 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
     @Override
     public void onOkClickNeutral() {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        HappiApplication.setCurrentContext(this);
     }
 }

@@ -19,7 +19,8 @@
         android:id="@+id/rl_exoplayer_parent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <include layout="@layout/channel_content_home" />
     </RelativeLayout>

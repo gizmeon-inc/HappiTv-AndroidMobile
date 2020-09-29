@@ -72,10 +72,11 @@ public class SettingsActivity extends BaseActivity {
         String accessToken = HappiApplication
                 .getAppToken();
         compositeDisposable = new CompositeDisposable();
-
-        iv_back.setOnClickListener(v -> {
-
-            super.onBackPressed();
+        iv_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
         });
 
         tv_clear_search_history.setOnClickListener(v -> {

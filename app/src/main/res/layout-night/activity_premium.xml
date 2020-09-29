@@ -22,7 +22,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dimen_8dp"
         android:layout_marginTop="@dimen/dimen_7dp"
-        android:layout_below="@+id/rl_toolbar">
+        android:layout_below="@+id/rl_toolbar"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_subscription"
@@ -42,26 +43,14 @@
         android:gravity="center"
         android:visibility="gone"
         android:textColor="@color/error_tint"/>
-    <!-- <LinearLayout
-         android:id="@+id/ll_error"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_gravity="center">
-         <TextView
-             android:id="@+id/tv_error"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:textColor="@color/colorPrimaryDark"
-             android:visibility="gone"
-             android:text=""
-             android:layout_marginBottom="@dimen/dimen_2dp" />
-     </LinearLayout>-->
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|bottom"
         android:layout_alignParentBottom="true"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:layout_marginBottom="?attr/actionBarSize">
         <LinearLayout
             android:id="@+id/ll_btn"
             android:layout_width="match_parent"
@@ -78,8 +67,7 @@
                 android:textColor="@color/colorWhite"
                 android:layout_marginBottom="@dimen/dimen_5dp"
                 android:textSize="@dimen/text_regular_medium3"
-                android:visibility="invisible"
-                />
+                android:visibility="invisible"/>
         </LinearLayout>
     </RelativeLayout>
 

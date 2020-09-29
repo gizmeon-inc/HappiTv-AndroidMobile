@@ -101,7 +101,8 @@
         android:id="@+id/sc_meta"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/rl_details">
+        android:layout_below="@+id/rl_details"
+        android:layout_marginBottom="?attr/actionBarSize">
 
         <RelativeLayout
             android:id="@+id/rl_meta_data"
