@@ -724,8 +724,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         pb_live.setVisibility(View.GONE);
         try {
-            //Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
-            Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
+            Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
+            //Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
 
             boolean needNewPlayer = exoPlayer == null;
 
