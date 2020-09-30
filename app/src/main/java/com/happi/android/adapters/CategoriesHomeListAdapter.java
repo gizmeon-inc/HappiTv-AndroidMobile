@@ -95,6 +95,7 @@ public class CategoriesHomeListAdapter extends RecyclerView.Adapter<CategoriesHo
 
         videoList_adapter.clearAll();
         videoList_adapter.addAll(videoModelList);
+        //loadingVideos.hide();
         SnapHelper snapHelper;
         snapHelper = new GravitySnapHelper(Gravity.START);
         snapHelper.attachToRecyclerView(holder.rv_video_grid);

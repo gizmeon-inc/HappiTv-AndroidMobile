@@ -29,6 +29,9 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.core.view.ViewCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
@@ -106,7 +109,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener, View.OnClickListener,
+public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,
+        LogoutAlertDialog.onLogoutClickListener, View.OnClickListener,
         VideoList_adapter.itemClickListener,
         ShowList_adapter.itemClickListener,
         ChannelSuggestionAdapter.SuggesteditemClickListener, CategoryListAdapter.itemClickListener,
@@ -121,7 +125,6 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
     CategoryListAdapter categoryList_adapter;
     ChannelSuggestionAdapter channelListAdapter;
     ChannelListAdapter liveChannelsAdapter;
-    RecyclerView.LayoutManager layoutManager;
     private CompositeDisposable compositeDisposable;
     //error layout
     private LinearLayout ll_error_home;
@@ -175,6 +178,9 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
     private EventLogger eventLogger;
     private LiveScheduleHomeListAdapter liveScheduleHomeListAdapter;
+    private int liveChannelId = 0;
+    //nested scroll
+    private NestedScrollView sv_scrollview;
 
     @Override
 
@@ -251,11 +257,12 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
         ll_watch_free = findViewById(R.id.ll_watch_free);
         ll_popular_live = findViewById(R.id.ll_popular_live);
         iv_search = findViewById(R.id.iv_search);
+
         mSwipeRefreshLayout = findViewById(R.id.swipeToRefresh);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryDark);
         mSwipeRefreshLayout.setDistanceToTriggerSync(250);
 
-        layoutManager = new LinearLayoutManager(this);
 
         //get user subscription id list
         subscriptionModelList = new ArrayList<>();
@@ -268,21 +275,27 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
         exo_player_view_home = findViewById(R.id.exo_player_view_home);
         ll_live_guide = findViewById(R.id.ll_live_guide);
         rv_live_schedule_list = findViewById(R.id.rv_live_schedule_list);
-
+        int spacingPixels = getResources().getDimensionPixelSize(R.dimen.default_spacing_small);
+        rv_live_schedule_list.addItemDecoration(new SpacesItemDecoration(spacingPixels));
+        //scroll view
+        sv_scrollview = findViewById(R.id.sv_scrollview);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
         apiErrorCount = 0;
+
+        setupRecyclerView();
         getSessionToken();
 
-        mSwipeRefreshLayout.setOnRefreshListener(() -> {
+        /*mSwipeRefreshLayout.setOnRefreshListener(() -> {
 
-            mSwipeRefreshLayout.setRefreshing(false);
+           *//* mSwipeRefreshLayout.setRefreshing(false);
             finish();
             startActivity(getIntent());
-            overridePendingTransition(0, 0);
-        });
+            overridePendingTransition(0, 0);*//*
+
+        });*/
 
         iv_search.setOnClickListener(v -> {
 
@@ -352,13 +365,12 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
         setUserName();
 
-        if (!homeLoaded) {
-
+        if (apiErrorCount == 5) {
             setupRecyclerView();
-
+            recallHomeApis();
         }
 
-        recallHomeApis();
+
 
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");
@@ -371,21 +383,21 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
         } else {
             new AdvertisingIdAsyncTask().execute();
         }
-
+        resumePlayer();
         super.onResume();
     }
 
 
     private void setupRecyclerView() {
 
-        ll_error_home.setVisibility(View.GONE);
         pb_live.setVisibility(View.VISIBLE);
-
+        ll_error_home.setVisibility(View.GONE);
+        sv_scrollview.setScrollX(0);
+        sv_scrollview.setScrollY(0);
         //----------------------------------------live schedule-------------------------------------------//
+        ViewCompat.setNestedScrollingEnabled(rv_live_schedule_list, false);
         rv_live_schedule_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         liveScheduleHomeListAdapter = new LiveScheduleHomeListAdapter(this);
-        int spacingPixels = getResources().getDimensionPixelSize(R.dimen.default_spacing_small);
-        rv_live_schedule_list.addItemDecoration(new SpacesItemDecoration(spacingPixels));
         rv_live_schedule_list.setAdapter(liveScheduleHomeListAdapter);
         loadingLiveSchedule = Skeleton.bind(rv_live_schedule_list)
                 .adapter(liveScheduleHomeListAdapter)
@@ -398,7 +410,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
                 .frozen(false)
                 .show();
         //---------------------------------------------------category-----------------------------------------------------------------//
-
+        ViewCompat.setNestedScrollingEnabled(rv_category_list, false);
         rv_category_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         categoryList_adapter = new CategoryListAdapter(this,
                 this::onCategoryItemClicked, false);
@@ -417,6 +429,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
                 .frozen(false)
                 .show();
         //-----------------------------------------------watch for free---------------------------------------------------------//
+        ViewCompat.setNestedScrollingEnabled(rv_watch_free, false);
         ll_watch_free.setVisibility(View.VISIBLE);
         rv_watch_free.setVisibility(View.VISIBLE);
 
@@ -435,7 +448,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
                 .show();
 
         //-------------------------------------------New Release-----------------------------------------------------//
-
+        ViewCompat.setNestedScrollingEnabled(rv_video_grid, false);
         rv_video_grid.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         videoList_adapter = new VideoList_adapter(this, this::onItemClicked, false);
         rv_video_grid.setAdapter(videoList_adapter);
@@ -454,6 +467,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
 
         //-----------------------------------------live----------------------------------------------------//
+       ViewCompat.setNestedScrollingEnabled(rv_live, false);
         rv_live.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         liveChannelsAdapter = new ChannelListAdapter(this,
                 this::onChannelItemClicked, false, MainHomeActivity.this, this::onRedirectionToLive);
@@ -509,7 +523,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
                         }, throwable -> {
                             // Log.w("KKK###","session");
-                            Log.e("getSessionToken", throwable.getLocalizedMessage());
+                            Log.e("getSessionToken","token error");
                         });
         compositeDisposable.add(tokenDisposable);
     }
@@ -601,12 +615,6 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
                         rv_video_grid.setVisibility(View.GONE);
                     }
 
-                    //load live now list
-                    if (channelModelList.size() != 0) {
-
-                    } else {
-
-                    }
 
                 }, throwable -> {
                     apiErrorCount++;
@@ -615,6 +623,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
     }
 
     private void liveNow() {
+        pb_live.setVisibility(View.VISIBLE);
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable liveDisposable = usersService.getChannels(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
@@ -625,19 +634,28 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
                     if (channelListResponse.getData().size() != 0) {
                         channelModels.addAll(channelListResponse.getData());
                     }
-                    channelModelList.addAll(channelModels);
-                    if (channelModelList.isEmpty()) {
-                        hideLivePlayerAndSchedule();
-                        rv_live.setVisibility(View.GONE);
-                        ll_popular_live.setVisibility(View.GONE);
-                    } else {
-                        generateToken(channelModelList.get(0));
-                        if (channelModelList.size() >= 10) {
-                            updateLiveVideos(channelModelList.subList(0, 10));
-                        } else {
-                            updateLiveVideos(channelModelList);
-                        }
+                    if(!channelModelList.isEmpty()){
+                        channelModelList.clear();
                     }
+                    channelModelList.addAll(channelModels);
+
+                        //load all live - player and channels list
+                        if (channelModelList.isEmpty()) {
+                            hideLivePlayerAndSchedule();
+                            rv_live.setVisibility(View.GONE);
+                            ll_popular_live.setVisibility(View.GONE);
+                        } else {
+                            liveChannelId = channelModelList.get(0).getChannelId();
+                            generateToken(channelModelList.get(0));
+                            loadLiveSchedule(liveChannelId);
+                            //load live channel list
+                            if (channelModelList.size() >= 10) {
+                                updateLiveVideos(channelModelList.subList(0, 10));
+                            } else {
+                                updateLiveVideos(channelModelList);
+                            }
+                        }
+
 
                 }, throwable -> {
                     apiErrorCount++;
@@ -657,7 +675,6 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
                     public void accept(TokenResponse tvexcelResponse) {
                         String token = tvexcelResponse.getData().trim();
                         initializePlayer(channelModel, token);
-                        loadLiveSchedule(channelModel.getChannelId());
                     }
                 }, throwable -> {
                     liveError();
@@ -707,8 +724,8 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
         pb_live.setVisibility(View.GONE);
         try {
-            Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
-            //Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
+            //Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
+            Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
 
             boolean needNewPlayer = exoPlayer == null;
 
@@ -831,8 +848,14 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
                     } else {
                         rv_categories_home_list.setVisibility(View.GONE);
                     }
+                    if(mSwipeRefreshLayout.isRefreshing()){
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
                 }, throwable -> {
                     apiErrorCount++;
+                    if(mSwipeRefreshLayout.isRefreshing()){
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
                     displayErrorLayout(getString(R.string.server_error));
                 });
         compositeDisposable.add(homeVideoDisposable);
@@ -840,18 +863,22 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
     private void recallHomeApis() {
         if (!HappiApplication.getAppToken().isEmpty()) {
+            if(liveScheduleHomeListAdapter == null || liveScheduleHomeListAdapter.isEmpty()){
+                loadLiveSchedule(liveChannelId);
+            }
             if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {
                 categoryApiCall();
-            } else if (SharedPreferenceUtility.getGuest()) {
-                if (freeShowList_adapter == null || freeShowList_adapter.isEmpty()) {
-                    watchForFreeShowList();
-                }
-            } else if (videoList_adapter == null || videoList_adapter.isEmpty()) {
+            }
+            if (freeShowList_adapter == null || freeShowList_adapter.isEmpty()) {
+                watchForFreeShowList();
+            }
+            if (videoList_adapter == null || videoList_adapter.isEmpty()) {
                 newReleases();
-            } else if (liveChannelsAdapter == null || liveChannelsAdapter.isEmpty()) {
+            }
+            if (liveChannelsAdapter == null || liveChannelsAdapter.isEmpty()) {
                 liveNow();
-                // }else if(categoryList_adapter==null || categoryList_adapter.isEmpty()){
-            } else if (!homeLoaded) {
+            }
+            if (!homeLoaded) {
                 loadCategoriesHomeList();
             }
         } else {
@@ -892,7 +919,6 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
             ll_popular_videos.setVisibility(View.GONE);
             rv_video_grid.setVisibility(View.GONE);
         }
-
         //return true;
     }
 
@@ -941,7 +967,6 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
         rv_categories_home_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv_categories_home_list.setAdapter(adapter);
         homeLoaded = true;
-
         //return true;
     }
 
@@ -988,6 +1013,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
     @Override
     protected void onPause() {
+        releasePlayer();
         super.onPause();
     }
 
@@ -995,7 +1021,7 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
         if (isDrawerOpened) {
 
-            drawer.closeDrawer(Gravity.LEFT);
+            drawer.closeDrawer(GravityCompat.START);
         } else {
 
             AppUtils.exitApp();
@@ -1004,6 +1030,9 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
     @Override
     protected void onDestroy() {
+        if (exoPlayer != null) {
+            exoPlayer.release();
+        }
         super.onDestroy();
         safelyDispose(compositeDisposable);
     }
@@ -1345,6 +1374,18 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
         }
     }
 
+    @Override
+    public void onRefresh() {
+        if(isNetworkConnected()){
+            setupRecyclerView();
+            loadHome();
+        }else{
+            if(mSwipeRefreshLayout.isRefreshing()){
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }
+    }
+
 
     //async task for advertising id
     public static class AdvertisingIdAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -1403,6 +1444,10 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
 
     private void liveError() {
         Toast.makeText(this, "Oops!! Can't play trailer. Please try again later.", Toast.LENGTH_SHORT).show();
+        releaseExoPlayer();
+        hideLivePlayerAndSchedule();
+    }
+    private void releaseExoPlayer(){
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
             exoPlayer.stop();
@@ -1414,6 +1459,33 @@ public class MainHomeActivity extends BaseActivity implements LogoutAlertDialog.
             exoPlayer = null;
             exo_player_view_home.setPlayer(null);
         }
-        hideLivePlayerAndSchedule();
+    }
+    private void loadHome(){
+        releaseExoPlayer();
+        setupRecyclerView();
+        if(HappiApplication.getAppToken().isEmpty()){
+            getSessionToken();
+        }else{
+            if (!SharedPreferenceUtility.getGuest()) {
+                checkSubscription();
+            }
+
+            liveNow();
+            categoryApiCall();
+            watchForFreeShowList();
+            newReleases();
+            loadCategoriesHomeList();
+        }
+    }
+    private void releasePlayer() {
+        if (exoPlayer != null) {
+            exoPlayer.setPlayWhenReady(false);
+        }
+    }
+
+    private void resumePlayer() {
+        if (exoPlayer != null) {
+            exoPlayer.setPlayWhenReady(true);
+        }
     }
 }
