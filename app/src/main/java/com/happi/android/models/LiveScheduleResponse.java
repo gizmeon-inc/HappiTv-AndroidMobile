@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 public class LiveScheduleResponse implements Serializable {
@@ -32,6 +33,27 @@ public class LiveScheduleResponse implements Serializable {
         @Expose
         private String thumbnail;
 
+////////////////////////////////////////////////////////////////////////////
+        private Date startDateTime = null;
+        private Date endDateTime = null;
+
+        public Date getStartDateTime() {
+            return startDateTime;
+        }
+
+        public void setStartDateTime(Date startDateTime) {
+            this.startDateTime = startDateTime;
+        }
+
+        public Date getEndDateTime() {
+            return endDateTime;
+        }
+
+        public void setEndDateTime(Date endDateTime) {
+            this.endDateTime = endDateTime;
+        }
+
+        ////////////////////////////////////////////////////////////////////////////
         public String getStarttime() {
             return starttime;
         }

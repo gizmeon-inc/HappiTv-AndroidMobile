@@ -93,7 +93,6 @@
         android:layout_width="@dimen/dimen_200dp"
         android:layout_height="@dimen/dimen_100dp"
         android:gravity="start|center_vertical"
-        android:padding="@dimen/dimen_5dp"
         android:background="@color/btm_nav"
         android:orientation="horizontal"
         android:weightSum="4">
@@ -104,7 +103,8 @@
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:layout_weight="1.2"
-            android:layout_marginEnd="@dimen/dimen_5dp">
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:padding="@dimen/dimen_5dp">
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -126,25 +126,33 @@
         <LinearLayout
             android:id="@+id/ll_schedule_details"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_80dp"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_weight="2.8">
+            android:layout_weight="2.8"
+            android:paddingTop="@dimen/dimen_3dp">
+            <com.happi.android.customviews.TypefacedTextViewBold
+                android:id="@+id/tv_schedule_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/whiteThree"
+                android:textSize="12sp"
+                android:gravity="center_vertical"/>
             <com.happi.android.customviews.TypefacedTextViewRegular
                 android:id="@+id/tv_schedule_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/whiteThree"
                 android:gravity="top"
-                android:layout_weight="1"
-                android:textSize="12sp"/>
+                android:layout_weight="0.8"
+                android:textSize="12sp" />
             <com.happi.android.customviews.TypefacedTextViewBold
                 android:id="@+id/tv_schedule_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
                 android:textSize="12sp"
-                android:gravity="bottom"
-                android:layout_weight="1" />
+                android:gravity="top"
+                android:layout_weight="1.6" />
 
         </LinearLayout>
 
