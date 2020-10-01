@@ -468,7 +468,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
                 this::onCategoryItemClicked, false);
         //  rv_category_list.setAdapter(categoryList_adapter);
 
-        circleViewAdapter = new CategoryCircleViewAdapter(getApplicationContext(), this::onCategoryItemClickedForCircleView);
+        circleViewAdapter = new CategoryCircleViewAdapter(getApplicationContext(), this::onCategoryItemClickedForCircleView,false);
         rv_category_list.setAdapter(circleViewAdapter);
 
         loadingCategories = Skeleton.bind(rv_category_list)

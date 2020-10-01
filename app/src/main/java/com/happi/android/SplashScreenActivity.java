@@ -23,6 +23,7 @@ import com.google.gson.JsonObject;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.LocationTrack;
 import com.happi.android.common.SharedPreferenceUtility;
+import com.happi.android.models.UserSubscriptionModel;
 import com.happi.android.utils.AppUtils;
 import com.happi.android.utils.ConstantUtils;
 import com.happi.android.webservice.ApiClient;
@@ -86,7 +87,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
         Uri data = newIntent.getData();
         String action = newIntent.getAction();
 
-        if ( data != null) {
+        if ( data != null && data.getQueryParameter("show") != null) {
             showId = data.getQueryParameter("show");
         }
 
@@ -130,6 +131,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                     if(publisherModel.getPubid()!=null){
                         Log.e("pubid",publisherModel.getPubid());
                         SharedPreferenceUtility.setPublisher_id(publisherModel.getPubid());
+                        SharedPreferenceUtility.setRegistration_mandatory_flag(publisherModel.isRegistration_mandatory_flag());
+                        SharedPreferenceUtility.setSubscription_mandatory_flag(publisherModel.isSubscription_mandatory_flag());
                       /*  if (SharedPreferenceUtility.getUserId() == 0) {
                             goToLoginPage();
                         }else{
@@ -155,7 +158,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     }
     private void goToLoginPage() {
         Intent intent = new Intent(SplashScreenActivity.this, LoginActivity.class);
-        intent.putExtra("show",showId);
+       // intent.putExtra("show",showId);
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
@@ -164,12 +167,16 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     private void goToHomePage() {
         //Intent intent = new Intent(SplashScreenActivity.this, HomeActivity.class);
         Intent intent = new Intent(SplashScreenActivity.this, MainHomeActivity.class);
-        intent.putExtra("show",showId);
-        HappiApplication.setIsFromLink(true);
+        if(!showId.equalsIgnoreCase("empty")){
+            intent.putExtra("show",showId);
+            HappiApplication.setIsFromLink(true);
+        }
         startActivity(intent);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         finish();
     }
+
+
 
     @Override
     protected void onStart() {
@@ -237,11 +244,6 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
     private void checkAndNav() {
 
-        if (SharedPreferenceUtility.getGuestStatus()) {
-
-            getSessionToken();
-
-        } else {
             if (SharedPreferenceUtility.getUserId() == 0) {
 
                final Handler handler = new Handler();
@@ -252,11 +254,66 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
                 final Handler handler = new Handler();
                handler.postDelayed(() -> {
+                   if(SharedPreferenceUtility.isRegistration_mandatory_flag()){
+                       if(SharedPreferenceUtility.getGuest()){
 
-                  //  goToHomePage();
-                   getSessionToken();
+                           SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                           SharedPreferenceUtility.setGuest(false);
+                           SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                           SharedPreferenceUtility.setChannelId(0);
+                           SharedPreferenceUtility.setShowId("0");
+                           SharedPreferenceUtility.setVideoId(0);
+                           SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                           SharedPreferenceUtility.setChannelTimeZone("");
+                           SharedPreferenceUtility.setSession_Id("");
+                           SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                           SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                           HappiApplication.setSub_id(new ArrayList<>());
+
+                           goToLoginPage();
+                       }else{
+                           checkIfSubscriptionMandatory();
+                       }
+                   }else{
+                       checkIfSubscriptionMandatory();
+                   }
+                   //getSessionToken();
                 }, 500);
             }
+
+    }
+
+
+    private void checkIfSubscriptionMandatory(){
+        boolean isSubscriptionMandatory = SharedPreferenceUtility.isSubscription_mandatory_flag();
+        if (isSubscriptionMandatory) {
+            //SUBSCRIPTION IS MANDATORY
+            if(SharedPreferenceUtility.getGuest()){
+
+                //NO ACCESS FOR GUEST >> LOGOUT
+                SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                SharedPreferenceUtility.setGuest(false);
+                SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                SharedPreferenceUtility.setChannelId(0);
+                SharedPreferenceUtility.setShowId("0");
+                SharedPreferenceUtility.setVideoId(0);
+                SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                SharedPreferenceUtility.setChannelTimeZone("");
+                SharedPreferenceUtility.setSession_Id("");
+                SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                HappiApplication.setSub_id(new ArrayList<>());
+
+                goToLoginPage();
+            }else{
+                //CHECK IF USER HAS SUBSCRIPTION
+                getSessionToken();
+            }
+        } else {
+            //SUBSCRIPTION IS NOT MANDATORY >> FORCIBLE LOGOUT CHECK
+            getSessionToken();
         }
     }
 
@@ -273,7 +330,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
             final Handler handler = new Handler();
             handler.postDelayed(() -> {
-                 goToHomePage();
+
+                goToHomePage();
             }, 500);
         }
       // getPubID();
@@ -301,7 +359,12 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                             //SharedPreferenceUtility.setAdMobPubIds("ca-app-pub-1674238972502360/1600095046", "ca-app-pub-1674238972502360/8688247573","ca-app-pub-1674238972502360/4202207657");
                             // SharedPreferenceUtility.setAdMobPubIds(sessionTokenResponseModel.getBanner_id(), sessionTokenResponseModel.getRewarded_id(),sessionTokenResponseModel.getInterstitial_id(),sessionTokenResponseModel.getApp_id(),sessionTokenResponseModel.getRewarded_status(),sessionTokenResponseModel.getInterstitial_status(),sessionTokenResponseModel.getMopub_interstitial_id(),sessionTokenResponseModel.getMopub_banner_id(),"0");
 
-                            loginRemovalApiCall();
+                           // loginRemovalApiCall();
+                            if(SharedPreferenceUtility.getGuest()){
+                                goToHomePage();
+                            }else{
+                                getUserSubscriptions();
+                            }
                         }, throwable -> {
 
                             Log.e("getSessionToken", throwable.getLocalizedMessage());
@@ -500,5 +563,95 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
         compositeDisposable.add(ipDisposable);
     }
 
+    private void getUserSubscriptions() {
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable subscriptionDisposable = usersService.getUserSubscriptions(HappiApplication.getAppToken(),
+                SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getAdvertisingId(),
+                SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriptionResponseModel -> {
+                    if (subscriptionResponseModel.isForcibleLogout()) {
+                        logoutApiCall();
+                    } else {
+
+                        List<String> subids = new ArrayList<>();
+                        if (subscriptionResponseModel.getData().size() != 0) {
+
+                            List<UserSubscriptionModel> userSubscriptionModelList = subscriptionResponseModel.getData();
+
+                            if (userSubscriptionModelList.size() != 0) {
+                                for (UserSubscriptionModel model : userSubscriptionModelList) {
+                                    subids.add(model.getSub_id());
+                                }
+
+                            }
+
+                        }
+                        HappiApplication.setSub_id(subids);
+
+                        if(SharedPreferenceUtility.isSubscription_mandatory_flag()){
+                           if(HappiApplication.getSub_id().isEmpty()){
+                               goToSubscriptionScreen();
+                           }else{
+                               goToHomePage();
+                           }
+                        }else{
+                            goToHomePage();
+                        }
+                    }
+
+                }, throwable -> {
+
+                    Toast.makeText(SplashScreenActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
+                });
+        compositeDisposable.add(subscriptionDisposable);
+    }
+    private void logoutApiCall() {
+
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logout(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
+
+                    if (logoutResponseModel.getStatus() == 100) {
+
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+                        goToLoginPage();
+                    } else {
+
+                        Toast.makeText(this, "Some error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+
+                    Toast.makeText(this, "Some error occurred. Please try again.", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+        compositeDisposable.add(logoutDisposable);
+    }
+    private void goToSubscriptionScreen(){
+        Intent intent = new Intent(SplashScreenActivity.this, MainSubscriptionActivity.class);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
+    }
     //================================================
 }

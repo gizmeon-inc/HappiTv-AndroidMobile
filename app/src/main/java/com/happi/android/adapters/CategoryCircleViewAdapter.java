@@ -23,6 +23,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.overrideOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class CategoryCircleViewAdapter extends RecyclerView.Adapter<CategoryCircleViewAdapter.CircleAdapterViewHolder> {
@@ -30,18 +31,27 @@ public class CategoryCircleViewAdapter extends RecyclerView.Adapter<CategoryCirc
     private Context context;
     private List<CategoryModel.Category> categories;
     private itemClickListenerForCategory itemClickListener;
+    private boolean isVertical;
 
-    public CategoryCircleViewAdapter(Context context, itemClickListenerForCategory itemClickListener){
+    public CategoryCircleViewAdapter(Context context, itemClickListenerForCategory itemClickListener,boolean isVertical){
         this.context = context;
         this.itemClickListener = itemClickListener;
+        this.isVertical = isVertical;
         categories = new ArrayList<>();
     }
 
     @NonNull
     @Override
     public CircleAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(context).inflate(R.layout.item_category_circle_view, viewGroup, false);
-        return new CircleAdapterViewHolder(v);
+        if(isVertical){
+            View v = LayoutInflater.from(context).inflate(R.layout.item_category_circle_view_vert, viewGroup, false);
+            return new CircleAdapterViewHolder(v);
+        }else{
+            View v = LayoutInflater.from(context).inflate(R.layout.item_category_circle_view, viewGroup, false);
+            return new CircleAdapterViewHolder(v);
+        }
+
+
     }
 
     @Override
@@ -58,19 +68,18 @@ public class CategoryCircleViewAdapter extends RecyclerView.Adapter<CategoryCirc
                         .apply(placeholderOf(R.drawable.ic_placeholder))
                         .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                         // .apply(fitCenterTransform())
-                       // .apply(overrideOf(400,333))
+                        .apply(overrideOf(400,333))
                         //  .apply(centerCropTransform())
                         .into(circleAdapterViewHolder.cv_category);
-            } else {
+            }else{
                 circleAdapterViewHolder.tv_category_title.setText(categories.get(i).getCategory());
                 Glide.with(context)
-                        .load(R.drawable.ic_placeholder_grey)
+                        .load(R.drawable.bg_pinkishgrey)
                         .error(Glide.with(context)
                                 .load(ContextCompat.getDrawable(context,R.drawable.ic_placeholder)))
                         .apply(placeholderOf(R.drawable.ic_placeholder))
                         .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
-                       // .apply(fitCenterTransform())
-                        //.apply(overrideOf(400,333))
+                        // .apply(fitCenterTransform())
                         //  .apply(centerCropTransform())
                         .into(circleAdapterViewHolder.cv_category);
             }
@@ -85,7 +94,6 @@ public class CategoryCircleViewAdapter extends RecyclerView.Adapter<CategoryCirc
     class CircleAdapterViewHolder extends RecyclerView.ViewHolder{
         CircleImageView cv_category;
         TypefacedTextViewSemiBold tv_category_title;
-
 
         public CircleAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -144,4 +152,3 @@ public class CategoryCircleViewAdapter extends RecyclerView.Adapter<CategoryCirc
         void onCategoryItemClickedForCircleView(int adapterPosition);
     }
 }
-

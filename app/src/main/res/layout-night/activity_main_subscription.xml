@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_black"
+    tools:context=".SubscriptionActivity"
+    android:paddingTop="@dimen/dimen_30dp">
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/rl_main_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/tl_toolbar_subscr"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:gravity="center_vertical"
+                android:contentInsetStart="0dp"
+                android:contentInsetLeft="0dp"
+                android:contentInsetEnd="0dp"
+                android:contentInsetRight="0dp"
+                android:orientation="horizontal"
+                app:contentInsetEnd="0dp"
+                app:contentInsetLeft="0dp"
+                app:contentInsetRight="0dp"
+                app:contentInsetStart="0dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <LinearLayout
+                        android:id="@+id/ll_user"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="top|end"
+                        android:layout_marginStart="@dimen/dimen_15dp"
+                        android:orientation="horizontal"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginEnd="@dimen/dimen_10dp">
+
+                        <com.happi.android.customviews.TypefacedTextViewLight
+                            android:id="@+id/tv_username"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text=""
+                            android:textSize="@dimen/text_regular_medium3"
+                            android:textColor="@color/whiteThree"
+                            android:padding="@dimen/dimen_5dp"
+                            android:lines="1"
+                            android:ellipsize="end"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/ll_logout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="top|end"
+                        android:layout_marginEnd="@dimen/dimen_15dp"
+                        android:orientation="horizontal"
+                        android:layout_alignParentEnd="true"
+                        android:layout_toEndOf="@+id/ll_user"
+                        android:layout_marginStart="@dimen/dimen_10dp">
+
+                        <com.happi.android.customviews.TypefacedTextViewLight
+                            android:id="@+id/tv_logout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:text="Log Out"
+                            android:textSize="@dimen/text_regular_medium3"
+                            android:textColor="@color/whiteThree"
+                            android:padding="@dimen/dimen_5dp"/>
+
+                    </LinearLayout>
+                </RelativeLayout>
+            </androidx.appcompat.widget.Toolbar>
+
+
+            <RelativeLayout
+                android:id="@+id/rl_web_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:layout_below="@+id/tl_toolbar_subscr"
+                android:padding="@dimen/dimen_5dp">
+                <WebView
+                    android:id="@+id/wv_subscription"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:background="@android:color/transparent"
+                    android:visibility="visible"
+                    android:scrollbars="none"/>
+            </RelativeLayout>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/rl_container_for_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dark_black"
+            android:layout_marginTop="?attr/actionBarSize"
+            android:visibility="gone">
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_transparent_logo"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/dark_overlay"/>
+            </FrameLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+
+</RelativeLayout>

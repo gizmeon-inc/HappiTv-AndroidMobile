@@ -144,13 +144,6 @@ public class ApiClient {
         Observable<TokenResponse> getToken(@Header("access-token") String header,
                                            @Body JsonObject jsonObject);
 
-        @POST("registerWithEmail")
-        Observable<RegisterWithEmailResponseModel> RegisterWithEmail(@Body JsonObject registerJson);
-
-        @GET("verifyOtpFromEmail")
-        Observable<LoginResponseModel> verifyOtpFromEmail (@Query("user_id") int user_id,
-                                                           @Query("pubid") String pubid,
-                                                           @Query("otp") String otp);
 
         //===================== CHANNEL =============================
 
@@ -345,6 +338,19 @@ public class ApiClient {
         @GET("FBLogin")
         Call<LoginResponseModel> checkFbLoginDetails(@Query("facebook_id") String facebook_id);
 
+        @POST("registerWithEmail")
+        Observable<RegisterWithEmailResponseModel> RegisterWithEmail(@Body JsonObject registerJson);
+
+        @GET("verifyOtpFromEmail")
+        Observable<LoginResponseModel> verifyOtpFromEmail (@Query("user_id") int user_id,
+                                                           @Query("pubid") String pubid,
+                                                           @Query("otp") String otp);
+
+        @GET("resendOtp")
+        Observable<BasicResponse> resendOtp (@Query("user_id") int user_id,
+                                            @Query("device_id") String device_id,
+                                            @Query("ipaddress") String ipaddress,
+                                            @Query("pubid") String publisher_id);
         @POST("Register")
         Observable<LoginResponseModel> Register(@Body JsonObject locationPost);
 

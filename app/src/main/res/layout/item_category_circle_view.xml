@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@android:color/transparent"
-    android:layout_marginRight="@dimen/dimen_7dp">
+    android:layout_marginEnd="@dimen/dimen_7dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/cv_category"
         android:layout_width="@dimen/dimen_100dp"
@@ -22,9 +22,13 @@
         android:layout_width="@dimen/dimen_100dp"
         android:layout_height="@dimen/dimen_100dp"
         android:ellipsize="end"
+        android:lines="1"
         android:gravity="center"
         android:textColor="@color/white"
         android:text=""
-        android:textSize="@dimen/text_regular_medium3" />
+        android:textSize="@dimen/text_regular_medium1"
+        android:paddingStart="@dimen/dimen_2dp"
+        android:paddingEnd="@dimen/dimen_2dp"
+        android:layout_gravity="center_vertical"/>
 
 </FrameLayout>

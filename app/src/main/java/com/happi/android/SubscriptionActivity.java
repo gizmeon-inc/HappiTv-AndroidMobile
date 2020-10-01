@@ -73,7 +73,7 @@ import io.reactivex.schedulers.Schedulers;
 
 import static android.view.View.GONE;
 
-public class SubscriptionActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,CustomAlertDialog.OnOkClick, LoginRegisterAlert.OnLoginRegisterUserPositive,
+public class SubscriptionActivity extends BaseActivity implements CustomAlertDialog.OnOkClick,
         LoginRegisterAlert.OnLoginRegisterUserNeutral, LoginRegisterAlert.OnLoginRegisterUserNegative,
         NumberRegistrationAlert.OnNumberRegisterUserPositive, NumberRegistrationAlert.OnNumberRegisterUserNegative{
 
@@ -87,7 +87,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
     private String token;
     private ProgressDialog progressDialog;
 
-    //phone number register layout
+   /* //phone number register layout
     private ImageView iv_close;
     private CountryCodePicker ccp_picker;
     private RelativeLayout rl_bottom_sheet;
@@ -95,9 +95,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
     private EditText et_phone_number;
     private String countryCode = "";
     private String phoneNumber = "";
-    private FirebaseAuth mAuth = null;
-    private String mVerificationId = "";
-    private PhoneAuthProvider.ForceResendingToken mResendToken = null;
+//    private FirebaseAuth mAuth = null;
+//    private String mVerificationId = "";
+//    private PhoneAuthProvider.ForceResendingToken mResendToken = null;
     private RelativeLayout rl_otp_screen;
     private RelativeLayout rl_otp_verification_screen;
     private TextView tv_timer;
@@ -113,11 +113,11 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
     private LinearLayout ll_resend;
     boolean isOtpScreenOpen = false;
     private CountDownTimer otpTimer;
-    private TextView tv_error;
+    private TextView tv_error;*/
     private long channel = 0;
     private long video = 0;
-    private boolean isFromSubsc = false;
 
+/*
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
 
         @Override
@@ -151,6 +151,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             }
         }
     };
+*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,8 +208,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             video = SharedPreferenceUtility.getVideoId();
         }
 
-        isFromSubsc = false;
-        //number registration
+       /* //number registration
         mAuth = FirebaseAuth.getInstance();
         rl_bottom_sheet = findViewById(R.id.rl_bottom_sheet);
         rl_btm = findViewById(R.id.rl_btm);
@@ -229,7 +229,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         iv_close = findViewById(R.id.iv_close);
         Button btn_continue = findViewById(R.id.btn_continue);
 
-        tv_error = findViewById(R.id.tv_error);
+        tv_error = findViewById(R.id.tv_error);*/
 
         //toolbar
         ImageView iv_menu = findViewById(R.id.iv_menu);
@@ -237,7 +237,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         ImageView iv_back = findViewById(R.id.iv_back);
         ImageView iv_search = findViewById(R.id.iv_search);
 
-        tv_error.setVisibility(View.GONE);
+        //tv_error.setVisibility(View.GONE);
         iv_menu.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
         iv_search.setVisibility(View.GONE);
@@ -245,7 +245,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
 
 
-        et_phone_number.setOnTouchListener(new View.OnTouchListener() {
+      /*  et_phone_number.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -331,7 +331,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
                 hideSoftKeyBoard();
                 rl_bottom_sheet.setVisibility(View.GONE);
-                checkIfNumberIsVerified();
+                //checkIfNumberIsVerified();
             }
         });
         iv_back_to_page.setOnClickListener(new View.OnClickListener() {
@@ -341,7 +341,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                 if (otpTimer != null) {
                     otpTimer.cancel();
                 }
-                checkIfNumberIsVerified();
+                //checkIfNumberIsVerified();
             }
         });
         tv_done.setOnClickListener(new View.OnClickListener() {
@@ -395,13 +395,11 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
                 resendVerificationCode(et_phone_number.getText().toString().trim(), countryCode);
             }
-        });
+        });*/
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SubscriptionActivity.super.onBackPressed();
-                finish();
-                overridePendingTransition(0,0);
+               onBackPressed();
             }
         });
 
@@ -409,16 +407,23 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             showLoginOrRegisterAlert();
         } else {
 
-            if (HappiApplication.getAppToken() != null && !HappiApplication.getAppToken().isEmpty()) {
+            /*if (HappiApplication.getAppToken() != null && !HappiApplication.getAppToken().isEmpty()) {
                 checkIfNumberIsVerified();
             } else {
                 getSessionToken(true);
+            }*/
+
+            if (HappiApplication.getAppToken() != null && !HappiApplication.getAppToken().isEmpty()) {
+                fetchToken();
+            } else {
+                getSessionToken();
             }
         }
 
 
     }
 
+/*
     private void verifyVerificationCode(String otp) {
         //creating the credential
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
@@ -426,7 +431,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         //signing the usermAuth
         signInWithPhoneAuthCredential(credential);
     }
+*/
 
+/*
     private void showOtpVerificationPage() {
        if(progressDialog.isShowing()){
            progressDialog.dismiss();
@@ -450,8 +457,10 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
 
     }
+*/
 
 
+/*
     private void setTimer() {
 
         tv_resend_otp.setEnabled(false);
@@ -501,6 +510,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             }
         }.start();
     }
+*/
 
     public void showSoftKeyboard() {
 
@@ -510,13 +520,18 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
     private void hideSoftKeyBoard() {
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        assert imm != null;
-        if (imm != null && imm.isAcceptingText() && getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) { // verify if the soft keyboard is open
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }
+       try{
+           InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+           assert imm != null;
+           if (imm != null && imm.isAcceptingText() && getCurrentFocus() != null && getCurrentFocus().getWindowToken() != null) { // verify if the soft keyboard is open
+               imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+           }
+       }catch(Exception ex){
+           Log.e("exception subsc act","");
+       }
     }
 
+/*
     private void resendVerificationCode(String mobile, String countryCode) {
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -528,7 +543,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                 mResendToken
         );
     }
+*/
 
+/*
     private void sendVerificationCode(String mobile, String countryCode) {
 
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
@@ -539,7 +556,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                 mCallbacks
         );
     }
+*/
 
+/*
     private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(HappiApplication.getCurrentActivity(), new OnCompleteListener<AuthResult>() {
@@ -563,14 +582,16 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                                 message = "Invalid code entered";
                             }
 
-                           /* Snackbar snackbar = Snackbar.make(findViewById(R.id.ll_parent), message, Snackbar.LENGTH_LONG);
+                           */
+/* Snackbar snackbar = Snackbar.make(findViewById(R.id.ll_parent), message, Snackbar.LENGTH_LONG);
                             snackbar.setAction("Dismiss", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
 
                                 }
                             });
-                            snackbar.show();*/
+                            snackbar.show();*//*
+
 
                             if (progressDialog.isShowing()) {
                                 progressDialog.dismiss();
@@ -580,7 +601,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                     }
                 });
     }
+*/
 
+/*
     private void verifyNumberApiCall() {
 
         ApiClient.UsersService usersService = ApiClient.create();
@@ -599,7 +622,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                 });
         compositeDisposable.add(phoneDisposable);
     }
+*/
 
+/*
     void alert(String message, boolean isOtpScrnVisible) {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -627,6 +652,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         Log.d("SubscriptionActivity", "Showing alert dialog: " + message);
         bld.create().show();
     }
+*/
 
     private void showLoginOrRegisterAlert() {
         if(progressDialog.isShowing()){
@@ -634,14 +660,14 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         }
         String message = "Please Login or Register to continue.";
         LoginRegisterAlert alertDialog =
-                new LoginRegisterAlert(this, message, "Register", "Login", "Cancel", this::onLoginRegisterNegativeClick,
-                        this::onLoginRegisterNeutralClick, this::onLoginRegisterPositiveClick, false);
+                new LoginRegisterAlert(this, message, "Login", "Cancel", this::onLoginRegisterNegativeClick,
+                        this::onLoginRegisterNeutralClick, false);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();
     }
 
-    private void checkIfNumberIsVerified() {
+   /* private void checkIfNumberIsVerified() {
         progressDialog.show();
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable phoneVerificationDisposable = usersService.checkPhoneVerification(HappiApplication.getAppToken(),
@@ -663,7 +689,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                                     if (HappiApplication.getAppToken() != null && !HappiApplication.getAppToken().isEmpty()) {
                                         fetchToken();
                                     } else {
-                                        getSessionToken(false);
+                                        getSessionToken();
                                     }
 
 
@@ -688,8 +714,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         compositeDisposable.add(phoneVerificationDisposable);
 
 
-    }
+    }*/
 
+/*
     private void showNumberRegistrationAlert() {
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -702,8 +729,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         alertDialog.setCancelable(false);
         alertDialog.show();
     }
+*/
 
-    private void verifyNumber() {
+    /*private void verifyNumber() {
         rl_btm.setVisibility(View.VISIBLE);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -715,9 +743,9 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
         rl_btm.setLayoutParams(params);
         rl_bottom_sheet.setLayoutParams(new RelativeLayout.LayoutParams(width, 350));
         rl_bottom_sheet.setVisibility(View.VISIBLE);
-    }
+    }*/
 
-    private void getSessionToken(boolean isNumberVerificationCheck) {
+    private void getSessionToken() {
         progressDialog.show();
 
         String appKey = SharedPreferenceUtility.getAppKey();
@@ -735,12 +763,12 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                             SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());
                             SharedPreferenceUtility.setAdMobPubIds(sessionTokenResponseModel.getBanner_id(), sessionTokenResponseModel.getRewarded_id(), sessionTokenResponseModel.getInterstitial_id(), sessionTokenResponseModel.getApp_id(), sessionTokenResponseModel.getRewarded_status(), sessionTokenResponseModel.getInterstitial_status(), sessionTokenResponseModel.getMopub_interstitial_id(), sessionTokenResponseModel.getMopub_banner_id(), sessionTokenResponseModel.getMopub_interstitial_status(), sessionTokenResponseModel.getMopub_rect_banner_id());
 
-                            if (isNumberVerificationCheck) {
+                            /*if (isNumberVerificationCheck) {
                                 checkIfNumberIsVerified();
                             } else {
                                 fetchToken();
-                            }
-
+                            }*/
+                            fetchToken();
                         }, throwable -> {
 
                             Log.e("getSessionToken", "");
@@ -806,13 +834,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
     @Override
     public void onOkClickNeutral() {
-        super.onBackPressed();
         finish();
-    }
-
-    @Override
-    public void onLoginRegisterPositiveClick() {
-     goToRegisterScreen();
     }
 
     @Override
@@ -846,7 +868,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
     @Override
     public void onNumberRegisterPositiveClick() {
-        verifyNumber();
+        //verifyNumber();
     }
 
     @Override
@@ -917,11 +939,7 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel -> {
-                    if (subscriptionResponseModel.isForcibleLogout()) {
-                        isFromSubsc = true;
-                        loginExceededAlertSubscription();
-                    }
-                    else {
+
                         List<String> subids = new ArrayList<>();
                         if (subscriptionResponseModel.getData().size() != 0) {
                             List<UserSubscriptionModel> subscriptionModelList = subscriptionResponseModel.getData();
@@ -970,7 +988,6 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                             }
                             showAlertDialog("Your Subscription is being processed. Please try again after sometime.");
                         }
-                    }
                 }, throwable -> {
                     //hideProgressDialog();
                     if (progressDialog.isShowing()) {
@@ -980,26 +997,8 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
                 });
         compositeDisposable.add(subscriptionDisposable);
     }
-    private void loginExceededAlertSubscription() {
-       /* if (dialog.isShowing()) {
-            dialog.dismiss();
-        }*/
-        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
-        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        alertDialog.setCancelable(false);
-        alertDialog.show();
-    }
-    @Override
-    public void onLogoutClicked() {
-        if (isFromSubsc) {
-            // logoutApiCall();
-        }
-    }
 
-    @Override
-    public void onLogoutAllClicked() {
-        //  logoutAllApiCall();
-    }
+
     private void goToHomeScreen() {
         if(progressDialog.isShowing()){
             progressDialog.dismiss();
@@ -1043,13 +1042,13 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
 
     @Override
     public void onBackPressed() {
-        if(isOtpScreenOpen || (rl_otp_verification_screen.getVisibility() == View.VISIBLE)){
+        /*if(isOtpScreenOpen || (rl_otp_verification_screen.getVisibility() == View.VISIBLE)){
             isOtpScreenOpen = false;
             rl_bottom_sheet.setVisibility(View.GONE);
             rl_otp_verification_screen.setVisibility(View.GONE);
             if(otpTimer != null){
                 otpTimer.cancel();}
-            checkIfNumberIsVerified();
+            //checkIfNumberIsVerified();
 
         }else if(rl_bottom_sheet.getVisibility() == View.VISIBLE){
                 iv_close.performClick();
@@ -1057,7 +1056,11 @@ public class SubscriptionActivity extends BaseActivity implements LogoutAlertDia
             super.onBackPressed();
             finish();
             overridePendingTransition(0,0);
-        }
+        }*/
+
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(0,0);
     }
 
     @Override

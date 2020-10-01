@@ -3,8 +3,13 @@ package com.happi.android;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -24,6 +29,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.BaseActivity;
@@ -44,6 +50,9 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.gson.JsonObject;
 import com.hbb20.CountryCodePicker;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.util.Enumeration;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -68,10 +77,7 @@ public class RegisterActivity extends BaseActivity {
     private String c_code = "";
     private String countryCode = "";
     private CountryCodePicker ccp_picker;
-    private PhoneAuthProvider.ForceResendingToken mResendToken = null;
 
-    private FirebaseAuth mAuth = null;
-    private String mVerificationId = "";
     private ProgressDialog dialog;
     private CompositeDisposable compositeDisposable;
 
@@ -95,8 +101,6 @@ public class RegisterActivity extends BaseActivity {
     private int user_id = 0;
     private String email = "";
     private String password = "";
-    private String fbId = "";
-
 
     public static boolean isValidEmail(String email) {
 
@@ -131,10 +135,12 @@ public class RegisterActivity extends BaseActivity {
         if (SharedPreferenceUtility.getAdvertisingId().isEmpty()) {
             new AdvertisingIdAsyncTask().execute();
         }
+        if(HappiApplication.getIpAddress().isEmpty()){
+            getNetworkIP();
+        }
 
         isOtpScreenOpen = false;
         compositeDisposable = new CompositeDisposable();
-        mAuth = FirebaseAuth.getInstance();
         et_email = findViewById(R.id.et_email);
         et_name = findViewById(R.id.et_name);
         et_password = findViewById(R.id.et_password);
@@ -205,11 +211,14 @@ public class RegisterActivity extends BaseActivity {
                     et_password.setError("Minimum 6 letters required.");
                     et_password.setFocusable(true);
                     et_password.requestFocus();
-                } else if (et_phone_number.getText().toString().trim().isEmpty()) {
+                }
+                /*else if (et_phone_number.getText().toString().trim().isEmpty()) {
                     et_phone_number.setError("Please enter phone number");
                     et_phone_number.setFocusable(true);
                     et_phone_number.requestFocus();
-                }else if (et_phone_number.getText().toString().trim().length() > 15) {
+                //}else if (et_phone_number.getText().toString().trim().length() > 15) {
+                }*/
+                else if ((!et_phone_number.getText().toString().trim().isEmpty()) && (et_phone_number.getText().toString().trim().length() > 15)) {
                     et_phone_number.setError("Invalid phone number");
                     et_phone_number.setFocusable(true);
                     et_phone_number.requestFocus();
@@ -218,12 +227,14 @@ public class RegisterActivity extends BaseActivity {
                     dialog.show();
                     hideSoftKeyBoard();
                     countryCode = "+" + ccp_picker.getSelectedCountryCode();
-                  //  sendVerificationCode(et_phone_number.getText().toString().trim(), countryCode);
-
                     verified = "1";
                     c_code = countryCode;
-                    String emailInLowerCase = et_email.getText().toString().trim().toLowerCase();
-                    registerWithEmailApiCall(emailInLowerCase, et_password.getText().toString().trim(), et_name.getText().toString().trim(), "", c_code + et_phone_number.getText().toString().trim(), SharedPreferenceUtility.getAdvertisingId(), "android-phone", "gmail-login", "0", verified, c_code);
+                    email = et_email.getText().toString().trim().toLowerCase();
+                    password = et_password.getText().toString().trim();
+                    registerWithEmailApiCall(email, password, et_name.getText().toString().trim(), "",
+                            c_code + et_phone_number.getText().toString().trim(),
+                            SharedPreferenceUtility.getAdvertisingId(), "android-phone",
+                            "gmail-login", "0", verified, c_code);
 
 
                 }
@@ -258,34 +269,43 @@ public class RegisterActivity extends BaseActivity {
                 }
             }
         });
-/*
-        otpView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
-                    return false;
-                } else if (actionId == EditorInfo.IME_ACTION_DONE
-                        || event == null
-                        || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    //  Log.d("&&&&","enter pressed");
-                    tv_done.performClick();
-                }
-                return false;
-            }
-        });
-*/
         tv_resend_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-               /* resendVerificationCode(et_phone_number.getText().toString().trim(), countryCode);
+                resendOtp();
                 tv_resend_otp.setEnabled(false);
-                ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline_grey));
-                tv_resend_otp.setTextColor(getResources().getColor(R.color.coolGrey));*/
+               // ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline_grey));
+                Drawable resendDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_outline_grey, null);
+                ll_resend.setBackground(resendDrawable);
+                tv_resend_otp.setTextColor(getResources().getColor(R.color.coolGrey));
             }
         });
 
 
+    }
+    //resend otp
+    private void resendOtp(){
+        setTimer();
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable otpResendDisposable = usersService.resendOtp(user_id, SharedPreferenceUtility.getAdvertisingId(),
+                HappiApplication.getIpAddress(), SharedPreferenceUtility.getPublisher_id())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(basicResponse -> {
+                    if (basicResponse != null && (basicResponse.getMessage() != null && !basicResponse.getMessage().isEmpty())) {
+
+                        alert(basicResponse.getMessage());
+                    }
+
+                },throwable -> {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(RegisterActivity.this, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
+
+                });
+        compositeDisposable.add(otpResendDisposable);
     }
     //verify otp sent to mail
     private void verifyOtpFromEmailApiCall(String otp) {
@@ -307,24 +327,13 @@ public class RegisterActivity extends BaseActivity {
 
                             SharedPreferenceUtility.saveUserDetails(
                                     loginResponseModel.getData().get(0).getUser_id(), loginResponseModel.getData().get(0).getUser_name(), email,
-                                    password, "", "", "", fbId, false, c_code + et_phone_number.getText().toString().trim());
+                                    password, "", "", "", "", false, c_code + et_phone_number.getText().toString().trim());
 
                             isOtpScreenOpen = false;
-                          //  SharedPreferenceUtility.setLanguage("");
 
-                            //handling 3 cases
                             hideSoftKeyBoard();
-                          //  goToSubscriptionPage();
                             goToHome();
-                         //   verified = "1";
-                          //  c_code = countryCode;
-                          //  String phoneNo = c_code + et_phone_number.getText().toString().trim();
 
-                          //  String emailAddress = et_email.getText().toString().trim().toLowerCase();
-                         //   registerApiCall(emailAddress, et_password.getText().toString().trim(), et_name.getText().toString().trim(), "", phoneNo, deviceId, "android-phone", "gmail-login", "0", verified, c_code);
-
-
-                            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                         } else {
                             if(loginResponseModel.getMessage() != null && (!loginResponseModel.getMessage().isEmpty())){
                                 alert(loginResponseModel.getMessage());
@@ -377,9 +386,6 @@ public class RegisterActivity extends BaseActivity {
         jsonObject.addProperty("longitude", HappiApplication.getLongitude());
         jsonObject.addProperty("pubid", SharedPreferenceUtility.getPublisher_id());
 
-        //  Log.d("CHECKING REG:REG", "country_code "+SharedPreferenceUtility.getCountryCode());
-        //  Log.d("CHECKING  REG:REG", "latitude "+CeyFlixApplication.getLatitude());
-        //   Log.d("CHECKING  REG:REG", "longitude "+CeyFlixApplication.getLongitude());
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.RegisterWithEmail(jsonObject)
@@ -387,18 +393,14 @@ public class RegisterActivity extends BaseActivity {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(responseModel -> {
 
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
+
                     if (responseModel == null) {
                         if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
                         Toast.makeText(RegisterActivity.this, "Something went wrong. Please try again after sometime.", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
+
                         /*status:-
                         0 - registraion failed
                         1 - OTP sent to mail
@@ -437,29 +439,6 @@ public class RegisterActivity extends BaseActivity {
         compositeDisposable.add(videoDisposable);
     }
 
-
-    private void sendVerificationCode(String mobile, String countryCode) {
-
-       /* PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                countryCode + mobile,
-                60,
-                TimeUnit.SECONDS,
-                this,
-                mCallbacks
-        );*/
-    }
-
-    private void resendVerificationCode(String mobile, String countryCode) {
-
-        /*PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                countryCode + mobile,
-                60,
-                TimeUnit.SECONDS,
-                this,
-                mCallbacks,
-                mResendToken
-        );*/
-    }
     private void showOtpVerificationPage() {
         isOtpScreenOpen = true;
 
@@ -483,7 +462,7 @@ public class RegisterActivity extends BaseActivity {
         rl_otp_screen.setLayoutParams(params);
         rl_otp_verification_screen.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
         setTimer();
-        tv_verfication_code_number.setText(getText(R.string.please_type_verf_code) + " " + et_email.getText().toString().trim().toLowerCase());
+        tv_verfication_code_number.setText(getText(R.string.please_type_verf_code) + " " + email);
         rl_otp_verification_screen.setVisibility(View.VISIBLE);
         otpView.setText("");
         otpView.requestFocus();
@@ -503,12 +482,12 @@ public class RegisterActivity extends BaseActivity {
         });
     }
     private void setTimer() {
-        counterdown = 60;
+        counterdown = 30;
         minute = 0;
         minuteTimer = "";
         downTimer = "";
 
-        otpTimer = new CountDownTimer(62000, 1000) {
+        otpTimer = new CountDownTimer(32000, 1000) {
             public void onTick(long millisUntilFinished) {
                 tv_resend_otp.setEnabled(false);
                 minuteTimer = " " + "0" + String.valueOf(minute);
@@ -532,139 +511,14 @@ public class RegisterActivity extends BaseActivity {
             public void onFinish() {
                 tv_timer.setText(" 00:00");
                 tv_resend_otp.setEnabled(true);
-                tv_resend_otp.setTextColor(getResources().getColor(R.color.colorAccent));
-                ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline));
+                tv_resend_otp.setTextColor(getResources().getColor(R.color.white));
+                //ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline));
+                Drawable resendDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_outline, null);
+                ll_resend.setBackground(resendDrawable);
                 tv_resend_otp.setClickable(true);
             }
         }.start();
     }
-
-    //the callback to detect the verification status
-/*
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-
-            String code = phoneAuthCredential.getSmsCode();
-            if (code == null) {
-                signInWithPhoneAuthCredential(phoneAuthCredential);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            alert(e.getMessage());
-            Log.d("FirebaseException", e.getMessage());
-        }
-
-        private void showOtpVerificationPage() {
-            isOtpScreenOpen = true;
-
-            bt_signup.setEnabled(false);
-            et_name.setEnabled(false);
-            et_email.setEnabled(false);
-            et_phone_number.setEnabled(false);
-            ccp_picker.setCcpClickable(false);
-            et_password.setEnabled(false);
-            tv_login.setEnabled(false);
-
-
-            if ((dialog.isShowing())) {
-                dialog.dismiss();
-            }
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-            int height = displayMetrics.heightPixels;
-            int width = displayMetrics.widthPixels;
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rl_otp_screen.getLayoutParams();
-            rl_otp_screen.setLayoutParams(params);
-            rl_otp_verification_screen.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
-            setTimer();
-            tv_verfication_code_number.setText(getText(R.string.please_type_verf_code) + " " + et_email.getText().toString().trim().toLowerCase());
-            rl_otp_verification_screen.setVisibility(View.VISIBLE);
-            otpView.setText("");
-            otpView.requestFocus();
-            otpView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
-                        return false;
-                    } else if (actionId == EditorInfo.IME_ACTION_DONE
-                            || event == null
-                            || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                        //  Log.d("&&&&","enter pressed");
-                        tv_done.performClick();
-                    }
-                    return false;
-                }
-            });
-        }
-
-        private void setTimer() {
-
-            tv_resend_otp.setEnabled(false);
-            ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline_grey));
-            tv_resend_otp.setTextColor(getResources().getColor(R.color.coolGrey));
-
-
-            counterdown = 60;
-            minute = 0;
-            minuteTimer = "";
-            downTimer = "";
-
-            otpTimer = new CountDownTimer(62000, 1000) {
-                public void onTick(long millisUntilFinished) {
-                    tv_resend_otp.setEnabled(false);
-                    minuteTimer = " " + "0" + minute;
-                    if (counterdown > 0) {
-                        if (counterdown < 10) {
-                            downTimer = "0" + counterdown;
-                        } else {
-                            downTimer = String.valueOf(counterdown);
-                        }
-                    } else {
-                        downTimer = "00";
-                    }
-                    String timerText = minuteTimer + ":" + downTimer;
-                    tv_timer.setText(timerText);
-                    if (minute > 0) {
-                        --minute;
-                    }
-
-                    counterdown--;
-                }
-
-                public void onFinish() {
-                    String zeroText = " 00:00";
-                    tv_timer.setText(zeroText);
-                    if (otpTimer != null) {
-                        otpTimer.cancel();
-                    }
-                    tv_resend_otp.setEnabled(true);
-                    tv_resend_otp.setTextColor(getResources().getColor(R.color.colorAccent));
-                    ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline));
-                    tv_resend_otp.setClickable(true);
-                }
-            }.start();
-        }
-
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-
-            super.onCodeSent(s, forceResendingToken);
-            showOtpVerificationPage();
-            //storing the verification id that is sent to the user
-            if (s != null) {
-                mVerificationId = s;
-                mResendToken = forceResendingToken;
-                //   Log.e("VVVV","oncode sent: "+s);
-            }
-
-        }
-
-    };
-*/
 
     void alert(String message) {
         if (dialog.isShowing()) {
@@ -677,144 +531,6 @@ public class RegisterActivity extends BaseActivity {
         bld.create().show();
     }
 
-    private void verifyVerificationCode(String otp) {
-        //creating the credential
-        if (otp != null) {
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
-
-            //signing the usermAuth
-
-            signInWithPhoneAuthCredential(credential);
-
-        }
-
-    }
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-
-                            //verification successful we will start the profile activity
-
-
-                            verified = "1";
-                            c_code = countryCode;
-                            String phoneNo = c_code + et_phone_number.getText().toString().trim();
-
-                            String emailAddress = et_email.getText().toString().trim().toLowerCase();
-                            registerApiCall(emailAddress, et_password.getText().toString().trim(), et_name.getText().toString().trim(), "", phoneNo, deviceId, "android-phone", "gmail-login", "0", verified, c_code);
-
-
-                        } else {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-
-                            String message = "Something is wrong, we will fix it soon...";
-
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                message = "Invalid code entered...";
-                            }
-
-                            Snackbar snackbar = Snackbar.make(findViewById(R.id.ll_parent), message, Snackbar.LENGTH_LONG);
-                            snackbar.setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-                                }
-                            });
-                            snackbar.show();
-                        }
-                    }
-                });
-    }
-
-    //Register API Call
-    private void registerApiCall(final String email, final String password, final String firstName, final String lastName, final String phone, final String deviceId, final String deviceTyps,
-                                 final String loginType, final String fbId, final String verified, String c_code) {
-
-        hideSoftKeyBoard();
-
-        //creating the json object to send
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("user_email", email);
-        jsonObject.addProperty("password", password);
-        jsonObject.addProperty("first_name", firstName);
-        jsonObject.addProperty("last_name", lastName);
-        jsonObject.addProperty("phone", phone);
-        jsonObject.addProperty("device_id", deviceId);
-        jsonObject.addProperty("device_type", deviceTyps);
-        jsonObject.addProperty("login_type", loginType);
-        jsonObject.addProperty("facebook_id", fbId);
-        jsonObject.addProperty("verified", verified);
-        jsonObject.addProperty("c_code", c_code);
-        jsonObject.addProperty("country_code", SharedPreferenceUtility.getCountryCode());
-        jsonObject.addProperty("latitude", HappiApplication.getLatitude());
-        jsonObject.addProperty("longitude", HappiApplication.getLongitude());
-        jsonObject.addProperty("pubid", SharedPreferenceUtility.getPublisher_id());
-
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.Register(jsonObject)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(loginResponseModel -> {
-
-
-                    if (loginResponseModel == null) {
-                        if (dialog.isShowing()) {
-                            dialog.dismiss();
-                        }
-                        Toast.makeText(RegisterActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (loginResponseModel.getStatus() == 1) {
-
-                            SharedPreferenceUtility.saveUserDetails(
-                                    loginResponseModel.getData().get(0).getUser_id(), firstName, email,
-                                    password, "", "", "", fbId, false, phone);
-                            SharedPreferenceUtility.setGuest(false);
-                            isOtpScreenOpen = false;
-
-                            hideSoftKeyBoard();
-
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-
-                            goToHome();
-
-                        } else if (loginResponseModel.getStatus() == 2) {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            Toast.makeText(RegisterActivity.this, loginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
-
-                            goToLogin();
-                        } else if (loginResponseModel.getStatus() == 3) {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            if (loginResponseModel.getMessage() != null && !loginResponseModel.getMessage().isEmpty())
-                                alert(loginResponseModel.getMessage());
-                        } else {
-                            if (dialog.isShowing()) {
-                                dialog.dismiss();
-                            }
-                            if (loginResponseModel.getMessage() != null && !loginResponseModel.getMessage().isEmpty())
-                                alert(loginResponseModel.getMessage());
-                        }
-                    }
-                }, throwable -> {
-                    if (dialog.isShowing()) {
-                        dialog.dismiss();
-                    }
-                    Toast.makeText(RegisterActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
-
-                });
-        compositeDisposable.add(videoDisposable);
-    }
 
     private void goToHome() {
         //Intent intent = new Intent(RegisterActivity.this, HomeActivity.class);
@@ -825,11 +541,6 @@ public class RegisterActivity extends BaseActivity {
         finish();
     }
 
-    private void goToLogin() {
-        Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     public void setupUI(View view) {
 
@@ -854,12 +565,16 @@ public class RegisterActivity extends BaseActivity {
 
     private void hideSoftKeyBoard() {
 
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        assert imm != null;
-        if (imm != null && imm.isAcceptingText()) {
-            if (getCurrentFocus() != null)// verify if the soft keyboard is open
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-        }
+       try{
+           InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+           assert imm != null;
+           if (imm != null && imm.isAcceptingText()) {
+               if (getCurrentFocus() != null)// verify if the soft keyboard is open
+                   imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+           }
+       }catch(Exception ex){
+           Log.e("reg exception","");
+       }
     }
 
     @Override
@@ -907,5 +622,72 @@ public class RegisterActivity extends BaseActivity {
                 subscription.dispose();
             }
         }
+    }
+
+
+    private void getNetworkIP() {
+        boolean isMobileData = false;
+        boolean isWifi = false;
+        String ipAddress = "";
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+
+        for (NetworkInfo networkInfo : networkInfos) {
+            if (networkInfo.getTypeName().equalsIgnoreCase("WIFI")) {
+                if (networkInfo.isConnected()) {
+                    isWifi = true;
+                } else {
+                    isWifi = false;
+                }
+            }
+
+            if (networkInfo.getTypeName().equalsIgnoreCase("MOBILE")) {
+                if (networkInfo.isConnected()) {
+                    isMobileData = true;
+                } else {
+                    isMobileData = false;
+                }
+
+            }
+        }
+
+        if (isWifi) {
+            ipAddress = getWifiIpAddress();
+            HappiApplication.setIpAddress(ipAddress);
+        }
+        if (isMobileData) {
+            ipAddress = getMobileIpAddress();
+            HappiApplication.setIpAddress(ipAddress);
+        }
+    }
+
+    private String getWifiIpAddress() {
+        @SuppressWarnings("deprecation")
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        return ip;
+    }
+
+    private String getMobileIpAddress() {
+        try {
+
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface networkInterface = en.nextElement();
+                for (Enumeration<InetAddress> enumipAddr = networkInterface.getInetAddresses(); enumipAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = enumipAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        // if(inetAddress instanceof Inet4Address)
+                        return Formatter.formatIpAddress(inetAddress.hashCode());
+
+                    }
+
+                }
+            }
+
+        } catch (Exception ex) {
+            // Log.e("1234###", "exception: " + ex.toString());
+        }
+        return null;
     }
 }

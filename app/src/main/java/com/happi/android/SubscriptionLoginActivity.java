@@ -4,10 +4,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -27,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.AlertDialogRegisterScreen;
@@ -63,8 +66,12 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
     private ProgressDialog dialog;
     private CompositeDisposable compositeDisposable;
     private String from = "empty";
-    private boolean isFromSubsc = false;
     //otp
+    CountDownTimer otpTimer;
+    public int counterdown;
+    public int minute;
+    String downTimer = "";
+    String minuteTimer = "";
     Button btLogin;
     RelativeLayout rl_otp_screen;
     RelativeLayout rl_otp_verification_screen;
@@ -113,6 +120,17 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
             getNetworkIP();
         }
 
+        LinearLayout ll_signup = findViewById(R.id.ll_signup);
+        TypefacedTextViewRegular tv_signup = findViewById(R.id.tv_signup);
+
+
+        if(SharedPreferenceUtility.isSubscription_mandatory_flag()){
+            ll_signup.setVisibility(View.INVISIBLE);
+        }else{
+            ll_signup.setVisibility(View.VISIBLE);
+        }
+
+
         RelativeLayout ll_parent = findViewById(R.id.ll_parent);
         setupUI(ll_parent);
 
@@ -125,7 +143,6 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
 
 
         compositeDisposable = new CompositeDisposable();
-        isFromSubsc = false;
 
         dialog = new ProgressDialog(SubscriptionLoginActivity.this);
         dialog.setMessage("Please wait.");
@@ -151,6 +168,10 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         tv_resend_otp.setVisibility(View.INVISIBLE);
         ll_resend = findViewById(R.id.ll_resend);
 
+        tv_signup.setOnClickListener(v -> {
+
+            goToRegister();
+        });
         iv_back_to_page.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,7 +206,12 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         tv_resend_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                resendOtp();
+                tv_resend_otp.setEnabled(false);
+                // ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline_grey));
+                Drawable resendDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_outline_grey, null);
+                ll_resend.setBackground(resendDrawable);
+                tv_resend_otp.setTextColor(getResources().getColor(R.color.coolGrey));
             }
         });
 
@@ -223,7 +249,68 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
 
 
     }
+    //resend otp
+    private void resendOtp(){
+        setTimer();
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable otpResendDisposable = usersService.resendOtp(user_id, SharedPreferenceUtility.getAdvertisingId(),
+                HappiApplication.getIpAddress(), SharedPreferenceUtility.getPublisher_id())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(basicResponse -> {
+                    if (basicResponse != null && (basicResponse.getMessage() != null && !basicResponse.getMessage().isEmpty())) {
 
+                        alert(basicResponse.getMessage());
+                    }
+
+                },throwable -> {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(SubscriptionLoginActivity.this, "Something went wrong. Please try again later.", Toast.LENGTH_SHORT).show();
+
+                });
+        compositeDisposable.add(otpResendDisposable);
+    }
+    private void setTimer() {
+
+        counterdown = 30;
+        minute = 0;
+        minuteTimer = "";
+        downTimer = "";
+
+        otpTimer = new CountDownTimer(32000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                tv_resend_otp.setEnabled(false);
+                minuteTimer = " " + "0" + String.valueOf(minute);
+                if (counterdown > 0) {
+                    if (counterdown < 10) {
+                        downTimer = "0" + String.valueOf(counterdown);
+                    } else {
+                        downTimer = String.valueOf(counterdown);
+                    }
+                } else {
+                    downTimer = "00";
+                }
+                tv_timer.setText(minuteTimer + ":" + downTimer);
+                if (minute > 0) {
+                    --minute;
+                }
+
+                counterdown--;
+            }
+
+            public void onFinish() {
+                tv_timer.setText(" 00:00");
+                tv_resend_otp.setEnabled(true);
+                tv_resend_otp.setTextColor(getResources().getColor(R.color.white));
+                //ll_resend.setBackground(getResources().getDrawable(R.drawable.bg_outline));
+                Drawable resendDrawable = ResourcesCompat.getDrawable(getResources(), R.drawable.bg_outline, null);
+                ll_resend.setBackground(resendDrawable);
+                tv_resend_otp.setClickable(true);
+            }
+        }.start();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -469,7 +556,6 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel -> {
                     if (subscriptionResponseModel.isForcibleLogout()) {
-                        isFromSubsc = true;
                         loginExceededAlertSubscription();
                     } else {
                         List<String> subids = new ArrayList<>();
@@ -481,7 +567,14 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                         }
                         HappiApplication.setSub_id(subids);
                         if (!SharedPreferenceUtility.getGuest()) {
-                            if (from != null && from.equals("videoPlayer")) {
+                            if (from != null && from.equalsIgnoreCase("videoplayer")) {
+
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                goToVideoPlayerScreen();
+
+                            }else if (from != null && from.equalsIgnoreCase("videodetails")) {
 
                                 if (dialog.isShowing()) {
                                     dialog.dismiss();
@@ -489,7 +582,13 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                                 SubscriptionActivity.currentActivity.finish();
                                 goToVideoPlayerScreen();
 
-                            } else if (from != null && from.equals("channelPlayer")) {
+                            } else if (from != null && from.equalsIgnoreCase("channelplayer")) {
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                goToChannelPlayerScreen();
+
+                            }else if (from != null && from.equalsIgnoreCase("channeldetails")) {
                                 if (dialog.isShowing()) {
                                     dialog.dismiss();
                                 }
@@ -552,17 +651,25 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                 .subscribe(logoutResponseModel -> {
 
                     if (logoutResponseModel.getStatus() == 100) {
+
                         SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
                         SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
                         SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
                         SharedPreferenceUtility.setVideoId(0);
-                        // SharedPreferenceUtility.setLanguage("");
-                        SharedPreferenceUtility.setNightMode(true);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
                         HappiApplication.setSub_id(new ArrayList<>());
 
                         et_email.setText("");
                         et_password.setText("");
                         et_email.requestFocus();
+
                         if (dialog.isShowing()) {
                             dialog.dismiss();
                         }
@@ -595,12 +702,19 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                 .subscribe(logoutResponseModel -> {
 
                     if (logoutResponseModel.getStatus() == 100) {
+
                         SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
                         SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
                         SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
                         SharedPreferenceUtility.setVideoId(0);
-                        //  SharedPreferenceUtility.setLanguage("");
-                        SharedPreferenceUtility.setNightMode(true);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
                         HappiApplication.setSub_id(new ArrayList<>());
 
                         et_email.setText("");
@@ -777,6 +891,17 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
             Log.e("1234###", "exception: " + ex.toString());
         }
         return null;
+    }
+
+
+    private void goToRegister() {
+
+        Intent intent = new Intent(SubscriptionLoginActivity.this, SubscriptionRegisterActivity.class);
+        if(getIntent().getSerializableExtra("from") != null){
+            intent.putExtra("from",getIntent().getSerializableExtra("from"));
+        }
+        startActivity(intent);
+        finish();
     }
 }
 

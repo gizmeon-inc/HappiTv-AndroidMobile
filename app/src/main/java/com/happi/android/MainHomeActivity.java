@@ -1,6 +1,7 @@
 package com.happi.android;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -73,7 +74,7 @@ import com.happi.android.common.AdvertisingIdClient;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
-import com.happi.android.customviews.LogoutAlertDialog;
+import com.happi.android.customviews.CustomAlertDialog;
 import com.happi.android.customviews.SpacesItemDecoration;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.exoplayercontroller.EventLogger;
@@ -110,7 +111,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,
-        LogoutAlertDialog.onLogoutClickListener, View.OnClickListener,
+        View.OnClickListener, CustomAlertDialog.OnOkClick,
         VideoList_adapter.itemClickListener,
         ShowList_adapter.itemClickListener,
         ChannelSuggestionAdapter.SuggesteditemClickListener, CategoryListAdapter.itemClickListener,
@@ -151,7 +152,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private int commonVideoOrChannelId = 0;
 
     private String showId = "empty";
-    private boolean isFromSubsc = false;
 
     int apiErrorCount = 0;
 
@@ -181,6 +181,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private int liveChannelId = 0;
     //nested scroll
     private NestedScrollView sv_scrollview;
+    private ProgressDialog dialog;
 
     @Override
 
@@ -216,6 +217,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             } else {
                 showId = "empty";
             }
+        }else{
+            showId = "empty";
         }
         if (getIntent() != null) {
             isRedirectToLive = getIntent().getBooleanExtra("notification", false);
@@ -224,7 +227,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 uniqueId = getIntent().getIntExtra(ConstantUtils.UNIQUE_ID, 0);
             }
         }
-        isFromSubsc = false;
         wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
         sharedPreferences = getSharedPreferences(HappiApplication.getCurrentContext().getString(R.string.USER_PREFERENCES),
@@ -232,6 +234,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         getDisplayMetrics();
 
         compositeDisposable = new CompositeDisposable();
+
+        //progress dialog
+        dialog = new ProgressDialog(this, R.style.MyTheme);
+        dialog.setCancelable(false);
 
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -290,7 +296,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         /*mSwipeRefreshLayout.setOnRefreshListener(() -> {
 
-           *//* mSwipeRefreshLayout.setRefreshing(false);
+         *//* mSwipeRefreshLayout.setRefreshing(false);
             finish();
             startActivity(getIntent());
             overridePendingTransition(0, 0);*//*
@@ -364,12 +370,12 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         updateMenuItem(0);
 
         setUserName();
+        setLogoutAllVisibility();
 
         if (apiErrorCount == 5) {
             setupRecyclerView();
             recallHomeApis();
         }
-
 
 
         if (AppUtils.isDeviceRooted()) {
@@ -415,7 +421,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         categoryList_adapter = new CategoryListAdapter(this,
                 this::onCategoryItemClicked, false);
 
-        circleViewAdapter = new CategoryCircleViewAdapter(this, this::onCategoryItemClickedForCircleView);
+        circleViewAdapter = new CategoryCircleViewAdapter(this, this::onCategoryItemClickedForCircleView,false);
         rv_category_list.setAdapter(circleViewAdapter);
 
         loadingCategories = Skeleton.bind(rv_category_list)
@@ -465,9 +471,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .show();
 
 
-
         //-----------------------------------------live----------------------------------------------------//
-       ViewCompat.setNestedScrollingEnabled(rv_live, false);
+        ViewCompat.setNestedScrollingEnabled(rv_live, false);
         rv_live.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         liveChannelsAdapter = new ChannelListAdapter(this,
                 this::onChannelItemClicked, false, MainHomeActivity.this, this::onRedirectionToLive);
@@ -523,7 +528,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
                         }, throwable -> {
                             // Log.w("KKK###","session");
-                            Log.e("getSessionToken","token error");
+                            Log.e("getSessionToken", "token error");
                         });
         compositeDisposable.add(tokenDisposable);
     }
@@ -538,7 +543,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel -> {
                     if (subscriptionResponseModel.isForcibleLogout()) {
-                        isFromSubsc = true;
                         loginExceededAlertSubscription();
                     } else {
                         subids.clear();
@@ -558,7 +562,12 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void loginExceededAlertSubscription() {
-        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        String message = "You are no longer Logged in this device. Please Login again to access.";
+        CustomAlertDialog alertDialog =
+                new CustomAlertDialog(MainHomeActivity.this, "ok", message, "Ok", "", null, null, this::onOkClickNeutral, null);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();
@@ -634,27 +643,27 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                     if (channelListResponse.getData().size() != 0) {
                         channelModels.addAll(channelListResponse.getData());
                     }
-                    if(!channelModelList.isEmpty()){
+                    if (!channelModelList.isEmpty()) {
                         channelModelList.clear();
                     }
                     channelModelList.addAll(channelModels);
 
-                        //load all live - player and channels list
-                        if (channelModelList.isEmpty()) {
-                            hideLivePlayerAndSchedule();
-                            rv_live.setVisibility(View.GONE);
-                            ll_popular_live.setVisibility(View.GONE);
+                    //load all live - player and channels list
+                    if (channelModelList.isEmpty()) {
+                        hideLivePlayerAndSchedule();
+                        rv_live.setVisibility(View.GONE);
+                        ll_popular_live.setVisibility(View.GONE);
+                    } else {
+                        liveChannelId = channelModelList.get(0).getChannelId();
+                        generateToken(channelModelList.get(0));
+                        loadLiveSchedule(liveChannelId);
+                        //load live channel list
+                        if (channelModelList.size() >= 10) {
+                            updateLiveVideos(channelModelList.subList(0, 10));
                         } else {
-                            liveChannelId = channelModelList.get(0).getChannelId();
-                            generateToken(channelModelList.get(0));
-                            loadLiveSchedule(liveChannelId);
-                            //load live channel list
-                            if (channelModelList.size() >= 10) {
-                                updateLiveVideos(channelModelList.subList(0, 10));
-                            } else {
-                                updateLiveVideos(channelModelList);
-                            }
+                            updateLiveVideos(channelModelList);
                         }
+                    }
 
 
                 }, throwable -> {
@@ -682,16 +691,17 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         compositeDisposable.add(tokenDisposable);
 
     }
-    private void loadLiveSchedule(int channelId){
+
+    private void loadLiveSchedule(int channelId) {
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable tokenDisposable = usersService.getLiveSchedule(HappiApplication.getAppToken(), channelId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(liveScheduleResponse -> {
 
-                    if(liveScheduleResponse.getData().size() != 0){
+                    if (liveScheduleResponse.getData().size() != 0) {
                         updateLiveScheduleList(liveScheduleResponse.getData());
-                    }else{
+                    } else {
                         ll_live_guide.setVisibility(View.GONE);
                         rv_live_schedule_list.setVisibility(View.GONE);
                     }
@@ -701,6 +711,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 });
         compositeDisposable.add(tokenDisposable);
     }
+
     private void updateLiveScheduleList(List<LiveScheduleResponse.LiveScheduleModel> liveScheduleModelList) {
 
         liveScheduleHomeListAdapter.clearAll();
@@ -815,15 +826,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 });
         compositeDisposable.add(loginDisposable);
 
-        if (!showId.equalsIgnoreCase("empty") && HappiApplication.isIsFromLink()) {
-            HappiApplication.setIsFromLink(false);
-            Intent show = new Intent(MainHomeActivity.this, ShowDetailsActivity.class);
-            show.putExtra(ConstantUtils.SHOW_ID, showId);
-            show.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(show);
-            overridePendingTransition(0, 0);
-            showId = "empty";
-        }
     }
 
     private void loadCategoriesHomeList() {
@@ -848,22 +850,32 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                     } else {
                         rv_categories_home_list.setVisibility(View.GONE);
                     }
-                    if(mSwipeRefreshLayout.isRefreshing()){
+                    if (mSwipeRefreshLayout.isRefreshing()) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                 }, throwable -> {
                     apiErrorCount++;
-                    if(mSwipeRefreshLayout.isRefreshing()){
+                    if (mSwipeRefreshLayout.isRefreshing()) {
                         mSwipeRefreshLayout.setRefreshing(false);
                     }
                     displayErrorLayout(getString(R.string.server_error));
                 });
         compositeDisposable.add(homeVideoDisposable);
+
+        if (!showId.equalsIgnoreCase("empty") && HappiApplication.isIsFromLink()) {
+            HappiApplication.setIsFromLink(false);
+            Intent show = new Intent(MainHomeActivity.this, ShowDetailsActivity.class);
+            show.putExtra(ConstantUtils.SHOW_ID, showId);
+            show.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(show);
+            overridePendingTransition(0, 0);
+            showId = "empty";
+        }
     }
 
     private void recallHomeApis() {
         if (!HappiApplication.getAppToken().isEmpty()) {
-            if(liveScheduleHomeListAdapter == null || liveScheduleHomeListAdapter.isEmpty()){
+            if (liveScheduleHomeListAdapter == null || liveScheduleHomeListAdapter.isEmpty()) {
                 loadLiveSchedule(liveChannelId);
             }
             if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {
@@ -1334,17 +1346,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
     }
 
-    @Override
-    public void onLogoutClicked() {
-        if (isFromSubsc) {
-            // logoutApiCall();
-        }
-    }
-
-    @Override
-    public void onLogoutAllClicked() {
-        //  logoutAllApiCall();
-    }
 
     @Override
     public void onCategoryItemClickedForCircleView(int adapterPosition) {
@@ -1376,14 +1377,21 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onRefresh() {
-        if(isNetworkConnected()){
-            setupRecyclerView();
-            loadHome();
-        }else{
-            if(mSwipeRefreshLayout.isRefreshing()){
+        if (isNetworkConnected()) {
+            mSwipeRefreshLayout.setRefreshing(false);
+            finish();
+            startActivity(getIntent());
+            overridePendingTransition(0, 0);
+        } else {
+            if (mSwipeRefreshLayout.isRefreshing()) {
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }
+    }
+
+    @Override
+    public void onOkClickNeutral() {
+        logoutApiCall();
     }
 
 
@@ -1435,6 +1443,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void hideLivePlayerAndSchedule() {
+        releaseExoPlayer();
         pb_live.setVisibility(View.GONE);
         rl_player_live.setVisibility(View.GONE);
         exo_player_view_home.setVisibility(View.GONE);
@@ -1443,11 +1452,12 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void liveError() {
-        Toast.makeText(this, "Oops!! Can't play trailer. Please try again later.", Toast.LENGTH_SHORT).show();
-        releaseExoPlayer();
+        Toast.makeText(this, "Oops!! Can't play video. Please try again later.", Toast.LENGTH_SHORT).show();
+
         hideLivePlayerAndSchedule();
     }
-    private void releaseExoPlayer(){
+
+    private void releaseExoPlayer() {
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
             exoPlayer.stop();
@@ -1460,12 +1470,13 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             exo_player_view_home.setPlayer(null);
         }
     }
-    private void loadHome(){
+
+    private void loadHome() {
         releaseExoPlayer();
         setupRecyclerView();
-        if(HappiApplication.getAppToken().isEmpty()){
+        if (HappiApplication.getAppToken().isEmpty()) {
             getSessionToken();
-        }else{
+        } else {
             if (!SharedPreferenceUtility.getGuest()) {
                 checkSubscription();
             }
@@ -1477,6 +1488,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             loadCategoriesHomeList();
         }
     }
+
     private void releasePlayer() {
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
@@ -1487,5 +1499,63 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(true);
         }
+    }
+
+    private void logoutApiCall() {
+        dialog.show();
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logout(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
+
+                    if (logoutResponseModel.getStatus() == 100) {
+
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+
+                        goToLogin();
+
+
+                    } else {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        Toast.makeText(this, "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(this, "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+        compositeDisposable.add(logoutDisposable);
+    }
+
+    private void goToLogin() {
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        Intent intent = new Intent(MainHomeActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        MainHomeActivity.this.finish();
     }
 }

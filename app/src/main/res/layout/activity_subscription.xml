@@ -57,7 +57,7 @@
             android:layout_height="match_parent"
             android:background="@color/dark_overlay" />
     </FrameLayout>
-    <RelativeLayout
+    <!--<RelativeLayout
         android:id="@+id/rl_btm"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
 
         <include layout="@layout/layout_otp_verification"></include>
 
-    </RelativeLayout>
+    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/rl_btm_navigation"

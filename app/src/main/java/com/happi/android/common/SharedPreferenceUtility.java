@@ -23,17 +23,7 @@ public class SharedPreferenceUtility {
         return sharedPreferences;
     }
 
-    public static boolean isFirstTimeLaunch() {
-        return getSharedPreferenceInstance().getBoolean("IsFirstTimeLaunch", true);
-    }
 
-    //for splash screen
-    public static void setFirstTimeLaunch(boolean isFirstTime) {
-
-        SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferenceInstance().edit();
-        sharedPreferencesEditor.putBoolean("IsFirstTimeLaunch", isFirstTime);
-        sharedPreferencesEditor.commit();
-    }
 
     public static boolean isNightMode() {
         return getSharedPreferenceInstance().getBoolean("appTheme", false);
@@ -131,41 +121,10 @@ public class SharedPreferenceUtility {
         return getSharedPreferenceInstance().getString("userName", "");
     }
 
-    public static String getToken() {
-        return getSharedPreferenceInstance().getString("token", "");
-    }
-
-    public static String getBundleStatus() {
-        return getSharedPreferenceInstance().getString("bundle_status", "");
-    }
-
     public static String getUserEmail() {
         return getSharedPreferenceInstance().getString("userEmail", "");
     }
 
-    public static String getUserPassword() {
-        return getSharedPreferenceInstance().getString("userPassword", "");
-    }
-
-    public static String getUserLoginType() {
-        return getSharedPreferenceInstance().getString("userLoginType", "");
-    }
-
-    public static String getUserDeviceId() {
-        return getSharedPreferenceInstance().getString("userDeviceId", "");
-    }
-
-    public static String getUserDeviceType() {
-        return getSharedPreferenceInstance().getString("userDeviceType", "");
-    }
-
-    public static String getUserFbId() {
-        return getSharedPreferenceInstance().getString("userFbId", "");
-    }
-
-    public static boolean getGuestStatus() {
-        return getSharedPreferenceInstance().getBoolean("guestStatus", false);
-    }
 
     public static String getUserContact() {
         return getSharedPreferenceInstance().getString("userPhone", "");
@@ -431,4 +390,27 @@ public class SharedPreferenceUtility {
     public static int getCurrentBottomMenu() {
         return getSharedPreferenceInstance().getInt("menu_id", -1);
     }
+
+
+    public static boolean isRegistration_mandatory_flag() {
+        return getSharedPreferenceInstance().getBoolean("registration_mandatory_flag", false);
+    }
+
+    public static void setRegistration_mandatory_flag(boolean isRegistrationMandatory) {
+
+        SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferenceInstance().edit();
+        sharedPreferencesEditor.putBoolean("registration_mandatory_flag", isRegistrationMandatory);
+        sharedPreferencesEditor.commit();
+    }
+    public static boolean isSubscription_mandatory_flag() {
+        return getSharedPreferenceInstance().getBoolean("subscription_mandatory_flag", false);
+    }
+
+    public static void setSubscription_mandatory_flag(boolean isSubscriptionMandatory) {
+
+        SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferenceInstance().edit();
+        sharedPreferencesEditor.putBoolean("subscription_mandatory_flag", isSubscriptionMandatory);
+        sharedPreferencesEditor.commit();
+    }
+
 }

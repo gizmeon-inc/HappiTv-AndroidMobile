@@ -1,27 +1,24 @@
 package com.happi.android;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.happi.android.adapters.CategoryListAdapter;
-import com.happi.android.common.HappiApplication;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
+import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
+import com.happi.android.adapters.CategoryCircleViewAdapter;
 import com.happi.android.common.ActivityChooser;
 import com.happi.android.common.BaseActivity;
+import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.ItemDecorationAlbumColumns;
 import com.happi.android.customviews.TypefacedTextViewRegular;
@@ -30,9 +27,6 @@ import com.happi.android.recyclerview.AnimationItem;
 import com.happi.android.recyclerview.GridRecyclerView;
 import com.happi.android.utils.ConstantUtils;
 import com.happi.android.webservice.ApiClient;
-import com.ethanhua.skeleton.Skeleton;
-import com.ethanhua.skeleton.SkeletonScreen;
-import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import java.util.List;
 
@@ -42,14 +36,14 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class CategoriesListActivity extends BaseActivity implements CategoryListAdapter.itemClickListener {
+public class CategoriesListActivity extends BaseActivity implements CategoryCircleViewAdapter.itemClickListenerForCategory {
 
     TypefacedTextViewRegular tv_title;
     ImageView iv_menu, iv_back, iv_logo_text, iv_search;
     TypefacedTextViewRegular tv_errormsg;
     ImageView iv_errorimg;
     GridRecyclerView rv_category_list;
-    CategoryListAdapter categoryList_adapter;
+    private CategoryCircleViewAdapter circleViewAdapter;
     private AnimationItem mSelectedItem;
     private Disposable internetDisposable;
     private CompositeDisposable compositeDisposable;
@@ -99,25 +93,24 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
         setupRecyclerview();
 
         iv_back.setOnClickListener(new View.OnClickListener() {
-                                       @Override
-                                       public void onClick(View view) {
-                                           onBackPressed();
-                                       }
-                                   });
+            @Override
+            public void onClick(View view) {
+                onBackPressed();
+            }
+        });
 
     }
 
     private void setupRecyclerview() {
 
         rv_category_list.setLayoutManager(new GridLayoutManager(this, 3));
-        rv_category_list.addItemDecoration(new ItemDecorationAlbumColumns(7,3));
-        categoryList_adapter = new CategoryListAdapter(getApplicationContext(),
-                this::onCategoryItemClicked, true);
-        rv_category_list.setAdapter(categoryList_adapter);
+        rv_category_list.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
+        circleViewAdapter = new CategoryCircleViewAdapter(this, this::onCategoryItemClickedForCircleView, true);
+        rv_category_list.setAdapter(circleViewAdapter);
 
         loadingCategories = Skeleton.bind(rv_category_list)
-                .adapter(categoryList_adapter)
-                .load(R.layout.loading_categories_vertical)
+                .adapter(circleViewAdapter)
+                .load(R.layout.item_category_circle_loading_vert)
                 .color(R.color.colorLine)
                 .shimmer(true)
                 .angle(30)
@@ -130,17 +123,17 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(isConnected -> {
-                   // Log.d("^&^&^&","CatList"+isConnected);
-                    if (isConnected){
-                      //  Log.d("^&^&^&","CatList"+"^&^&^&");
-                       // loadCategories();
+                    // Log.d("^&^&^&","CatList"+isConnected);
+                    if (isConnected) {
+                        //  Log.d("^&^&^&","CatList"+"^&^&^&");
+                        // loadCategories();
                     }
 
                 });
         loadCategoryList();
     }
 
-    private void loadCategoryList(){
+    private void loadCategoryList() {
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable cateogoryDisposable = usersService.GetTheme(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getPublisher_id())
@@ -157,7 +150,6 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
                     }
 
 
-
                 }, throwable -> {
                     displayErrorLayout(getString(R.string.server_error));
                 });
@@ -168,7 +160,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.GetTheme(HappiApplication.getAppToken(),
-                 SharedPreferenceUtility.getPublisher_id())
+                SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<CategoryModel>() {
@@ -191,13 +183,14 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
 
     private void updateCategoryList(List<CategoryModel.Category> categories) {
 
-        categoryList_adapter.clearAll();
-        categoryList_adapter.addAll(categories);
+        circleViewAdapter.clearAll();
+        circleViewAdapter.addAll(categories);
         loadingCategories.hide();
-        categoryList_adapter.notifyDataSetChanged();
+        circleViewAdapter.notifyDataSetChanged();
         runLayoutAnimation(rv_category_list, mSelectedItem);
-        if(categoryList_adapter.isEmpty()){
+        if (circleViewAdapter.isEmpty()) {
             rv_category_list.setVisibility(View.GONE);
+            displayErrorLayout(getString(R.string.no_results_found));
         }
     }
 
@@ -210,18 +203,6 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
         tv_errormsg.setText(message);
     }
 
-    @Override
-    public void onCategoryItemClicked(int adapterPosition) {
-
-        HappiApplication.setCategoryId(categoryList_adapter
-                .getItem(adapterPosition).getCategoryid() + ";" + categoryList_adapter.getItem
-                (adapterPosition).getCategory());
-        ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, categoryList_adapter
-                .getItem(adapterPosition).getCategoryid() + ";" + categoryList_adapter.getItem
-                (adapterPosition).getCategory());
-      //  overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        overridePendingTransition(0,0);
-    }
 
     private void runLayoutAnimation(final RecyclerView recyclerView, final AnimationItem item) {
         final Context context = recyclerView.getContext();
@@ -258,7 +239,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
 
     }
 
@@ -268,5 +249,16 @@ public class CategoriesListActivity extends BaseActivity implements CategoryList
                 subscription.dispose();
             }
         }
+    }
+
+    @Override
+    public void onCategoryItemClickedForCircleView(int adapterPosition) {
+        HappiApplication.setCategoryId(circleViewAdapter
+                .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
+                (adapterPosition).getCategory());
+        ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, circleViewAdapter
+                .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
+                (adapterPosition).getCategory());
+        overridePendingTransition(0, 0);
     }
 }

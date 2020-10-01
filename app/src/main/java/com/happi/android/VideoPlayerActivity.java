@@ -4,11 +4,17 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -29,7 +35,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.core.widget.NestedScrollView;
 import androidx.mediarouter.app.MediaRouteButton;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -43,7 +48,9 @@ import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
+import com.happi.android.customviews.CustomAlertDialog;
 import com.happi.android.customviews.ItemDecorationAlbumColumns;
+import com.happi.android.customviews.LoginRegisterAlert;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.customviews.TypefacedTextViewSemiBold;
 import com.happi.android.exoplayercontroller.EventLogger;
@@ -52,6 +59,7 @@ import com.happi.android.models.IPAddressModel;
 import com.happi.android.models.SelectedVideoModel;
 import com.happi.android.models.ShowModel;
 import com.happi.android.models.TokenResponse;
+import com.happi.android.models.UserSubscriptionModel;
 import com.happi.android.models.VideoSubscriptionModel;
 import com.happi.android.recyclerview.AnimationItem;
 import com.happi.android.recyclerview.GridRecyclerView;
@@ -115,18 +123,21 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.common.images.WebImage;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.gson.JsonObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.Timer;
@@ -143,10 +154,11 @@ import retrofit2.Response;
 
 public class VideoPlayerActivity extends BaseActivity implements View.OnClickListener,
         AdErrorEvent.AdErrorListener, AdEvent.AdEventListener, Cast.MessageReceivedCallback,
-        ShowList_adapter.itemClickListener {
+        ShowList_adapter.itemClickListener,
+        LoginRegisterAlert.OnLoginRegisterUserNeutral, LoginRegisterAlert.OnLoginRegisterUserNegative,
+        CustomAlertDialog.OnOkClick{
 
     private String token = "";
-    private ImageView iv_back;
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
     private PlayerView exo_player_view;
     private SimpleExoPlayer exoPlayer;
@@ -154,25 +166,19 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
     private Handler mainHandler;
     private EventLogger eventLogger;
-    private DefaultTrackSelector trackSelector;
-    private TrackSelectionHelper trackSelectionHelper;
     private boolean shouldAutoPlay = true;
     private int resumeWindow;
     private long resumePosition;
     private AdsLoader adsLoader;
-    private Uri loadedAdTagUri;
     private ViewGroup adUiViewGroup;
     private boolean isExoPlayerFullscreen = false;
-    private FrameLayout exo_fullscreen_button;
     private ImageView exo_fullscreen_icon;
     private RelativeLayout rl_exoplayer_parent;
     private RelativeLayout rl_toolbar;
     private LinearLayout ll_video_actions;
     private RelativeLayout rl_video_grid;
     private LinearLayout popular_channel_videos;
-    private TypefacedTextViewSemiBold tv_video_title;
     private RelativeLayout rl_channel_title;
-    private TypefacedTextViewRegular tv_count;
     private TypefacedTextViewRegular tv_more_videos;
     private CheckBox iv_heart;
     private GridRecyclerView rv_more_videos;
@@ -186,19 +192,13 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private SelectedVideoModel videoModel;
     private SelectedVideoModel selectedVideoModel;
     private String gmtStartTime = "";
-    private ViewGroup mAdUiContainer;
     private ImaSdkFactory mSdkFactory;
     private com.google.ads.interactivemedia.v3.api.AdsLoader mAdsLoader;
     private AdsManager mAdsManager;
     private boolean mIsAdDisplayed;
-    //  private String from="";
-    private boolean isAdMobLoaded = true;
     private List<VideoSubscriptionModel> videoSubscriptionModelList;
     private ProgressDialog progressDialog;
-    private final float mAspectRatio = 72f / 128;
-    private String mAdTagUrl = "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpreonly&cmsid=496&vid=short_onecue&correlator=";
     private MediaInfo mSelectedMedia;
-    private FirebaseAuth mAuth = null;
     //cast
     private boolean isCasting = false;
     private CastContext mCastContext;
@@ -237,6 +237,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private boolean isVideoDescAvailable = false;
     //bottom navigation view
     private RelativeLayout rl_btm_navigation_video;
+    private boolean isForceLogout = false;
 
     public void loadRemoteMedia() {
         Log.e("CAST", "loadRemoteMedia called");
@@ -386,7 +387,10 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         if (SharedPreferenceUtility.getAdvertisingId().isEmpty()) {
             new AdvertisingIdAsyncTask().execute();
         }
-
+        if (HappiApplication.getIpAddress().isEmpty()) {
+            getNetworkIP();
+        }
+        isForceLogout = false;
         //casting
         setupCastListener();
         mCastContext = CastContext.getSharedInstance(this);
@@ -399,17 +403,17 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         videoSubscriptionModelList = new ArrayList<>();
 
-        getSessionToken();
 
 
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
-        //verify phone number
-        mAuth = FirebaseAuth.getInstance();
+        /*//for ad
+         float mAspectRatio = 72f / 128;
+         String mAdTagUrl = "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpreonly&cmsid=496&vid=short_onecue&correlator=";*/
 
-        iv_back = findViewById(R.id.iv_back);
+        ImageView iv_back = findViewById(R.id.iv_back);
         iv_back.setVisibility(View.VISIBLE);
 
         rl_btm_navigation_video = findViewById(R.id.rl_btm_navigation_video);
@@ -429,9 +433,9 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         rl_video_grid = findViewById(R.id.rl_video_grid);
         popular_channel_videos = findViewById(R.id.ll_popular_videos);
 
-        tv_video_title = findViewById(R.id.tv_video_title);
+        TypefacedTextViewSemiBold tv_video_title = findViewById(R.id.tv_video_title);
         rl_channel_title = findViewById(R.id.rl_channel_title);
-        tv_count = findViewById(R.id.tv_count);
+        TypefacedTextViewRegular tv_count = findViewById(R.id.tv_count);
         tv_more_videos = findViewById(R.id.tv_more_videos);
         iv_heart = findViewById(R.id.iv_heart);
         iv_heart.setVisibility(View.INVISIBLE);
@@ -482,7 +486,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
 
         exo_fullscreen_icon = exo_player_view.findViewById(R.id.exo_fullscreen_icon);
-        exo_fullscreen_button = exo_player_view.findViewById(R.id.exo_fullscreen_button);
+        FrameLayout exo_fullscreen_button = exo_player_view.findViewById(R.id.exo_fullscreen_button);
         exo_fullscreen_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -501,6 +505,16 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             isExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
 
+        if(SharedPreferenceUtility.getGuest()){
+            showLoginOrRegisterAlert();
+        }else{
+            if (HappiApplication.getAppToken() != null && !HappiApplication.getAppToken().isEmpty()) {
+                checkUserSubscription();
+            } else {
+                getSessionToken();
+            }
+
+        }
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -534,7 +548,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         });
 
 
-        mAdUiContainer = findViewById(R.id.exo_player_view);
+        ViewGroup mAdUiContainer = findViewById(R.id.exo_player_view);
 
 
         mSdkFactory = ImaSdkFactory.getInstance();
@@ -678,7 +692,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
                         token = tvexcelResponse.getData().trim();
                         Log.e("TOKEN", token);
-                        initializePlayer(videoModel);
+
+                        if(!isForceLogout){
+                            initializePlayer(videoModel);
+                        }else{
+                            loginExceededAlertSubscription();
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -837,9 +856,9 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
                 if (needNewPlayer) {
                     TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
-                    trackSelector = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
-                    trackSelectionHelper = new TrackSelectionHelper(trackSelector, adaptiveTrackSelectionFactory);
-                    eventLogger = new EventLogger(trackSelector);
+                    DefaultTrackSelector trackSelector1 = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
+                    TrackSelectionHelper trackSelectionHelper = new TrackSelectionHelper(trackSelector1, adaptiveTrackSelectionFactory);
+                    eventLogger = new EventLogger(trackSelector1);
 
                     TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(BANDWIDTH_METER));
                     //boolean preferExtensionDecoders = intent.getBooleanExtra(PREFER_EXTENSION_DECODERS, false);
@@ -1339,8 +1358,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void goToPremiumContent() {
-
-        SharedPreferenceUtility.setVideoId(videoId);
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
 
@@ -1348,7 +1365,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         SharedPreferenceUtility.setVideoId(videoId);
         //Intent intent = new Intent(VideoPlayerActivity.this, PremiumVideoDetailsActivity.class);
         Intent intent = new Intent(VideoPlayerActivity.this, SubscriptionActivity.class);
-        intent.putExtra("from", "videoPlayer");
+        intent.putExtra("from", "videoplayer");
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
@@ -1513,7 +1530,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         if (adsLoader != null) {
             adsLoader.release();
             adsLoader = null;
-            loadedAdTagUri = null;
+            Uri loadedAdTagUri = null;
             exo_player_view.getOverlayFrameLayout().removeAllViews();
         }
     }
@@ -1778,7 +1795,21 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
     }
+    private void showLoginOrRegisterAlert() {
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        SharedPreferenceUtility.setVideoId(videoId);
+        String message = "Please Login or Register to continue.";
+        LoginRegisterAlert alertDialog =
+                new LoginRegisterAlert(this, message, "Ok", "Cancel", this::onLoginRegisterNegativeClick,
+                        this::onLoginRegisterNeutralClick, false);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
 
+
+    }
     private void getSessionToken() {
         String appKey = SharedPreferenceUtility.getAppKey();
         String bundleId = SharedPreferenceUtility.getBundleID();
@@ -1793,8 +1824,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                             HappiApplication.setAppToken(sessionTokenResponseModel.getToken());
                             SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());
 
+                            checkUserSubscription();
 
-                            getSelectedVideo(videoId);
                         }, throwable -> {
                             Toast.makeText(this, "Server error", Toast.LENGTH_SHORT).show();
                             Log.e("getSessionToken", throwable.getLocalizedMessage());
@@ -1834,7 +1865,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onShowsItemClicked(int adapterPosition) {
-        HappiApplication.setShowId(showsAdapter.getItem(adapterPosition).getShow_id());
+        SharedPreferenceUtility.setShowId(showsAdapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, showsAdapter.getItem(adapterPosition).getShow_id());
         finish();
     }
@@ -1879,5 +1910,208 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         } catch (Exception ex) {
             Log.e("000##", ": exception :  " + "POP08" + " - " + ex.toString());
         }
+    }
+
+
+
+    private void goToLoginScreen(){
+
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        SharedPreferenceUtility.setVideoId(videoId);
+        Intent intent = new Intent(VideoPlayerActivity.this, SubscriptionLoginActivity.class);
+        intent.putExtra("from" , "videoplayer");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        VideoPlayerActivity.this.finish();
+    }
+    private void goToLogin(){
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        Intent intent = new Intent(VideoPlayerActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        VideoPlayerActivity.this.finish();
+    }
+
+    private void getNetworkIP() {
+        boolean isMobileData = false;
+        boolean isWifi = false;
+        String ipAddress = "";
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+
+        for (NetworkInfo networkInfo : networkInfos) {
+            if (networkInfo.getTypeName().equalsIgnoreCase("WIFI")) {
+                if (networkInfo.isConnected()) {
+                    isWifi = true;
+                } else {
+                    isWifi = false;
+                }
+            }
+
+            if (networkInfo.getTypeName().equalsIgnoreCase("MOBILE")) {
+                if (networkInfo.isConnected()) {
+                    isMobileData = true;
+                } else {
+                    isMobileData = false;
+                }
+
+            }
+        }
+
+        if (isWifi) {
+            ipAddress = getWifiIpAddress();
+            HappiApplication.setIpAddress(ipAddress);
+        }
+        if (isMobileData) {
+            ipAddress = getMobileIpAddress();
+            HappiApplication.setIpAddress(ipAddress);
+        }
+        //Log.e("1234###","ipAddressFinal: "+ipAddressFinal);
+    }
+
+    private String getWifiIpAddress() {
+        @SuppressWarnings("deprecation")
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        return ip;
+    }
+
+    private String getMobileIpAddress() {
+        try {
+
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface networkInterface = en.nextElement();
+                for (Enumeration<InetAddress> enumipAddr = networkInterface.getInetAddresses(); enumipAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = enumipAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        // if(inetAddress instanceof Inet4Address)
+                        return Formatter.formatIpAddress(inetAddress.hashCode());
+
+                    }
+
+                }
+            }
+
+        } catch (Exception ex) {
+            Log.e("mobipaddr", "exception: " + ex.toString());
+        }
+        return null;
+    }
+
+    private void checkUserSubscription() {
+
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable subscriptionDisposable = usersService.getUserSubscriptions(HappiApplication.getAppToken(),
+                SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getAdvertisingId(),
+                SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(subscriptionResponseModel -> {
+                    isForceLogout = subscriptionResponseModel.isForcibleLogout();
+
+                    List<String> subids = new ArrayList<>();
+                    if (subscriptionResponseModel.getData().size() != 0) {
+
+                        List<UserSubscriptionModel> userSubscriptionModelList = subscriptionResponseModel.getData();
+
+                        if (userSubscriptionModelList.size() != 0) {
+                            for (UserSubscriptionModel model : userSubscriptionModelList) {
+                                subids.add(model.getSub_id());
+                            }
+
+                        }
+
+                    }
+                    if(isForceLogout){
+                        loginExceededAlertSubscription();
+                    }else{
+                        getSelectedVideo(videoId);
+                    }
+                    HappiApplication.setSub_id(subids);
+
+
+                }, throwable -> {
+                    Toast.makeText(VideoPlayerActivity.this, "Server Error. Please try again after sometime.", Toast.LENGTH_SHORT).show();
+
+                });
+        compositeDisposable.add(subscriptionDisposable);
+    }
+
+    public void loginExceededAlertSubscription() {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        String message = "You are no longer Logged in this device. Please Login again to access.";
+        CustomAlertDialog alertDialog =
+                new CustomAlertDialog(VideoPlayerActivity.this, "ok", message, "Ok", "", null, null, this::onOkClickNeutral, null);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(false);
+        alertDialog.show();
+        releasePlayer();
+    }
+
+    @Override
+    public void onOkClickNeutral() {
+        logoutApiCall();
+    }
+    private void logoutApiCall() {
+
+        progressDialog.show();
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logout(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
+
+                    if (logoutResponseModel.getStatus() == 100) {
+
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+                        releasePlayer();
+                        goToLogin();
+                    } else {
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                        Toast.makeText(this, "Unable to logout. Please try again.", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                    Toast.makeText(this, "Unable to logout. Please try again.", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+        compositeDisposable.add(logoutDisposable);
+    }
+
+    @Override
+    public void onLoginRegisterNegativeClick() {
+        goToLoginScreen();
+    }
+    @Override
+    public void onLoginRegisterNeutralClick() {
+        VideoPlayerActivity.this.finish();
     }
 }

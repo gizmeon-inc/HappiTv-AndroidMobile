@@ -97,8 +97,8 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import me.gujun.android.taggroup.TagGroup;
 
-public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,LoginRegisterAlert.OnLoginRegisterUserNegative,
-        LoginRegisterAlert.OnLoginRegisterUserNeutral, LoginRegisterAlert.OnLoginRegisterUserPositive {
+public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAlert.OnLoginRegisterUserNegative,
+        LoginRegisterAlert.OnLoginRegisterUserNeutral {
 
     TagGroup tag_theme;
     ImageView iv_menu;
@@ -479,7 +479,7 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
 
 
         if (HappiApplication.getAppToken().isEmpty()) {
-            getSession(showId, true);
+            getSession(showId);
         } else {
             getShowDetails(showId);
         }
@@ -510,10 +510,11 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
+
         String message = "Please Login or Register to use this feature.";
         LoginRegisterAlert alertDialog =
-                new LoginRegisterAlert(this, message, "Register", "Login", "Cancel", this::onLoginRegisterNegativeClick,
-                        this::onLoginRegisterNeutralClick, this::onLoginRegisterPositiveClick, true);
+                new LoginRegisterAlert(this, message, "Ok", "Cancel", this::onLoginRegisterNegativeClick,
+                        this::onLoginRegisterNeutralClick, true);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(true);
         alertDialog.show();
@@ -522,14 +523,6 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
     private void goToLoginScreen() {
         SharedPreferenceUtility.setShowId(showId);
         Intent loginIntent = new Intent(ShowDetailsActivity.this, SubscriptionLoginActivity.class);
-        loginIntent.putExtra("from", "showDetails");
-        startActivity(loginIntent);
-        // finish();
-    }
-
-    private void goToRegisterScreen() {
-        SharedPreferenceUtility.setShowId(showId);
-        Intent loginIntent = new Intent(ShowDetailsActivity.this, SubscriptionRegisterActivity.class);
         loginIntent.putExtra("from", "showDetails");
         startActivity(loginIntent);
         // finish();
@@ -726,7 +719,7 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
         compositeDisposable.add(likeDisposable);
     }
 
-    private void getSession(String showId, boolean isForShow) {
+    private void getSession(String showId) {
         ApiClient.TokenService tokenService = ApiClient.token();
         Disposable tokenDisposable = tokenService.getSessionToken(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getAppKey(),
                 SharedPreferenceUtility.getBundleID())
@@ -736,11 +729,8 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
 
                     HappiApplication.setAppToken(sessionTokenResponseModel.getToken());
                     SharedPreferenceUtility.setApp_Id(sessionTokenResponseModel.getApplication_id());
-                    if (isForShow) {
-                        getShowDetails(showId);
-                    } else {
-                        getUserSubscriptions();
-                    }
+
+                    getShowDetails(showId);
 
 
                 }, throwable -> {
@@ -764,13 +754,13 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
                                 showVideoUpdatedResponseModel.getData().get(0).getVideoModelUpdatedList(),
                                 showVideoUpdatedResponseModel.getData().get(0).getLanguageModelUpdatedList(),
                                 showVideoUpdatedResponseModel.getData().get(0).getCategoryModelUpdatedList());
+                    }else{
+                        displayErrorLayout();
                     }
                 }, throwable -> {
                     displayErrorLayout();
 
                     Toast.makeText(this, "Please try again", Toast.LENGTH_SHORT).show();
-                    // super.onBackPressed();
-                    //startActivity(new Intent(ShowDetailsActivity.this,HomeActivity.class));
                 });
         compositeDisposable.add(disposable);
     }
@@ -1647,9 +1637,6 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
             ll_watch_list.setEnabled(true);
             ll_like.setEnabled(true);
         }*/
-        if (!SharedPreferenceUtility.getGuest())
-            checkUserSubscriptions();
-
 
         super.onResume();
     }
@@ -1677,24 +1664,6 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
     }
 
     private void backNavigation() {
-       /* if(HappiApplication.getRedirect() != null){
-            if(HappiApplication.getRedirect().equals("category")){
-                startActivity(new Intent(this, CategoryViewActivity.class));
-            }else{
-                startActivity(new Intent(this, CategoryViewActivity.class));
-            }
-        }
-        if(getIntent().getSerializableExtra("from") != null){
-
-           if(getIntent().getSerializableExtra("from").equals("home")){
-               startActivity(new Intent(this,HomeActivity.class));
-           }else  if(getIntent().getSerializableExtra("from").equals("category")){
-               startActivity(new Intent(this, CategoryViewActivity.class));
-           }
-        }else{
-            //super.onBackPressed();
-            startActivity(new Intent(this,HomeActivity.class));
-        }*/
         isFromWatchList = false;
         if (isExoPlayerFullscreen) {
             closeFullscreen();
@@ -1711,61 +1680,6 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
 
     }
 
-    private void checkUserSubscriptions() {
-        if (HappiApplication.getAppToken().isEmpty()) {
-            getSession("empty", false);
-        } else {
-            getUserSubscriptions();
-        }
-    }
-
-    private void getUserSubscriptions() {
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable userSubscriptionDisposable = usersService.getUserSubscriptions(HappiApplication.getAppToken(), SharedPreferenceUtility.getUserId(),
-                SharedPreferenceUtility.getAdvertisingId(), SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(userSubscriptionResponseModel -> {
-                    if (userSubscriptionResponseModel.isForcibleLogout()) {
-                        isFromSubsc = true;
-                        loginExceededAlertSubscription();
-                    }
-                    else {
-                        List<String> subIdsList = new ArrayList<>();
-                        if (userSubscriptionResponseModel.getData().size() != 0) {
-                            List<UserSubscriptionModel> list = userSubscriptionResponseModel.getData();
-                            for (UserSubscriptionModel item : list) {
-                                subIdsList.add(item.getSub_id());
-                            }
-                        }
-                        HappiApplication.setSub_id(subIdsList);
-                    }
-                }, throwable -> {
-
-                });
-        compositeDisposable.add(userSubscriptionDisposable);
-
-    }
-    private void loginExceededAlertSubscription() {
-       /* if (dialog.isShowing()) {
-            dialog.dismiss();
-        }*/
-        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
-        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        alertDialog.setCancelable(false);
-        alertDialog.show();
-    }
-    @Override
-    public void onLogoutClicked() {
-        if (isFromSubsc) {
-            // logoutApiCall();
-        }
-    }
-
-    @Override
-    public void onLogoutAllClicked() {
-        //  logoutAllApiCall();
-    }
 
     private void safelyDispose(Disposable... disposables) {
         for (Disposable subscription : disposables) {
@@ -1773,12 +1687,6 @@ public class ShowDetailsActivity extends BaseActivity implements LogoutAlertDial
                 subscription.dispose();
             }
         }
-    }
-
-
-    @Override
-    public void onLoginRegisterPositiveClick() {
-        goToRegisterScreen();
     }
 
     @Override

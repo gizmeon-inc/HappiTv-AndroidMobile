@@ -137,8 +137,7 @@
                 android:layout_below="@id/tv_forgot_password"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/dimen_20dp"
-                android:orientation="horizontal"
-                android:visibility="invisible">
+                android:orientation="horizontal">
 
                 <com.happi.android.customviews.TypefacedTextViewRegular
                     android:id="@+id/new_user"
@@ -173,7 +172,7 @@
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:padding="@dimen/dimen_5dp"
                 android:text="@string/skip_login"
-                android:visibility="invisible"
+                android:visibility="gone"
                 android:textColor="@color/whiteThree"
                 android:background="?selectableItemBackground"
                 android:textSize="@dimen/text_regular_medium1" />

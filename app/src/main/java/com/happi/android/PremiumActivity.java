@@ -4,12 +4,16 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -18,19 +22,22 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.happi.android.adapters.PremiumItemAdapter;
+import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.CustomAlertDialog;
-import com.happi.android.customviews.LogoutAlertDialog;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.UserSubscriptionModel;
 import com.happi.android.webservice.ApiClient;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -40,7 +47,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener,PremiumItemAdapter.itemClickListener, CustomAlertDialog.OnOkClick {
+public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.itemClickListener, CustomAlertDialog.OnOkClick {
     private List<UserSubscriptionModel> userSubscriptionModelList;
     TypefacedTextViewRegular tv_title;
     TypefacedTextViewRegular tv_error;
@@ -57,7 +64,6 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
     String sku;
     String packageName;
     UserSubscriptionModel uModel;
-    private boolean isFromSubsc = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,9 +82,15 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
         }
         setContentView(R.layout.activity_premium);
 
-        HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
 
+        HappiApplication.setCurrentContext(this);
+        if(SharedPreferenceUtility.getAdvertisingId().isEmpty()){
+            new AdvertisingIdAsyncTask().execute();
+        }
+        if(HappiApplication.getIpAddress().isEmpty()){
+            getNetworkIP();
+        }
         progressDialog = new ProgressDialog(this, R.style.MyTheme);
         progressDialog.setCancelable(false);
         progressDialog.show();
@@ -97,7 +109,6 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
         isItemClicked = false;
         sku = "empty";
         packageName= "empty";
-        isFromSubsc = false;
 
         iv_menu.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
@@ -259,10 +270,8 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(subscriptionResponseModel ->{
                     if (subscriptionResponseModel.isForcibleLogout()) {
-                        isFromSubsc = true;
                         loginExceededAlertSubscription();
-                    }
-                    else {
+                    } else {
                         List<String> subids = new ArrayList<>();
                         if(subscriptionResponseModel.getData().size() != 0){
                             userSubscriptionModelList = subscriptionResponseModel.getData();
@@ -286,25 +295,22 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
         compositeDisposable.add(subscriptionDisposable);
     }
     private void loginExceededAlertSubscription() {
-       /* if (dialog.isShowing()) {
-            dialog.dismiss();
-        }*/
-        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        String message = "You are no longer Logged in this device. Please Login again to access.";
+        CustomAlertDialog alertDialog =
+                new CustomAlertDialog(PremiumActivity.this, "ok", message, "Ok", "", null, null, new CustomAlertDialog.OnOkClick() {
+                    @Override
+                    public void onOkClickNeutral() {
+                        logoutApiCall();
+                    }
+                }, null);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();
     }
-    @Override
-    public void onLogoutClicked() {
-        if (isFromSubsc) {
-            // logoutApiCall();
-        }
-    }
 
-    @Override
-    public void onLogoutAllClicked() {
-        //  logoutAllApiCall();
-    }
     private void displayErrorMessage(String message) {
         if(progressDialog.isShowing()){
             progressDialog.dismiss();
@@ -380,5 +386,127 @@ public class PremiumActivity extends BaseActivity implements LogoutAlertDialog.o
     protected void onResume() {
         super.onResume();
         HappiApplication.setCurrentContext(this);
+    }
+
+    private void logoutApiCall() {
+
+        progressDialog.show();
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logout(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
+
+                    if (logoutResponseModel.getStatus() == 100) {
+
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+                        goToLogin();
+                    } else {
+                        if(progressDialog.isShowing()){
+                            progressDialog.dismiss();
+                        }
+                        Toast.makeText(this, "Unable to logout. Please try again.", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+                    if(progressDialog.isShowing()){
+                        progressDialog.dismiss();
+                    }
+                    Toast.makeText(this, "Unable to logout. Please try again.", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+        compositeDisposable.add(logoutDisposable);
+    }
+
+    private void goToLogin(){
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
+        }
+        Intent intent = new Intent(PremiumActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+        startActivity(intent);
+        finish();
+    }
+    private void getNetworkIP() {
+        boolean isMobileData = false;
+        boolean isWifi = false;
+        String ipAddress = "";
+
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
+        NetworkInfo[] networkInfos = connectivityManager.getAllNetworkInfo();
+
+        for (NetworkInfo networkInfo : networkInfos) {
+            if (networkInfo.getTypeName().equalsIgnoreCase("WIFI")) {
+                if (networkInfo.isConnected()) {
+                    isWifi = true;
+                } else {
+                    isWifi = false;
+                }
+            }
+
+            if (networkInfo.getTypeName().equalsIgnoreCase("MOBILE")) {
+                if (networkInfo.isConnected()) {
+                    isMobileData = true;
+                } else {
+                    isMobileData = false;
+                }
+
+            }
+        }
+
+        if (isWifi) {
+            ipAddress = getWifiIpAddress();
+            HappiApplication.setIpAddress(ipAddress);
+        }
+        if (isMobileData) {
+            ipAddress = getMobileIpAddress();
+            HappiApplication.setIpAddress(ipAddress);
+        }
+        //Log.e("1234###","ipAddressFinal: "+ipAddressFinal);
+    }
+
+    private String getWifiIpAddress() {
+        @SuppressWarnings("deprecation")
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        String ip = Formatter.formatIpAddress(wifiManager.getConnectionInfo().getIpAddress());
+        return ip;
+    }
+
+    private String getMobileIpAddress() {
+        try {
+
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface networkInterface = en.nextElement();
+                for (Enumeration<InetAddress> enumipAddr = networkInterface.getInetAddresses(); enumipAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = enumipAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress()) {
+                        // if(inetAddress instanceof Inet4Address)
+                        return Formatter.formatIpAddress(inetAddress.hashCode());
+
+                    }
+
+                }
+            }
+
+        } catch (Exception ex) {
+            // Log.e("1234###", "exception: " + ex.toString());
+        }
+        return null;
     }
 }

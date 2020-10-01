@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:name="com.happi.android.common.HappiApplication"
+        android:name=".common.HappiApplication"
         android:allowBackup="true"
         android:fullBackupContent="false"
         android:hardwareAccelerated="true"
@@ -23,79 +23,85 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.happi.android.ChannelLivePlayerActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden"/>
-        <activity
-            android:name="com.happi.android.SubscriptionActivity"
+        <activity android:name=".MainSubscriptionActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.happi.android.SubscriptionForgotPasswordActivity"
+            android:name=".ChannelLivePlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.happi.android.SubscriptionRegisterActivity"
+            android:name=".SubscriptionActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.happi.android.SubscriptionLoginActivity"
+            android:name=".SubscriptionForgotPasswordActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".SubscriptionRegisterActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".SubscriptionLoginActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
 
         <service
-            android:name="com.happi.android.common.NotifyService"
+            android:name=".common.NotifyService"
             android:enabled="true"
             android:exported="false" />
 
         <receiver
-            android:name="com.happi.android.common.AlarmReceiver"
+            android:name=".common.AlarmReceiver"
             android:enabled="true"
             android:exported="true" />
 
         <activity
-            android:name="com.happi.android.LiveScheduleActivity"
+            android:name=".LiveScheduleActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.WatchListActivity"
+            android:name=".WatchListActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.PayPerViewVideoListActivity"
+            android:name=".PayPerViewVideoListActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.ShowDetailsActivity"
+            android:name=".ShowDetailsActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.PremiumActivity"
+            android:name=".PremiumActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.ChannelScheduleActivity"
+            android:name=".ChannelScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.ScheduleActivity"
+            android:name=".ScheduleActivity"
             android:theme="@style/AppTheme.NoActionBar" /> <!-- MoPub's consent dialog -->
         <activity
-            android:name="com.happi.android.SplashScreenActivity"
+            android:name=".SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -111,115 +117,117 @@
                                                                            android:value="ca-app-pub-3940256099942544~3347511713"/>
         -->
         <activity
-            android:name="com.happi.android.LoginActivity"
+            android:name=".LoginActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.happi.android.RegisterActivity"
+            android:name=".RegisterActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.happi.android.HomeActivity"
+            android:name=".HomeActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.MainHomeActivity"
+            android:name=".MainHomeActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.VideoPlayerActivity"
+            android:name=".VideoPlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.ChannelHomeActivity"
+            android:name=".ChannelHomeActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.happi.android.ForgotPasswordActivity"
+            android:name=".ForgotPasswordActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="com.happi.android.SearchActivity"
+            android:name=".SearchActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.happi.android.CategoryViewActivity"
+            android:name=".CategoryViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.ChannelsListingActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.happi.android.CategoriesListActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.happi.android.PopularVideosActivity"
+            android:name=".ChannelsListingActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.PopularChannelsActivity"
+            android:name=".CategoriesListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.WatchHistoryActivity"
+            android:name=".PopularVideosActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.WebViewActivity"
+            android:name=".PopularChannelsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.NoInternetActivity"
+            android:name=".WatchHistoryActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.SettingsActivity"
+            android:name=".WebViewActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.LanguageSelectionCheckboxActivity"
+            android:name=".NoInternetActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.LiveVideoListingActivity"
+            android:name=".SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.ShowsListActivity"
+            android:name=".LanguageSelectionCheckboxActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.happi.android.ShowVideoActivity"
+            android:name=".LiveVideoListingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-      <!--  <activity
+        <activity
+            android:name=".ShowsListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ShowVideoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <!--
+  <activity
             android:name="com.happi.android.NotificationManagerActivity"
             android:parentActivityName="com.happi.android.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />-->
+            android:theme="@style/AppTheme.NoActionBar" />
+        -->
         <activity
-            android:name="com.happi.android.NotificationManagerActivity"
-            android:parentActivityName="com.happi.android.MainHomeActivity"
+            android:name=".NotificationManagerActivity"
+            android:parentActivityName=".MainHomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -234,7 +242,7 @@
             android:value="com.happi.android.cast.CastOptionsProvider" />
 
         <service
-            android:name="com.happi.android.common.HappiMessagingService"
+            android:name=".common.HappiMessagingService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -242,7 +250,7 @@
         </service>
 
         <activity
-            android:name="com.happi.android.cast.ExpandedControlsActivity"
+            android:name=".cast.ExpandedControlsActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"

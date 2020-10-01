@@ -7,6 +7,26 @@ public class PublisherModel {
     private String pubid;
     @SerializedName("message")
     private String message;
+    @SerializedName("registration_mandatory_flag")
+    private boolean registration_mandatory_flag;
+    @SerializedName("subscription_mandatory_flag")
+    private boolean subscription_mandatory_flag;
+
+    public boolean isRegistration_mandatory_flag() {
+        return registration_mandatory_flag;
+    }
+
+    public void setRegistration_mandatory_flag(boolean registration_mandatory_flag) {
+        this.registration_mandatory_flag = registration_mandatory_flag;
+    }
+
+    public boolean isSubscription_mandatory_flag() {
+        return subscription_mandatory_flag;
+    }
+
+    public void setSubscription_mandatory_flag(boolean subscription_mandatory_flag) {
+        this.subscription_mandatory_flag = subscription_mandatory_flag;
+    }
 
     public String getPubid() {
         return pubid;

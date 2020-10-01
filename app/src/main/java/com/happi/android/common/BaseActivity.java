@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +25,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.happi.android.ChannelsListingActivity;
-import com.happi.android.HomeActivity;
 import com.happi.android.LiveVideoListingActivity;
 import com.happi.android.LoginActivity;
 import com.happi.android.MainHomeActivity;
@@ -40,9 +40,14 @@ import com.happi.android.WebViewActivity;
 import com.happi.android.customviews.AboutUsDialogClass;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.utils.ConstantUtils;
+import com.happi.android.webservice.ApiClient;
 
 import java.util.ArrayList;
 import java.util.Objects;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 //public class BaseActivity extends CommonActivity {
 public class BaseActivity extends AppCompatActivity {
@@ -52,6 +57,7 @@ public class BaseActivity extends AppCompatActivity {
     public Boolean isDrawerOpened = false;
     public TypefacedTextViewRegular tv_user;
     public BottomNavigationView btm_navigation;
+    public LinearLayout ll_logoutall;
 
 
     @Override
@@ -131,7 +137,9 @@ public class BaseActivity extends AppCompatActivity {
         });
 
         tv_user = findViewById(R.id.tv_user);
+        ll_logoutall = findViewById(R.id.ll_logoutall);
         setUserName();
+        setLogoutAllVisibility();
 
 
         LinearLayout ll_contact_us = findViewById(R.id.ll_contact_us);
@@ -159,7 +167,7 @@ public class BaseActivity extends AppCompatActivity {
             drawer.closeDrawer(findViewById(R.id.navigation));
             finish();
             goToHomePage();
-           // drawer.closeDrawer(findViewById(R.id.navigation));
+            // drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_channels = findViewById(R.id.ll_channels);
@@ -187,10 +195,11 @@ public class BaseActivity extends AppCompatActivity {
             drawer.closeDrawer(findViewById(R.id.navigation));
         });*/
         LinearLayout ll_premium = findViewById(R.id.ll_premium);
+        ll_premium.setVisibility(View.GONE);
         ll_premium.setOnClickListener(v -> {
             drawer.closeDrawer(findViewById(R.id.navigation));
             goToPremium();
-           // drawer.closeDrawer(findViewById(R.id.navigation));
+            // drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_favourite = findViewById(R.id.ll_favourite);
@@ -199,7 +208,7 @@ public class BaseActivity extends AppCompatActivity {
             public void onClick(View v) {
                 drawer.closeDrawer(findViewById(R.id.navigation));
                 goToShowListingPage("Favourites");
-               // drawer.closeDrawer(findViewById(R.id.navigation));
+                // drawer.closeDrawer(findViewById(R.id.navigation));
             }
         });
 
@@ -213,6 +222,7 @@ public class BaseActivity extends AppCompatActivity {
             }
         });
         LinearLayout ll_payperview_list = findViewById(R.id.ll_payperview_list);
+        ll_payperview_list.setVisibility(View.GONE);
         ll_payperview_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -230,17 +240,17 @@ public class BaseActivity extends AppCompatActivity {
 
         LinearLayout ll_terms = findViewById(R.id.ll_terms);
         ll_terms.setOnClickListener(v -> {
-            // Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-            drawer.closeDrawer(findViewById(R.id.navigation));
-            goToWebView("T");
+             Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
+//            drawer.closeDrawer(findViewById(R.id.navigation));
+//            goToWebView("T");
             //drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_privacy = findViewById(R.id.ll_privacy);
         ll_privacy.setOnClickListener(v -> {
-            //Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-            drawer.closeDrawer(findViewById(R.id.navigation));
-            goToWebView("P");
+            Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
+//            drawer.closeDrawer(findViewById(R.id.navigation));
+//            goToWebView("P");
             //drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
@@ -251,13 +261,17 @@ public class BaseActivity extends AppCompatActivity {
             //drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
+
         LinearLayout ll_logout = findViewById(R.id.ll_logout);
+        ll_logout.setVisibility(View.VISIBLE);
         ll_logout.setOnClickListener(v -> {
 
             drawer.closeDrawer(findViewById(R.id.navigation));
             ll_new.setVisibility(View.INVISIBLE);
             logoutPrompt();
         });
+
+
     }
 
     public void setUserName() {
@@ -265,6 +279,18 @@ public class BaseActivity extends AppCompatActivity {
             tv_user.setText(SharedPreferenceUtility.getUserName());
 
         }
+    }
+    public void setLogoutAllVisibility(){
+        if(SharedPreferenceUtility.getGuest()){
+            ll_logoutall.setVisibility(View.GONE);
+        }else{
+            ll_logoutall.setVisibility(View.VISIBLE);
+        }
+        ll_logoutall.setOnClickListener(v -> {
+
+            drawer.closeDrawer(findViewById(R.id.navigation));
+            logoutAllPrompt();
+        });
     }
 
     private void goToLoginPage() {
@@ -359,21 +385,72 @@ public class BaseActivity extends AppCompatActivity {
 
     private void logoutPrompt() {
 
+        String message = "Are you sure you want to Logout?";
+
         AlertDialog.Builder builder = new AlertDialog.Builder(HappiApplication.getCurrentContext());
-        builder.setMessage("Are you sure you want to Logout?")
+        builder.setMessage(message)
                 .setCancelable(false)
-                .setPositiveButton("yes", (dialog, which) -> {
+                .setPositiveButton("Yes", (dialog, which) -> {
 
-                    SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
-                    SharedPreferenceUtility.setGuest(false);
-                    SharedPreferenceUtility.setChannelId(0);
-                    SharedPreferenceUtility.setVideoId(0);
-                    SharedPreferenceUtility.setChannelTimeZone("");
-                    HappiApplication.setSub_id(new ArrayList<>());
-                    SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                    if (SharedPreferenceUtility.getGuest()) {
+
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
 
 
-                    goToLoginPage();
+                        goToLoginPage();
+                    } else {
+                         logoutApiCall();
+                    }
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+
+                    dialog.cancel();
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+    private void logoutAllPrompt() {
+
+        String message = "Are you sure you want to Logout from All active Devices?";
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(HappiApplication.getCurrentContext());
+        builder.setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Yes", (dialog, which) -> {
+
+                    if (SharedPreferenceUtility.getGuest()) {
+
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+
+                        goToLoginPage();
+                    } else {
+                         logoutAllApiCall();
+                    }
                 })
                 .setNegativeButton("No", (dialog, which) -> {
 
@@ -502,5 +579,87 @@ public class BaseActivity extends AppCompatActivity {
             }
         }
     };
+
+    private void logoutApiCall() {
+
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logout(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
+
+                    if (logoutResponseModel.getStatus() == 100) {
+
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+                        goToLoginPage();
+                    } else {
+
+                        Toast.makeText(this, "Unable to logout. Please try again.", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+
+                    Toast.makeText(this, "Unable to logout. Please try again.", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+    }
+
+    private void logoutAllApiCall() {
+
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable logoutDisposable = usersService.logoutAll(SharedPreferenceUtility.getUserId(), SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getAdvertisingId(), HappiApplication.getIpAddress())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(logoutResponseModel -> {
+
+                    if (logoutResponseModel.getStatus() == 100) {
+
+                       SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.setGuest(false);
+                        SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                        SharedPreferenceUtility.setChannelId(0);
+                        SharedPreferenceUtility.setShowId("0");
+                        SharedPreferenceUtility.setVideoId(0);
+                        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        SharedPreferenceUtility.setChannelTimeZone("");
+                        SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                        SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+
+                        HappiApplication.setSub_id(new ArrayList<>());
+
+                        goToLoginPage();
+
+
+                    } else {
+
+                        Toast.makeText(this, "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                        Log.e("Logout", "api call failed");
+                    }
+
+                }, throwable -> {
+
+                    Toast.makeText(this, "Unable to logout. Please try again", Toast.LENGTH_SHORT).show();
+                    Log.e("Logout", "api call failed");
+                });
+
+    }
 
 }

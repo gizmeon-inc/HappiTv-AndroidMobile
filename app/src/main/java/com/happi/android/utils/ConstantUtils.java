@@ -35,10 +35,10 @@ public class ConstantUtils {
 
 
 
-    public static final String termsDayUrl = "https://web.fantastic-entertainment.com/termsDarkMOde";
-    public static final String termsNightUrl = "https://web.fantastic-entertainment.com/termsDarkMOde";
-    public static final String policyDayUrl = "https://web.fantastic-entertainment.com/policyDarkMode";
-    public static final String policyNightUrl = "https://web.fantastic-entertainment.com/policyDarkMode";
+    public static final String termsDayUrl = "";
+    public static final String termsNightUrl = "";
+    public static final String policyDayUrl = "";
+    public static final String policyNightUrl = "";
 
     //appkey, bundle id
     public static final String appKey="happifilms";

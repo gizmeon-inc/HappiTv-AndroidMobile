@@ -35,6 +35,7 @@
     <string name="live_label">Live</string>
     <string name="_15_00">15:00</string>
     <string name="logout">LogOut</string>
+    <string name="logoutall">LogOut All</string>
     <string name="search">SEARCH</string>
     <string name="search_video">Search Videos</string>
     <string name="search_show">Search</string>
@@ -75,6 +76,8 @@
     <string name="already_have_an_account">Already have an account?</string>
     <string name="or_signup_with">Or, Signup with</string>
     <string name="verify_number">Verify your number</string>
+    <string name="done_label">Done</string>
+    <string name="resend_label">Resend</string>
 
     // Forgot your password
     <string name="submit">Submit</string>
@@ -197,6 +200,9 @@
     <string name="logoutall_dialog">You have exceeded no of active users. Please logout from existing device to access.\n\nLOGOUT ALL lets you logout from all currently active devices.</string>
     <string name="logoutall_label">LOGOUT ALL</string>
     <string name="ok_label">OK</string>
+    <string name="no_label">NO</string>
+    <string name="yes_label">YES</string>
+    <string name="logout_prompt_msg">Are you sure you want to Logout?</string>
 
     //watch,fav
     <string name="favourite_label">Favourites</string>

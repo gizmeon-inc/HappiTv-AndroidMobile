@@ -13,9 +13,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/alert_dark"
-        android:paddingLeft="@dimen/dimen_20dp"
+        android:paddingLeft="@dimen/dimen_30dp"
         android:paddingTop="@dimen/dimen_20dp"
-        android:paddingRight="@dimen/dimen_20dp"
+        android:paddingRight="@dimen/dimen_30dp"
         android:paddingBottom="@dimen/dimen_20dp">
 
 
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_8dp"
             android:gravity="start"
-            android:text=""
+            android:text="@string/logout_prompt_msg"
             android:textColor="@color/white"
             android:textSize="15sp" />
 
@@ -34,27 +34,26 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_msg"
             android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/dimen_23dp"
+            android:layout_marginTop="@dimen/dimen_20dp"
             android:gravity="end">
 
             <com.happi.android.customviews.TypefacedTextViewRegular
-                android:id="@+id/tv_negative"
+                android:id="@+id/tv_no"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_15dp"
-                android:text=""
+                android:gravity="start"
+                android:text="@string/no_label"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp" />
 
-
             <com.happi.android.customviews.TypefacedTextViewRegular
-                android:id="@+id/tv_neutral"
+                android:id="@+id/tv_yes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/dimen_15dp"
-                android:layout_toEndOf="@+id/tv_negative"
+                android:layout_marginLeft="@dimen/dimen_35dp"
+                android:layout_toRightOf="@+id/tv_no"
                 android:gravity="start"
-                android:text=""
+                android:text="@string/yes_label"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="15sp" />
 

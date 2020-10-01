@@ -32,7 +32,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     private static String region = "";
     public static String appToken = "";
     public static List<String> sub_id = new ArrayList<>();
-    public static int updateTransactionCount = 3;
 
     //------------------------new changes------------------------------------//
     public static ShowModel showModel = new ShowModel();
@@ -40,7 +39,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     public static boolean isFeaturedShow = false;
     public static String redirect = "";
     public static String categoryId = "";
-    public static String showId = "";
     public static boolean isNewSubscriber = false;
     public static boolean isNewLoginFromPremiumPage = false;
     public static boolean isFromLink = false;
@@ -56,16 +54,7 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
 
 
     //getter and setter
-    //getter and setter
-    private static boolean hasUpdatedReceipt;
 
-    public static boolean getHasUpdatedReceipt() {
-        return hasUpdatedReceipt;
-    }
-
-    public static void setHasUpdatedReceipt(boolean hasUpdatedReceipt) {
-        HappiApplication.hasUpdatedReceipt = hasUpdatedReceipt;
-    }
 
 
     public static void setIsDatePickerClicked(boolean isDatePickerClicked) {
@@ -129,13 +118,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
         HappiApplication.isNewSubscriber = isNewSubscriber;
     }
 
-    public static String getShowId() {
-        return showId;
-    }
-
-    public static void setShowId(String showId) {
-        HappiApplication.showId = showId;
-    }
 
     public static String getCategoryId() {
         return categoryId;
@@ -180,13 +162,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     //--------------------------------------------------------------------//
 
 
-    public static int getUpdateTransactionCount() {
-        return updateTransactionCount;
-    }
-
-    public static void setUpdateTransactionCount(int updateTransactionCount) {
-        HappiApplication.updateTransactionCount = updateTransactionCount;
-    }
 
     public static List<String> getSub_id() {
         return sub_id;
@@ -196,14 +171,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
         HappiApplication.sub_id = sub_id;
     }
 
-    //         50006  5007
-    /*public static String getPublisher_id() {
-        return publisher_id;
-    }
-
-    public static void setPublisher_id(String publisher_id) {
-        HappiApplication.publisher_id = publisher_id;
-    }*/
 
     public static Context getCurrentContext() {
         return mContext;
@@ -242,14 +209,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     public static void setCity(String city) {
         HappiApplication.city = city;
     }
-
- /*   public static String getCountryCode() {
-        return countryCode;
-    }
-
-    public static void setCountryCode(String countryCode) {
-        HappiApplication.countryCode = countryCode;
-    }*/
 
     public static String getRegion() {
         return region;

@@ -44,8 +44,8 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:id="@+id/iv_profile"
@@ -60,7 +60,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="Hi User"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
 
         </LinearLayout>
 
@@ -71,8 +72,8 @@
             android:layout_below="@id/ll_profile"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -86,7 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/channels"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
             <LinearLayout
                 android:id="@+id/ll_new"
                 android:layout_width="match_parent"
@@ -111,8 +113,8 @@
             android:layout_below="@id/ll_channels"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -126,7 +128,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/live_videos_to_tv"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
 
         <!--    <LinearLayout
@@ -160,8 +163,9 @@
             android:layout_below="@id/ll_live"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -175,7 +179,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/my_subscription"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_favourite"
@@ -184,8 +189,8 @@
             android:layout_below="@id/ll_premium"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -199,7 +204,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/favourite_label"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_watch_list"
@@ -208,8 +214,8 @@
             android:layout_below="@id/ll_favourite"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -223,7 +229,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/watch_list_label"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
 
         <LinearLayout
@@ -233,8 +240,9 @@
             android:layout_below="@id/ll_watch_list"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp"
+            android:visibility="gone">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -248,7 +256,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/PayPerView_Videos_label"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
 
         <LinearLayout
@@ -258,8 +267,8 @@
             android:layout_below="@id/ll_payperview_list"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="34dp"
@@ -273,7 +282,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/terms_and_conditions"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
 
         <LinearLayout
@@ -283,8 +293,8 @@
             android:layout_below="@id/ll_terms"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -298,7 +308,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/privacy_policy"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
 
         <LinearLayout
@@ -308,8 +319,8 @@
             android:layout_below="@id/ll_privacy"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -324,7 +335,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/settings"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_contact_us"
@@ -333,8 +345,8 @@
             android:layout_below="@id/ll_settings"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_7dp"
-            android:paddingBottom="@dimen/dimen_7dp">
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
@@ -349,33 +361,62 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/contact_us"
-                android:textSize="@dimen/text_regular_medium3" />
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
 
-
         <LinearLayout
-            android:id="@+id/ll_logout"
+            android:id="@+id/ll_logoutall"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="100dp"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+            android:layout_below="@id/ll_contact_us"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
 
             <ImageView
                 android:layout_width="@dimen/dimen_32dp"
                 android:layout_height="@dimen/dimen_32dp"
                 android:src="@drawable/ic_logout"
-                android:tint="@color/colorPrimaryDark" />
+                android:padding="@dimen/dimen_2dp"
+                android:tint="@color/colorPrimaryDark"/>
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_logoutall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:text="@string/logoutall"
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/ll_logoutall"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/dimen_5dp"
+            android:paddingBottom="@dimen/dimen_5dp">
+
+            <ImageView
+                android:layout_width="@dimen/dimen_32dp"
+                android:layout_height="@dimen/dimen_32dp"
+                android:src="@drawable/ic_logout"
+                android:padding="@dimen/dimen_2dp"
+                android:tint="@color/colorPrimaryDark"/>
 
             <com.happi.android.customviews.TypefacedTextViewRegular
                 android:id="@+id/tv_logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="@dimen/dimen_10dp"
                 android:text="@string/logout"
-                android:textSize="@dimen/text_regular_medium3" />
-
+                android:textSize="@dimen/text_regular_medium3"
+                android:textColor="@color/dark_black"/>
         </LinearLayout>
+
     </RelativeLayout>
 </RelativeLayout>
