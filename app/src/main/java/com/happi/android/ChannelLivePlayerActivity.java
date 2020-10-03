@@ -874,43 +874,6 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         compositeDisposable.add(vodToLiveDisposable);
     }
 
-    private void loadVideoList() {
-
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.Getvideo(HappiApplication.getAppToken(),
-                CHANNEL_ID, userId, SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(videoResponse -> {
-
-                    if (videoResponse.getData().size() != 0) {
-                        updateVideoDataList(videoResponse.getData());
-                    } else {
-
-                        displayErrorLayout(getString(R.string.no_results_found));
-                    }
-                }, throwable -> {
-
-                    displayErrorLayout(getString(R.string.server_error));
-                });
-        compositeDisposable.add(videoDisposable);
-    }
-
-    // private void updateVideoDataList(List<VideoModel> videoModelList) {
-    /*private void updateVideoDataList(List<ShowModel> videoModelList) {
-        rv_video_grid.setVisibility(View.VISIBLE);
-        tv_more_videos.setVisibility(View.VISIBLE);
-
-        videoList_adapter.clearAll();
-        videoList_adapter.addAll(videoModelList);
-        loadingVideos.hide();
-        videoList_adapter.notifyDataSetChanged();
-        runLayoutAnimation(rv_video_grid, mSelectedItem);
-        if (videoList_adapter.isEmpty()) {
-
-            rv_video_grid.setVisibility(View.GONE);
-        }
-    }*/
     private void updateLiveVideoList(List<VodToLiveModel> liveVideoList) {
         rv_video_grid.setVisibility(View.VISIBLE);
         tv_more_videos.setVisibility(View.VISIBLE);
@@ -923,6 +886,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         if (vodLiveAdapter.isEmpty()) {
 
             rv_video_grid.setVisibility(GONE);
+            displayErrorLayout(getString(R.string.no_results_found));
         }
 
     }
@@ -1926,6 +1890,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             SharedPreferenceUtility.setVideoId(vid);
             ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, vid);
             finish();
+            overridePendingTransition(0,0);
         } catch (Exception e) {
             Log.e("DDDD", e.getMessage());
         }
@@ -2259,6 +2224,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     @Override
     public void onLoginRegisterNeutralClick() {
         ChannelLivePlayerActivity.this.finish();
+        overridePendingTransition(0,0);
     }
 
     private void goToLoginScreen(){
@@ -2272,6 +2238,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         ChannelLivePlayerActivity.this.finish();
+        overridePendingTransition(0,0);
     }
 
 
@@ -2385,6 +2352,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         ChannelLivePlayerActivity.this.finish();
+        overridePendingTransition(0,0);
     }
 
     private void getNetworkIP() {

@@ -1048,6 +1048,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         if (exoPlayer != null) {
             exoPlayer.release();
         }
+
         super.onDestroy();
         safelyDispose(compositeDisposable);
     }

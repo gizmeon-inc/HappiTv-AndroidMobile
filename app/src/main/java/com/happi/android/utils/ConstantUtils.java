@@ -74,9 +74,9 @@ public class ConstantUtils {
 
     //Subscription webview url
     //test
-  /*  public static final String SUBSCRIPTION_WEBVIEW_URL = "https://stagingweb.fantastic-entertainment.com/androidHomeSub?antkn=";
-    public static final String SUBSCRIPTION_WEBVIEW_URL_SUCCESS = "https://stagingweb.fantastic-entertainment.com/webviewsuccess";
-    public static final String SUBSCRIPTION_WEBVIEW_URL_FAILURE = "https://stagingweb.fantastic-entertainment.com/failed";*/
+  /*  public static final String SUBSCRIPTION_WEBVIEW_URL = "";
+    public static final String SUBSCRIPTION_WEBVIEW_URL_SUCCESS = "";
+    public static final String SUBSCRIPTION_WEBVIEW_URL_FAILURE = "";*/
     //production
     public static final String SUBSCRIPTION_WEBVIEW_URL = "";
     public static final String SUBSCRIPTION_WEBVIEW_URL_SUCCESS = "";

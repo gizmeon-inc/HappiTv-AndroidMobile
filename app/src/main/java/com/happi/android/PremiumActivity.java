@@ -178,7 +178,6 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
                     }else{
                         String message = "No Matching Subscription found in your Google Play Store Account. Please check with your other platforms.";
                         showAlert(message);
-                        //  Toast.makeText(CeyFlixApplication.getCurrentContext(), "No Matching Subscription found in your Google Play Store Account.Please check with your other platforms.", Toast.LENGTH_SHORT).show();
 
                     }
                 }else{
@@ -446,6 +445,7 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         finish();
+        overridePendingTransition(0,0);
     }
     private void getNetworkIP() {
         boolean isMobileData = false;

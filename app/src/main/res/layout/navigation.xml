@@ -364,59 +364,63 @@
                 android:textSize="@dimen/text_regular_medium3"
                 android:textColor="@color/dark_black"/>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/ll_logoutall"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/ll_contact_us"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
-
-            <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
-                android:src="@drawable/ic_logout"
-                android:padding="@dimen/dimen_2dp"
-                android:tint="@color/colorPrimaryDark"/>
-
-            <com.happi.android.customviews.TypefacedTextViewRegular
-                android:id="@+id/tv_logoutall"
-                android:layout_width="wrap_content"
+            android:layout_alignParentBottom="true">
+            <LinearLayout
+                android:id="@+id/ll_logoutall"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:text="@string/logoutall"
-                android:textSize="@dimen/text_regular_medium3"
-                android:textColor="@color/dark_black"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/ll_logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/ll_logoutall"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dimen_5dp"
+                android:paddingBottom="@dimen/dimen_5dp">
 
-            <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
-                android:src="@drawable/ic_logout"
-                android:padding="@dimen/dimen_2dp"
-                android:tint="@color/colorPrimaryDark"/>
+                <ImageView
+                    android:layout_width="@dimen/dimen_32dp"
+                    android:layout_height="@dimen/dimen_32dp"
+                    android:src="@drawable/ic_logout"
+                    android:padding="@dimen/dimen_2dp"
+                    android:tint="@color/colorPrimaryDark"/>
 
-            <com.happi.android.customviews.TypefacedTextViewRegular
-                android:id="@+id/tv_logout"
-                android:layout_width="wrap_content"
+                <com.happi.android.customviews.TypefacedTextViewRegular
+                    android:id="@+id/tv_logoutall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:text="@string/logoutall"
+                    android:textSize="@dimen/text_regular_medium3"
+                    android:textColor="@color/dark_black"/>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_logout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/dimen_10dp"
-                android:text="@string/logout"
-                android:textSize="@dimen/text_regular_medium3"
-                android:textColor="@color/dark_black"/>
-        </LinearLayout>
+                android:layout_below="@id/ll_logoutall"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/dimen_5dp"
+                android:paddingBottom="@dimen/dimen_5dp">
+
+                <ImageView
+                    android:layout_width="@dimen/dimen_32dp"
+                    android:layout_height="@dimen/dimen_32dp"
+                    android:src="@drawable/ic_logout"
+                    android:padding="@dimen/dimen_2dp"
+                    android:tint="@color/colorPrimaryDark"/>
+
+                <com.happi.android.customviews.TypefacedTextViewRegular
+                    android:id="@+id/tv_logout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/dimen_10dp"
+                    android:text="@string/logout"
+                    android:textSize="@dimen/text_regular_medium3"
+                    android:textColor="@color/dark_black"/>
+            </LinearLayout>
+        </RelativeLayout>
+
 
     </RelativeLayout>
 </RelativeLayout>

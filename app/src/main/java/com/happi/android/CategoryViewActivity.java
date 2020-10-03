@@ -255,6 +255,7 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
         runLayoutAnimation(rv_video_list, mSelectedItem);
         if (showList_adapter.isEmpty()) {
             rv_video_list.setVisibility(View.GONE);
+            displayErrorLayout(getString(R.string.no_results_found));
         }
     }
 

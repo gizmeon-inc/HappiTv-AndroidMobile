@@ -73,7 +73,6 @@ public class PremiumVideoItemAdapter extends RecyclerView.Adapter<PremiumVideoIt
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         VideoSubscriptionModel videoSubscriptionModel = videoSubscriptionModelList.get(i);
         viewHolder.tv_subscription_name.setText(videoSubscriptionModel.getSubscription_name());
-        //viewHolder.tv_subscription_name.setText("Fantastic Films Yearly");
         viewHolder.tv_subscription_type.setText(videoSubscriptionModel.getSubscription_type_name());
         viewHolder.tv_price.setText(videoSubscriptionModel.getNew_price());
 

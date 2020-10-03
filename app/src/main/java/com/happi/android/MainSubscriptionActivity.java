@@ -195,7 +195,7 @@ public class MainSubscriptionActivity extends BaseActivity implements LogoutDial
         settings.setDomStorageEnabled(true);
         settings.setUserAgentString("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E233 Safari/601.1");
 
-        wv_subscription.setWebViewClient(new CeyflixWebViewClient());
+        wv_subscription.setWebViewClient(new HappiTVWebViewClient());
         wv_subscription.loadUrl(url);
 
     }
@@ -205,7 +205,7 @@ public class MainSubscriptionActivity extends BaseActivity implements LogoutDial
         logoutApiCall();
     }
 
-    private class CeyflixWebViewClient extends WebViewClient {
+    private class HappiTVWebViewClient extends WebViewClient {
 
         @Override
         public void onPageFinished(WebView view, String url) {

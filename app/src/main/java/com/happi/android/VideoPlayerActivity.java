@@ -1870,6 +1870,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         SharedPreferenceUtility.setShowId(showsAdapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, showsAdapter.getItem(adapterPosition).getShow_id());
         finish();
+        overridePendingTransition(0,0);
     }
 
     private void callAddErrorAnalyticsApi(String errorCode, String errorMessage) {
@@ -1927,6 +1928,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         VideoPlayerActivity.this.finish();
+        overridePendingTransition(0,0);
     }
     private void goToLogin(){
         if(progressDialog.isShowing()){
@@ -1936,6 +1938,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         VideoPlayerActivity.this.finish();
+        overridePendingTransition(0,0);
     }
 
     private void getNetworkIP() {
@@ -2115,5 +2118,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onLoginRegisterNeutralClick() {
         VideoPlayerActivity.this.finish();
+        overridePendingTransition(0,0);
     }
 }

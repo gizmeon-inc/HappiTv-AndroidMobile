@@ -836,6 +836,7 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
     @Override
     public void onOkClickNeutral() {
         finish();
+        overridePendingTransition(0,0);
     }
 
     @Override
@@ -846,6 +847,7 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
     @Override
     public void onLoginRegisterNeutralClick() {
      SubscriptionActivity.super.finish();
+        overridePendingTransition(0,0);
     }
 
 
@@ -875,6 +877,7 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
     @Override
     public void onNumberRegisterNegativeClick() {
         SubscriptionActivity.super.finish();
+        overridePendingTransition(0,0);
     }
 
     private class FEWebViewClient extends WebViewClient {
@@ -906,12 +909,10 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
                     progressDialog.show();
                     fl_container_for_icon.setVisibility(View.VISIBLE);
                     updateSubscriptionIds();
-                    // Toast.makeText(CeyFlixApplication.getCurrentContext(), " onPageStarted >> Subscription is successfull.", Toast.LENGTH_SHORT).show();
 
                 } else if (url.trim().equalsIgnoreCase(ConstantUtils.SUBSCRIPTION_WEBVIEW_URL_FAILURE.trim())) {
                     fl_container_for_icon.setVisibility(View.VISIBLE);
                     showAlertDialog("Sorry, your Subscription has failed.");
-                    // Toast.makeText(CeyFlixApplication.getCurrentContext(), " onPageStarted >> Sorry. Your Subscription has failed.", Toast.LENGTH_SHORT).show();
 
                 }
             }

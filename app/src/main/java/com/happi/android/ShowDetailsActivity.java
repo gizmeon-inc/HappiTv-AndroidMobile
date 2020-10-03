@@ -1127,52 +1127,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 tv_more_click.setVisibility(View.GONE);
                 progressDialogDismiss();
             }
-//                TextView tx1 = new TextView(this);
-//                tx1.setLines(7);
-//                tx1.setEllipsize(TextUtils.TruncateAt.END);
-
-
-//                tv_description.setText(showDetails.getSynopsis());
-//                makeTextViewResizable(tv_description, 6, "...More", false,showDetails.getSynopsis());
-//                progressDialogDismiss();
-
-            /*  //  tv_description.setMaxLines(7);
-              //  tv_description.setEllipsize(TextUtils.TruncateAt.END);
-                tv_description.setText(showDetails.getSynopsis());
-                int lineCount = tv_description.getLineCount();
-                if(lineCount > 7){
-                    TextView tv1 = new TextView(this);
-                    tv1.setLines(7);
-                    tv1.setEllipsize(TextUtils.TruncateAt.END);
-                    tv1.setText();
-                }
-                String truncated = (String) tv_description.getText();
-                int count = truncated.length();
-                String subString = truncated.substring(0,count-8);
-
-               // truncated = truncated+"...More";
-                tv_description.setText(Html.fromHtml(subString + "<font color='#F2743C'>More</font>"));
-                tv_description.setVisibility(View.VISIBLE);
-                progressDialogDismiss();
-                tv_description.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        tv_description.setText(showDetails.getSynopsis());
-                    }
-                });*/
-
-
-//                String synopsisFullText = showDetails.getSynopsis();
-//                tv_description = setSpanForSynopsis(synopsisFullText, tv_description);
-//                progressDialogDismiss();
-//                tv_description.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        tv_description.setText(synopsisFullText);
-//                    }
-//                });
-            //tv_description.setText(synopsisFullText);
 
         } else {
             progressDialogDismiss();
@@ -1620,12 +1574,16 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+
         isFromWatchList = false;
         isTrailerPlayable = false;
         isPlayNow = false;
         // isYtPlayer = false;
         safelyDispose(compositeDisposable);
+        if (exoPlayer != null) {
+            exoPlayer.release();
+        }
+        super.onDestroy();
     }
 
     @Override

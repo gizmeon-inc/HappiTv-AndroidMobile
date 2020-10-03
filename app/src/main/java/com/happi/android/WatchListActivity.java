@@ -432,7 +432,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
 
     private void showAlert(String showName, String showId, int adapterPosition) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(Html.fromHtml("Do you want to remove " + "<font color = '#E50914'>"+showName+"</font>"  + " from  " + pageContext + " ?"));
+        builder.setMessage(Html.fromHtml("Do you want to remove " + "<font color = '#34A7CD'>"+showName+"</font>"  + " from  " + pageContext + " ?"));
         builder.setCancelable(false);
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
