@@ -1378,7 +1378,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             pb_trailer.setVisibility(View.GONE);
             try {
 
-                Uri teaserUri = Uri.parse(teaser);
+                Uri teaserUri = Uri.parse(teaser.trim());
 
                 if (needNewPlayer) {
                     TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
