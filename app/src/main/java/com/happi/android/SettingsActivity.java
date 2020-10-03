@@ -47,6 +47,7 @@ public class SettingsActivity extends BaseActivity {
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         ImageView iv_menu = findViewById(R.id.iv_menu);
         ImageView iv_back = findViewById(R.id.iv_back);
@@ -187,8 +188,10 @@ public class SettingsActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
     }
 
     @Override

@@ -62,6 +62,7 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -206,8 +207,10 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");
         }

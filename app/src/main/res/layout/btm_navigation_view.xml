@@ -13,5 +13,6 @@
         app:itemIconTint="@color/bottom_nav_color_day"
         app:itemTextColor="@color/bottom_nav_color_day"
         app:layout_scrollFlags="scroll|enterAlways|snap"
-        app:menu="@menu/bottom_bar_day" />
+        app:menu="@menu/bottom_bar_day"
+        app:labelVisibilityMode="labeled"/>
 </RelativeLayout>

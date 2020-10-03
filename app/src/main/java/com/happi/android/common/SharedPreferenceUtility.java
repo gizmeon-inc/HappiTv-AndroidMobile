@@ -388,9 +388,8 @@ public class SharedPreferenceUtility {
     }
 
     public static int getCurrentBottomMenu() {
-        return getSharedPreferenceInstance().getInt("menu_id", -1);
+        return getSharedPreferenceInstance().getInt("menu_id", 0);
     }
-
 
     public static boolean isRegistration_mandatory_flag() {
         return getSharedPreferenceInstance().getBoolean("registration_mandatory_flag", false);

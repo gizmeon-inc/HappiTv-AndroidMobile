@@ -52,7 +52,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
 
     public static boolean isDatePickerClicked = false;
 
-
     //getter and setter
 
 

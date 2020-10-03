@@ -29,6 +29,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -182,7 +183,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     //nested scroll
     private NestedScrollView sv_scrollview;
     private ProgressDialog dialog;
-
     @Override
 
     public void onClick(View view) {
@@ -304,46 +304,46 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         });*/
 
         iv_search.setOnClickListener(v -> {
-
+            releasePlayer();
             Intent intent = new Intent(MainHomeActivity.this, SearchActivity.class);
             intent.putExtra("search_type", "show");
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-
-
             overridePendingTransition(0, 0);
         });
 
         ll_watch_free.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                releasePlayer();
                 Intent intent = new Intent(MainHomeActivity.this, PopularVideosActivity.class);
                 intent.putExtra("title", "watchFree");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 startActivity(intent);
 
+
                 overridePendingTransition(0, 0);
             }
         });
         ll_popular_live.setOnClickListener(v -> {
-
+            releasePlayer();
             Intent intent = new Intent(HappiApplication.getCurrentContext(), LiveVideoListingActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
-
             overridePendingTransition(0, 0);
         });
 
         ll_category_list.setOnClickListener(v -> {
-
+            releasePlayer();
             Intent intent = new Intent(MainHomeActivity.this, CategoriesListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
+
             overridePendingTransition(0, 0);
         });
 
         ll_popular_videos.setOnClickListener(v -> {
-
+            releasePlayer();
             Intent intent = new Intent(MainHomeActivity.this, PopularVideosActivity.class);
             intent.putExtra("title", "newRelease");
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
@@ -367,8 +367,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         HappiApplication.setCurrentContext(this);
         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
-        updateMenuItem(0);
-
+        if(getMenuItem() != R.id.item_home){
+            updateMenuItem(0);
+        }
         setUserName();
         setLogoutAllVisibility();
 
@@ -565,6 +566,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         if (dialog.isShowing()) {
             dialog.dismiss();
         }
+        releasePlayer();
         String message = "You are no longer Logged in this device. Please Login again to access.";
         CustomAlertDialog alertDialog =
                 new CustomAlertDialog(MainHomeActivity.this, "ok", message, "Ok", "", null, null, this::onOkClickNeutral, null);
@@ -1042,6 +1044,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     protected void onDestroy() {
+        SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
         if (exoPlayer != null) {
             exoPlayer.release();
         }
@@ -1059,6 +1062,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onShowsItemClicked(int adapterPosition) {
+        releasePlayer();
         HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(freeShowList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, freeShowList_adapter.getItem(adapterPosition).getShow_id());
@@ -1068,6 +1072,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onItemClicked(int adapterPosition) {
+        releasePlayer();
         HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(videoList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, videoList_adapter.getItem(adapterPosition).getShow_id());
@@ -1078,6 +1083,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onCategoryItemClicked(int adapterPosition) {
+        releasePlayer();
         HappiApplication.setRedirect("");
         HappiApplication.setCategoryId(categoryList_adapter.getItem(adapterPosition).getCategoryid()
                 + ";" + categoryList_adapter.getItem(adapterPosition).getCategory());
@@ -1085,12 +1091,12 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .getItem(adapterPosition).getCategoryid() + ";" + categoryList_adapter.getItem
                 (adapterPosition).getCategory());
 
-
         overridePendingTransition(0, 0);
     }
 
     @Override
     public void onSuggestedItemClicked(int adapterPosition) {
+        releasePlayer();
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, channelListAdapter.getItem(adapterPosition).getChannelId());
 
         overridePendingTransition(0, 0);
@@ -1104,12 +1110,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onChannelItemClicked(int adapterPosition) {
-
+        releasePlayer();
         SharedPreferenceUtility.setChannelId(liveChannelsAdapter.getItem(adapterPosition)
                 .getChannelId());
         SharedPreferenceUtility.setChannelTimeZone(liveChannelsAdapter.getItem(adapterPosition).getTimezone());
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, liveChannelsAdapter.getItem(adapterPosition)
                 .getChannelId());
+
+        overridePendingTransition(0,0);
+
         //  Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
 
     }
@@ -1133,7 +1142,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onRewardedVideoAdClosed() {
-
+        releasePlayer();
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, commonVideoOrChannelId);
         overridePendingTransition(0, 0);
 
@@ -1349,18 +1358,19 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     public void onCategoryItemClickedForCircleView(int adapterPosition) {
+        releasePlayer();
         HappiApplication.setRedirect("");
         HappiApplication.setCategoryId(circleViewAdapter.getItem(adapterPosition).getCategoryid()
                 + ";" + circleViewAdapter.getItem(adapterPosition).getCategory());
         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, circleViewAdapter
                 .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
                 (adapterPosition).getCategory());
-
         overridePendingTransition(0, 0);
     }
 
     @Override
     public void onRedirectionToLive(ChannelModel channelModel) {
+        releasePlayer();
         SharedPreferenceUtility.setChannelId(channelModel.getChannelId());
         SharedPreferenceUtility.setChannelTimeZone(channelModel.getTimezone());
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, channelModel.getChannelId());
@@ -1379,6 +1389,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     public void onRefresh() {
         if (isNetworkConnected()) {
             mSwipeRefreshLayout.setRefreshing(false);
+            releasePlayer();
             finish();
             startActivity(getIntent());
             overridePendingTransition(0, 0);
@@ -1557,5 +1568,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intent);
         MainHomeActivity.this.finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

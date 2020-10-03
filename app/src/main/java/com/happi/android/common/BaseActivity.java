@@ -49,7 +49,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-//public class BaseActivity extends CommonActivity {
 public class BaseActivity extends AppCompatActivity {
 
     public DrawerLayout drawer;
@@ -64,7 +63,6 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
     }
 
     public void updateMenuItem(int index) {
@@ -86,18 +84,22 @@ public class BaseActivity extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
                     case R.id.item_home:
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                        Log.e("BTM","base"+">>selector>>home");
                         ActivityChooser.goToSelectedActivity(ConstantUtils.HOME_ACTIVITY);
                         return true;
                     case R.id.item_search:
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(1);
+                        Log.e("BTM","base"+">>selector>>search");
                         ActivityChooser.goToSelectedActivity(ConstantUtils.SEARCH_ACTIVITY);
                         return true;
                     case R.id.item_categories:
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(2);
+                        Log.e("BTM","base"+">>selector>>category");
                         ActivityChooser.goToSelectedActivity(ConstantUtils.CATEGORIES_LIST_ACTIVITY);
                         return true;
                     case R.id.item_lang_selector:
                         // SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
+                        Log.e("BTM","base"+">>selector>>language");
                         Toast.makeText(HappiApplication.getCurrentContext(), "Coming soon", Toast.LENGTH_SHORT).show();
                         return false;
                     // return true;
@@ -661,5 +663,7 @@ public class BaseActivity extends AppCompatActivity {
                 });
 
     }
+
+
 
 }

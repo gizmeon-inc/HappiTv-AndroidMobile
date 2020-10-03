@@ -169,6 +169,7 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         currentActivity = this;
 
@@ -1065,7 +1066,9 @@ public class SubscriptionActivity extends BaseActivity implements CustomAlertDia
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
     }
 }

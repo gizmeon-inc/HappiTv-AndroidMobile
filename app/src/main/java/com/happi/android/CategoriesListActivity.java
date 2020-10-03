@@ -2,6 +2,7 @@ package com.happi.android;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -229,10 +230,13 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
         SharedPreferenceUtility.setCurrentBottomMenuIndex(2);
-        updateMenuItem(2);
+        if(getMenuItem() != R.id.item_categories){
+            updateMenuItem(2);
+        }
+        super.onResume();
     }
 
     @Override

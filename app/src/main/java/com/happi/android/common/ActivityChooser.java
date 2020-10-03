@@ -127,39 +127,53 @@ public class ActivityChooser {
             HappiApplication.getCurrentActivity().finish();
         }
     }
-
+    public static boolean isSameClassForMenuSelector(String className) {
+        boolean isSameClass = false;
+        if (className.equals(HappiApplication.getCurrentActivity().getClass().getSimpleName())) {
+            //HappiApplication.getCurrentActivity().finish();
+            isSameClass = true;
+        }
+        return isSameClass;
+    }
 
     public static void goToSelectedActivity(int key) {
 
         Intent intent = null;
+        boolean isSameClass = false;
 
         switch (key) {
-
 
             case ConstantUtils.HOME_ACTIVITY:
                // isSameClass("HomeActivity");
                 isSameClass("MainHomeActivity");
-
+              //  isSameClass = isSameClassForMenuSelector("MainHomeActivity");
                // intent = new Intent(HappiApplication.getCurrentActivity(), HomeActivity.class);
-                intent = new Intent(HappiApplication.getCurrentActivity(), MainHomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+              //  if(!isSameClass){
+                    intent = new Intent(HappiApplication.getCurrentActivity(), MainHomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               // }
                 break;
 
             case ConstantUtils.SEARCH_ACTIVITY:
                 isSameClass("SearchActivity");
+              //  isSameClass = isSameClassForMenuSelector("SearchActivity");
+              //  if(!isSameClass){
+                    intent = new Intent(HappiApplication.getCurrentActivity(),
+                            SearchActivity.class);
+                    intent.putExtra("search_type", "show");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+              //  }
 
-                intent = new Intent(HappiApplication.getCurrentActivity(),
-                        SearchActivity.class);
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
             case ConstantUtils.CATEGORIES_LIST_ACTIVITY:
                 isSameClass("CategoriesListActivity");
+                //isSameClass = isSameClassForMenuSelector("CategoriesListActivity");
+               // if(!isSameClass){
+                    intent = new Intent(HappiApplication.getCurrentActivity(),
+                            CategoriesListActivity.class);
 
-                intent = new Intent(HappiApplication.getCurrentActivity(),
-                        CategoriesListActivity.class);
-
-                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               // }
                 break;
 
         }

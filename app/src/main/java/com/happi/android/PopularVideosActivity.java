@@ -71,6 +71,7 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -289,8 +290,10 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
     }
 
     @Override

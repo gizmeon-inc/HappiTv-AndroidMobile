@@ -383,6 +383,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         if (SharedPreferenceUtility.getAdvertisingId().isEmpty()) {
             new AdvertisingIdAsyncTask().execute();
@@ -1188,6 +1189,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         // TODO Auto-generated method stub
 
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");

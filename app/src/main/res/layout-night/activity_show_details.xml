@@ -218,7 +218,26 @@
                 </LinearLayout>
 
             </LinearLayout>
-
+            <TextView
+                android:id="@+id/tv_show_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:text="10 Eco Getaways"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/dimen_20dp"
+                android:visibility="gone"
+                android:layout_below="@+id/ll_icons"/>
+            <TextView
+                android:id="@+id/tv_resolution"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tv_show_name"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:text="10 x 52 Min HD TV Series"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/dimen_18dp"
+                android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/ll_producer"
                 android:layout_width="match_parent"
@@ -566,27 +585,9 @@
                 </androidx.core.widget.NestedScrollView>
             </RelativeLayout>
 
-            <TextView
-                android:id="@+id/tv_resolution"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tv_show_name"
-                android:layout_marginTop="@dimen/dimen_5dp"
-                android:text="10 x 52 Min HD TV Series"
-                android:textColor="@color/colorWhite"
-                android:textSize="@dimen/dimen_18dp"
-                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tv_show_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/dimen_10dp"
-                android:text="10 Eco Getaways"
-                android:textColor="@color/orange"
-                android:textSize="@dimen/dimen_20dp"
-                android:visibility="gone"
-                android:layout_below="@+id/ll_icons"/>
+
+
 
         </RelativeLayout>
 

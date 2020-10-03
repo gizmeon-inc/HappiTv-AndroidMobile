@@ -291,6 +291,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         if(SharedPreferenceUtility.getAdvertisingId().isEmpty()){
             new AdvertisingIdAsyncTask().execute();
@@ -656,6 +657,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onResume() {
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");
         }

@@ -80,6 +80,7 @@ public class PayPerViewVideoListActivity extends BaseActivity implements PayPerV
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -268,8 +269,10 @@ public class PayPerViewVideoListActivity extends BaseActivity implements PayPerV
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
         if(SharedPreferenceUtility.getGuest()){
             sw_list.setEnabled(false);
         }else{

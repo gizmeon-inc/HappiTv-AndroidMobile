@@ -86,6 +86,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -377,6 +378,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     @Override
     protected void onResume() {
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
         if(SharedPreferenceUtility.getGuest()){
             sw_list.setEnabled(false);
         }else{

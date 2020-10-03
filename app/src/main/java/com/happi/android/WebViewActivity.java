@@ -39,6 +39,7 @@ public class WebViewActivity extends BaseActivity {
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         WebView wv_layout = findViewById(R.id.wv_layout);
         ImageView iv_menu = findViewById(R.id.iv_menu);
@@ -87,8 +88,10 @@ public class WebViewActivity extends BaseActivity {
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
     }
 
     @Override

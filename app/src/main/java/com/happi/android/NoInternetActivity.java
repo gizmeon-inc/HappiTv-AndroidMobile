@@ -21,7 +21,6 @@ import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 
-//public class NoInternetActivity extends CommonActivity {
 public class NoInternetActivity extends BaseActivity {
 
     ImageView iv_retry;

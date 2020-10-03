@@ -82,9 +82,11 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
         }
         setContentView(R.layout.activity_premium);
 
-        onCreateBottomNavigationView();
-
         HappiApplication.setCurrentContext(this);
+        onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+
+
         if(SharedPreferenceUtility.getAdvertisingId().isEmpty()){
             new AdvertisingIdAsyncTask().execute();
         }
@@ -384,8 +386,10 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
     }
 
     private void logoutApiCall() {

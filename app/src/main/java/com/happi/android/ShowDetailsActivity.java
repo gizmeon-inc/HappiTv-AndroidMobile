@@ -218,6 +218,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         currentActivity = this;
 
@@ -510,7 +511,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-
+        releaseExoplayer();
         String message = "Please Login or Register to use this feature.";
         LoginRegisterAlert alertDialog =
                 new LoginRegisterAlert(this, message, "Ok", "Cancel", this::onLoginRegisterNegativeClick,
@@ -830,7 +831,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             ll_icons.setVisibility(View.VISIBLE);
 
             //show logo
-            if (showDetails.getLogo() != null) {
+            if (showDetails.getLogo() != null && !showDetails.getLogo().isEmpty()) {
                 rl_image.setVisibility(View.VISIBLE);
                 iv_show_image.setVisibility(View.VISIBLE);
                 Glide.with(getApplicationContext())
@@ -842,7 +843,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             }
 
             //show name
-            if (showDetails.getShow_name() != null) {
+            if (showDetails.getShow_name() != null  && !showDetails.getShow_name().isEmpty()) {
                 if (showDetails.getShow_name().length() > 19) {
                     String title = showDetails.getShow_name().substring(0, 19) + "...";
                     tv_title.setText(title);
@@ -858,7 +859,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             }
 
             // show resolution
-            if (showDetails.getResolution() != null) {
+            if (showDetails.getResolution() != null && !showDetails.getResolution().isEmpty()) {
                 tv_resolution.setVisibility(View.VISIBLE);
                 tv_resolution.setText(showDetails.getResolution());
             } else {
@@ -866,7 +867,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             }
 
             //show producer
-            if (showDetails.getProducer() != null) {
+            if (showDetails.getProducer() != null && !showDetails.getProducer().isEmpty()) {
                 ll_producer.setVisibility(View.VISIBLE);
                 tv_producer.setVisibility(View.VISIBLE);
                 tv_producer_label.setVisibility(View.VISIBLE);
@@ -876,7 +877,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                     public void onClick(View v) {
 
                         HappiApplication.setCategoryId(showDetails.getProducer());
-                        ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, showDetails.getProducer());
+                        releaseExoplayer();
+                        ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, showDetails.getProducer().trim());
+
                     }
                 });
             } else {
@@ -886,7 +889,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             }
 
             //show year
-            if (showDetails.getYear() != null) {
+            if (showDetails.getYear() != null && !showDetails.getYear().isEmpty()) {
                 ll_year.setVisibility(View.GONE);
                 tv_year_label.setVisibility(View.VISIBLE);
                 tv_year.setVisibility(View.VISIBLE);
@@ -917,7 +920,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             }
 
             //show director
-            if (showDetails.getDirector() != null) {
+            if (showDetails.getDirector() != null && !showDetails.getDirector().isEmpty()) {
                 ll_director.setVisibility(View.VISIBLE);
                 tv_director_label.setVisibility(View.VISIBLE);
                 tv_director.setVisibility(View.VISIBLE);
@@ -965,9 +968,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                             if (tag.equals(category.getCategory_name())) {
 
                                 HappiApplication.setCategoryId(category.getCategory_id() + ";" + category.getCategory_name());
+                                releaseExoplayer();
                                 ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, category.getCategory_id() + ";" + category.getCategory_name());
                                 break;
-                            } else {
                             }
                         }
 
@@ -1016,10 +1019,10 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                  teaser_flag         = 0 -> Youtube player
                                        1 -> Exoplayer
                                        3 -> No teaser       */
-            if (showDetails.getTeaser_status_flag() != null) {
+            if (showDetails.getTeaser_status_flag() != null && !showDetails.getTeaser_status_flag().isEmpty()) {
                 if (showDetails.getTeaser_status_flag().equals("1")) {
 
-                    if (showDetails.getTeaser_flag() != null) {
+                    if (showDetails.getTeaser_flag() != null && !showDetails.getTeaser_flag().isEmpty()) {
                         String teaserFlag = showDetails.getTeaser_flag();
                         if (teaserFlag.equals("0")) {
                             isTrailerPlayable = false;
@@ -1091,7 +1094,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
 
             //show description
-            if (showDetails.getSynopsis() != null) {
+            if (showDetails.getSynopsis() != null && !showDetails.getSynopsis().isEmpty()) {
                 tv_synopsis_label.setVisibility(View.VISIBLE);
                 ll_synopsis_text.setVisibility(View.VISIBLE);
                 tv_more_click.setVisibility(View.VISIBLE);
@@ -1174,7 +1177,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         } else {
             progressDialogDismiss();
             Toast.makeText(this, "Error occured. Please try again", Toast.LENGTH_SHORT).show();
-            super.onBackPressed();
+            displayErrorLayout();
         }
 
     }
@@ -1340,6 +1343,12 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     }
 
     private void goToVideoPlayer(int videoId) {
+        releaseExoplayer();
+        SharedPreferenceUtility.setVideoId(videoId);
+        ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoId);
+        // finish();
+    }
+    private void releaseExoplayer(){
         if(exoPlayer!=null){
             isTrailerPlayable = true;
             exoPlayer.setPlayWhenReady(false);
@@ -1354,12 +1363,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         }
         rl_player.setVisibility(View.GONE);
         rl_image.setVisibility(View.VISIBLE);
-
-        SharedPreferenceUtility.setVideoId(videoId);
-        ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoId);
-        // finish();
     }
-
     private void trailerError() {
         pb_trailer.setVisibility(View.GONE);
         Toast.makeText(this, "Oops!! Can't play trailer. Please try again later.", Toast.LENGTH_SHORT).show();
@@ -1627,9 +1631,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     @Override
     protected void onResume() {
         HappiApplication.setCurrentContext(this);
-        if (exoPlayer != null) {
-            resumePlayer();
-        }
+        int menu = SharedPreferenceUtility.getCurrentBottomMenu();
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        resumePlayer();
        /* if(!SharedPreferenceUtility.getGuest()){
             isInWatchList();
             isLiked();

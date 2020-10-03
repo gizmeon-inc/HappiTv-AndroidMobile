@@ -74,7 +74,7 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
-
+       // updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
         //categoryId = HappiApplication.getCategoryId();
 
         AnimationItem[] mAnimationItems = getAnimationItems();
@@ -323,8 +323,10 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
 
     @Override
     protected void onResume() {
-        super.onResume();
+
         HappiApplication.setCurrentContext(this);
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        super.onResume();
     }
 
     @Override
