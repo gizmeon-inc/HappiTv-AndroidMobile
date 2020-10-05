@@ -91,7 +91,7 @@
 
     <LinearLayout
         android:layout_width="@dimen/dimen_200dp"
-        android:layout_height="@dimen/dimen_100dp"
+        android:layout_height="@dimen/dimen_80dp"
         android:gravity="start|center_vertical"
         android:background="@color/btm_nav"
         android:orientation="horizontal"

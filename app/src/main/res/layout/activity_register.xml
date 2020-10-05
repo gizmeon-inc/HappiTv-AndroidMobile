@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ll_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/whiteTwo"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context="com.happi.android.RegisterActivity">
 
@@ -38,13 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <LinearLayout
-                android:id="@+id/ll_main_page"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,8 +58,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="50dp"
-                android:paddingRight="@dimen/dimen_50dp">
+                android:paddingStart="50dp"
+                android:paddingEnd="@dimen/dimen_50dp">
 
                 <EditText
                     android:id="@+id/et_name"
@@ -75,9 +69,11 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/name"
                     android:inputType="textCapWords"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/coolGrey"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/dark_black"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "/>
 
                 <View
                     android:layout_width="match_parent"
@@ -94,9 +90,10 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/email_address"
                     android:inputType="textEmailAddress"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/coolGrey"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/dark_black"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -138,9 +135,10 @@
                         android:hint="@string/phone_number"
                         android:inputType="number"
                         android:maxLength="15"
-                        android:textColorHint="@color/whiteThree"
+                        android:textColorHint="@color/coolGrey"
                         android:textSize="@dimen/dimen_20dp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:textColor="@color/dark_black"/>
 
 
                 </LinearLayout>
@@ -159,9 +157,10 @@
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/password"
                     android:inputType="textPassword"
-                    android:textColorHint="@color/whiteThree"
+                    android:textColorHint="@color/coolGrey"
                     android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@color/dark_black"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -219,7 +218,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_horizontal"
                         android:text="@string/already_have_an_account"
-                        android:textColor="@color/coolGrey"
+                        android:textColor="@color/dark_black"
                         android:textSize="@dimen/text_regular_medium1" />
 
                     <com.happi.android.customviews.TypefacedTextViewRegular
@@ -237,7 +236,6 @@
 
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
         </LinearLayout>
     </ScrollView>
     <RelativeLayout

@@ -205,7 +205,8 @@
                         android:id="@+id/iv_share"
                         android:layout_width="@dimen/dimen_30dp"
                         android:layout_height="@dimen/dimen_30dp"
-                        android:src="@drawable/ic_share"/>
+                        android:src="@drawable/ic_share"
+                        android:tint="@color/orange"/>
                     <TextView
                         android:id="@+id/tv_share"
                         android:layout_width="wrap_content"

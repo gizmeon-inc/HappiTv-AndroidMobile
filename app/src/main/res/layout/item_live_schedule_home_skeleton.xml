@@ -11,7 +11,7 @@
     app:cardUseCompatPadding="false">
     <LinearLayout
         android:layout_width="@dimen/dimen_200dp"
-        android:layout_height="@dimen/dimen_100dp"
+        android:layout_height="@dimen/dimen_80dp"
         android:gravity="start|center_vertical"
         android:padding="@dimen/dimen_5dp"
         android:background="@color/coolGrey"
@@ -20,20 +20,22 @@
         <LinearLayout
             android:id="@+id/ll_schedule_image"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_80dp"
+            android:layout_height="match_parent"
             android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1.3"
-            android:layout_margin="@dimen/dimen_5dp">
+            android:gravity="center_vertical"
+            android:layout_weight="1.2"
+            android:layout_marginEnd="@dimen/dimen_5dp"
+            android:padding="@dimen/dimen_3dp">
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:cardCornerRadius="@dimen/dimen_3dp"
+                app:cardCornerRadius="@dimen/dimen_5dp"
                 app:cardElevation="@dimen/dimen_0dp"
                 app:cardMaxElevation="@dimen/dimen_0dp"
                 app:cardUseCompatPadding="true"
                 app:cardPreventCornerOverlap="false"
                 app:cardBackgroundColor="@color/whiteThree"/>
+
 
         </LinearLayout>
         <LinearLayout
@@ -44,7 +46,8 @@
             android:layout_weight="2.7"
             android:layout_marginEnd="@dimen/dimen_3dp"
             android:layout_marginStart="@dimen/dimen_3dp"
-            android:paddingTop="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_3dp"
+            android:paddingBottom="@dimen/dimen_3dp">
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/dimen_0dp"
@@ -54,7 +57,6 @@
                 app:cardUseCompatPadding="true"
                 app:cardPreventCornerOverlap="false"
                 app:cardBackgroundColor="@color/whiteThree"
-                android:layout_marginTop="@dimen/dimen_5dp"
                 android:gravity="top"
                 android:layout_weight="1"
                 android:layout_marginBottom="@dimen/dimen_7dp"/>

@@ -21,24 +21,7 @@ import static com.happi.android.utils.ConstantUtils.ANALYTICS_BASE_URL;
 
 public class AnalyticsApi {
 
-    public static AnalyticsService create(){
 
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(httpLoggingInterceptor)
-                .connectTimeout(3, TimeUnit.MINUTES)
-                .writeTimeout(3, TimeUnit.MINUTES)
-                .readTimeout(3, TimeUnit.MINUTES)
-                .build();
-
-        Retrofit retrofit = new Retrofit.Builder().baseUrl(ANALYTICS_BASE_URL)
-                .client(client)
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .build();
-
-        return retrofit.create(AnalyticsService.class);
-    }
 
     public static AnalyticsServiceScalar createScalar(){
 
@@ -61,15 +44,7 @@ public class AnalyticsApi {
 
     }
 
-    public interface AnalyticsService{
 
-        @POST("poppo-analytics-api/device")
-        Observable<AnalyticsResponseModel> firstTimeInstall(@Body JsonObject details);
-
-        @POST("poppo-analytics-api/event")
-        Observable<AnalyticsResponseModel> eventCall(@Body JsonObject eventDetails);
-
-    }
     public interface AnalyticsServiceScalar{
 
         @POST("device")
@@ -79,3 +54,4 @@ public class AnalyticsApi {
         Call<String> eventCall2(@Body JsonObject eventDetails);
     }
 }
+

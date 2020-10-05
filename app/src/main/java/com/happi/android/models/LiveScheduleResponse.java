@@ -16,7 +16,7 @@ public class LiveScheduleResponse implements Serializable {
         return data;
     }
 
-    public class LiveScheduleModel implements Serializable{
+    public static class LiveScheduleModel implements Serializable{
         @SerializedName("starttime")
         @Expose
         private String starttime;

@@ -7,6 +7,7 @@ import com.happi.android.CategoryViewActivity;
 import com.happi.android.ChannelLivePlayerActivity;
 import com.happi.android.ChannelScheduleActivity;
 import com.happi.android.HomeActivity;
+import com.happi.android.LiveVideoListingActivity;
 import com.happi.android.MainHomeActivity;
 import com.happi.android.SearchActivity;
 import com.happi.android.ShowDetailsActivity;
@@ -171,9 +172,14 @@ public class ActivityChooser {
                // if(!isSameClass){
                     intent = new Intent(HappiApplication.getCurrentActivity(),
                             CategoriesListActivity.class);
-
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                // }
+                break;
+                case ConstantUtils.LIVE_VIDEO_LISTING_ACTIVITY:
+                isSameClass("LiveVideoListingActivity");
+                    intent = new Intent(HappiApplication.getCurrentActivity(),
+                            LiveVideoListingActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
         }

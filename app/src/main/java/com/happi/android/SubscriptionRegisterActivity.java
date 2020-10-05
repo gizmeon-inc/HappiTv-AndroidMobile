@@ -89,7 +89,6 @@ public class SubscriptionRegisterActivity extends BaseActivity {
     TextView tv_verfication_code_number;
     ImageView iv_back_to_page;
     LinearLayout ll_resend;
-    LinearLayout ll_main_page;
     boolean isOtpScreenOpen = false;
     CountDownTimer otpTimer;
     private int user_id = 0;
@@ -168,7 +167,6 @@ public class SubscriptionRegisterActivity extends BaseActivity {
         tv_timer = findViewById(R.id.tv_timer);
         tv_resend_otp = findViewById(R.id.tv_resend_otp);
         ll_resend = findViewById(R.id.ll_resend);
-        ll_main_page = findViewById(R.id.ll_main_page);
 
 
         et_name.setError(null);

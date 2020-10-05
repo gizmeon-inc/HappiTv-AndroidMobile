@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -54,6 +55,17 @@ public class WebViewActivity extends BaseActivity {
         iv_logo_text.setVisibility(View.GONE);
         tv_title.setVisibility(View.VISIBLE);
         iv_search.setVisibility(View.GONE);
+
+        //webview
+        WebSettings settings = wv_layout.getSettings();
+        settings.setLoadWithOverviewMode(true);
+        settings.setUseWideViewPort(true);
+        settings.setJavaScriptEnabled(true);
+        settings.setAppCacheEnabled(false);
+        settings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        settings.setDomStorageEnabled(true);
+        settings.setUserAgentString("Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13E233 Safari/601.1");
+
 
         Intent intent = getIntent();
         String web_view_select = intent.getStringExtra("web_view_select");

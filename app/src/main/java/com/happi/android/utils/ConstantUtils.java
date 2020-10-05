@@ -16,7 +16,7 @@ public class ConstantUtils {
     public static final int CATEGORIES_LIST_ACTIVITY = 11;
     public static final int CATEGORY_VIEW_ACTIVITY = 12;
     public static final int CHANNEL_LIVE_PLAYER_ACTIVITY = 13;
-    public static final int PAYPERVIEW_VIDEO_LIST_ACTIVITY = 14;
+    public static final int LIVE_VIDEO_LISTING_ACTIVITY = 14;
     public static final int PREMIUM_ACTIVITY = 15;
     public static final int SEARCH_ACTIVITY = 16;
     public static final int SETTINGS_ACTIVITY = 17;
@@ -35,10 +35,10 @@ public class ConstantUtils {
 
 
 
-    public static final String termsDayUrl = "";
-    public static final String termsNightUrl = "";
-    public static final String policyDayUrl = "";
-    public static final String policyNightUrl = "";
+    public static final String termsDayUrl = "https://staging.gethappi.tv/termsofuse";
+    public static final String termsNightUrl = "https://staging.gethappi.tv/termsofuse";
+    public static final String policyDayUrl = "https://staging.gethappi.tv/policydarkmode";
+    public static final String policyNightUrl = "https://staging.gethappi.tv/policydarkmode";
 
     //appkey, bundle id
     public static final String appKey="happifilms";
@@ -68,7 +68,6 @@ public class ConstantUtils {
 
     //Analytics api
     public static final String ANALYTICS_BASE_URL = "https://analytics.poppo.tv/";
-
     //share url
     public static final String SHARE_URL = "";
 

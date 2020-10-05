@@ -201,8 +201,8 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
@@ -388,7 +388,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         iv_like.setImageResource(R.drawable.ic_like_empty);
 
                         ll_dislike.setEnabled(true);
-                        iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                        iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
                         tv_dislike.setTextColor(getResources().getColor(R.color.whiteThree));
 
                         likeOrUnlikeShow(0);
@@ -422,7 +422,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         iv_dislike.setImageResource(R.drawable.ic_thumbsdown_empty);
 
                         ll_like.setEnabled(true);
-                        iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                        iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
                         tv_like.setTextColor(getResources().getColor(R.color.whiteThree));
 
                         dislikeShow(0);
@@ -650,7 +650,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                             iv_like.setImageResource(R.drawable.ic_like_empty);
 
                             ll_dislike.setEnabled(true);
-                            iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                            iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
                             tv_dislike.setTextColor(getResources().getColor(R.color.whiteThree));
                         }
                         Toast.makeText(HappiApplication.getCurrentContext(), "Can't connect to server. Please try again later.", Toast.LENGTH_SHORT).show();
@@ -668,7 +668,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         iv_like.setImageResource(R.drawable.ic_like_empty);
 
                         ll_dislike.setEnabled(true);
-                        iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                        iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
                         tv_dislike.setTextColor(getResources().getColor(R.color.whiteThree));
                     }
                 });
@@ -695,7 +695,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                             iv_dislike.setImageResource(R.drawable.ic_thumbsdown_empty);
 
                             ll_like.setEnabled(true);
-                            iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                            iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
                             tv_like.setTextColor(getResources().getColor(R.color.whiteThree));
                         }
                         Toast.makeText(HappiApplication.getCurrentContext(), "Can't connect to server. Please try again later.", Toast.LENGTH_SHORT).show();
@@ -713,7 +713,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         iv_dislike.setImageResource(R.drawable.ic_thumbsdown_empty);
 
                         ll_like.setEnabled(true);
-                        iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                        iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.orange), PorterDuff.Mode.SRC_ATOP);
                         tv_like.setTextColor(getResources().getColor(R.color.whiteThree));
                     }
                 });

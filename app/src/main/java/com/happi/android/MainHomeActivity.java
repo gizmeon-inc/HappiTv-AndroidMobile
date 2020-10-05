@@ -262,7 +262,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         ll_popular_videos = findViewById(R.id.ll_popular_videos);
         ll_watch_free = findViewById(R.id.ll_watch_free);
         ll_popular_live = findViewById(R.id.ll_popular_live);
+        ll_popular_live = findViewById(R.id.ll_popular_live);
         iv_search = findViewById(R.id.iv_search);
+
+        //no free shows
+        ll_watch_free.setVisibility(View.GONE);
+        rv_watch_free.setVisibility(View.GONE);
+        //no live category in home
+        rv_live.setVisibility(View.GONE);
+        ll_popular_live.setVisibility(View.GONE);
 
         mSwipeRefreshLayout = findViewById(R.id.swipeToRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -273,6 +281,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //get user subscription id list
         subscriptionModelList = new ArrayList<>();
         subids = new ArrayList<>();
+
 
         //live player
         channelModelList = new ArrayList<>();
@@ -373,7 +382,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         setUserName();
         setLogoutAllVisibility();
 
-        if (apiErrorCount == 5) {
+        if (apiErrorCount == 4) {
             setupRecyclerView();
             recallHomeApis();
         }
@@ -437,9 +446,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .show();
         //-----------------------------------------------watch for free---------------------------------------------------------//
         ViewCompat.setNestedScrollingEnabled(rv_watch_free, false);
-        ll_watch_free.setVisibility(View.VISIBLE);
+        /*ll_watch_free.setVisibility(View.VISIBLE);
         rv_watch_free.setVisibility(View.VISIBLE);
-
+*/
         rv_watch_free.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         freeShowList_adapter = new ShowList_adapter(this, this::onShowsItemClicked, false);
         rv_watch_free.setAdapter(freeShowList_adapter);
@@ -522,7 +531,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                             }
                             liveNow();
                             categoryApiCall();
-                            watchForFreeShowList();
+                            //watchForFreeShowList();
                             newReleases();
                             loadCategoriesHomeList();
 
@@ -651,20 +660,23 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                     channelModelList.addAll(channelModels);
 
                     //load all live - player and channels list
-                    if (channelModelList.isEmpty()) {
-                        hideLivePlayerAndSchedule();
-                        rv_live.setVisibility(View.GONE);
-                        ll_popular_live.setVisibility(View.GONE);
-                    } else {
+                    if (!channelModelList.isEmpty()) {
                         liveChannelId = channelModelList.get(0).getChannelId();
-                        generateToken(channelModelList.get(0));
                         loadLiveSchedule(liveChannelId);
-                        //load live channel list
+                        generateToken(channelModelList.get(0));
+
+                        /*//load live channel list
                         if (channelModelList.size() >= 10) {
                             updateLiveVideos(channelModelList.subList(0, 10));
                         } else {
                             updateLiveVideos(channelModelList);
-                        }
+                        }*/
+
+                    } else {
+                        hideLivePlayerAndSchedule();
+                        rv_live.setVisibility(View.GONE);
+                        ll_popular_live.setVisibility(View.GONE);
+
                     }
 
 
@@ -708,6 +720,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                         rv_live_schedule_list.setVisibility(View.GONE);
                     }
                 }, throwable -> {
+                    apiErrorCount++;
                     ll_live_guide.setVisibility(View.GONE);
                     rv_live_schedule_list.setVisibility(View.GONE);
                 });
@@ -883,15 +896,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {
                 categoryApiCall();
             }
-            if (freeShowList_adapter == null || freeShowList_adapter.isEmpty()) {
+            /*if (freeShowList_adapter == null || freeShowList_adapter.isEmpty()) {
                 watchForFreeShowList();
-            }
+            }*/
             if (videoList_adapter == null || videoList_adapter.isEmpty()) {
                 newReleases();
             }
-            if (liveChannelsAdapter == null || liveChannelsAdapter.isEmpty()) {
+            /*if (liveChannelsAdapter == null || liveChannelsAdapter.isEmpty()) {
                 liveNow();
-            }
+            }*/
             if (!homeLoaded) {
                 loadCategoriesHomeList();
             }
@@ -986,7 +999,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
 
     private void displayErrorLayout(String message) {
-        if (apiErrorCount == 5) {
+        if (apiErrorCount == 4) {
 
             hideLivePlayerAndSchedule();
 
@@ -1495,7 +1508,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
             liveNow();
             categoryApiCall();
-            watchForFreeShowList();
+            //watchForFreeShowList();
             newReleases();
             loadCategoriesHomeList();
         }

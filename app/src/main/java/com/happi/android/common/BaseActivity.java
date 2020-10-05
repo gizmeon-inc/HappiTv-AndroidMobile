@@ -97,12 +97,11 @@ public class BaseActivity extends AppCompatActivity {
                         Log.e("BTM","base"+">>selector>>category");
                         ActivityChooser.goToSelectedActivity(ConstantUtils.CATEGORIES_LIST_ACTIVITY);
                         return true;
-                    case R.id.item_lang_selector:
-                        // SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
+                    case R.id.item_live:
+                         SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
                         Log.e("BTM","base"+">>selector>>language");
-                        Toast.makeText(HappiApplication.getCurrentContext(), "Coming soon", Toast.LENGTH_SHORT).show();
-                        return false;
-                    // return true;
+                        ActivityChooser.goToSelectedActivity(ConstantUtils.LIVE_VIDEO_LISTING_ACTIVITY);
+                     return true;
                 }
 
                 return false;
@@ -242,18 +241,14 @@ public class BaseActivity extends AppCompatActivity {
 
         LinearLayout ll_terms = findViewById(R.id.ll_terms);
         ll_terms.setOnClickListener(v -> {
-             Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-//            drawer.closeDrawer(findViewById(R.id.navigation));
-//            goToWebView("T");
-            //drawer.closeDrawer(findViewById(R.id.navigation));
+            drawer.closeDrawer(findViewById(R.id.navigation));
+            goToWebView("T");
         });
 
         LinearLayout ll_privacy = findViewById(R.id.ll_privacy);
         ll_privacy.setOnClickListener(v -> {
-            Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
-//            drawer.closeDrawer(findViewById(R.id.navigation));
-//            goToWebView("P");
-            //drawer.closeDrawer(findViewById(R.id.navigation));
+            drawer.closeDrawer(findViewById(R.id.navigation));
+            goToWebView("P");
         });
 
         LinearLayout ll_settings = findViewById(R.id.ll_settings);
