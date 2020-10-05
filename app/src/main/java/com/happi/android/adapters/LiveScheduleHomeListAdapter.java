@@ -126,7 +126,7 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
             }
         }
         if(endDateTime.contains("T")){
-            String[] end= startDateTime.split("T");
+            String[] end= endDateTime.split("T");
             if(end.length == 2){
                 endDateString = end[0];
                 endTimeString = end[1];
@@ -149,8 +149,7 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
         Log.d("liveschhmeadapter","pos: "+position+">> start-"+startDateString+"&"+startTimeString+"*"+startTime);
         Log.d("liveschhmeadapter","pos: "+position+">> end-"+endDateString+"&"+endTimeString+"*"+endTime);
 
-        /*Calendar currentCalendar = Calendar.getInstance();
-        Date currentDate = currentCalendar.getTime();*/
+
 
         SimpleDateFormat sdfYearTimeLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         SimpleDateFormat sdfYearTimeUTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -160,28 +159,30 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
         try{
             //start
             String startString = startDateString+" "+startTimeString;
-            Date parsedDateStart = sdfYearTimeUTC.parse(startString);
-            finalStartTime = sdfTime.format(parsedDateStart);
+            //Date parsedDateStart = sdfYearTimeUTC.parse(startString);
+            //finalStartTime = sdfTime.format(parsedDateStart);
             //finalStartDateTime = sdfYearTimeUTC.parse(startString);
             Date d1 = sdfYearTimeUTC.parse(startString);
             String s1 = sdfYearTimeLocal.format(d1);
+            finalStartTime = sdfTime.format(d1);
             finalStartDateTime = sdfYearTimeLocal.parse(s1);
             //end
             String endString = endDateString+" "+endTimeString;
-            Date parsedDateEnd = sdfYearTimeUTC.parse(endString);
-            finalEndTime = sdfTime.format(parsedDateEnd);
-            finalEndDateTime = sdfYearTimeUTC.parse(endString);
+            //Date parsedDateEnd = sdfYearTimeUTC.parse(endString);
+            //finalEndTime = sdfTime.format(parsedDateEnd);
+            //finalEndDateTime = sdfYearTimeUTC.parse(endString);
+            Date d2 = sdfYearTimeUTC.parse(endString);
+            String s2 = sdfYearTimeLocal.format(d2);
+            finalEndTime = sdfTime.format(d2);
+            finalEndDateTime = sdfYearTimeLocal.parse(s2);
         }catch(Exception ex){
             Log.e("exception date","");
         }
         liveScheduleList.get(position).setStartDateTime(finalStartDateTime);
         liveScheduleList.get(position).setEndDateTime(finalEndDateTime);
 
-        /*if(finalStartDateTime.after(currentDate)){
-           //schedule start is today or not
-
-        }*/
-
+        //Log.e("liveschhmeadapter","pos: "+position+">> start date time-"+finalStartDateTime);
+        //Log.e("liveschhmeadapter","pos: "+position+">> end date time-"+finalEndDateTime);
         localTime = finalStartTime +" - "+finalEndTime;
 
         return localTime;
