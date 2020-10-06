@@ -13,6 +13,7 @@ import com.happi.android.SearchActivity;
 import com.happi.android.ShowDetailsActivity;
 import com.happi.android.ShowVideoActivity;
 import com.happi.android.VideoPlayerActivity;
+import com.happi.android.WatchListActivity;
 import com.happi.android.utils.ConstantUtils;
 
 public class ActivityChooser {
@@ -175,10 +176,11 @@ public class ActivityChooser {
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                // }
                 break;
-                case ConstantUtils.LIVE_VIDEO_LISTING_ACTIVITY:
-                isSameClass("LiveVideoListingActivity");
+                case ConstantUtils.WATCHLIST_ACTIVITY:
+                    isWatchList("WatchListActivity");
                     intent = new Intent(HappiApplication.getCurrentActivity(),
-                            LiveVideoListingActivity.class);
+                            WatchListActivity.class);
+                    intent.putExtra("pageContext", "Watch List");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                 break;
 
@@ -192,7 +194,15 @@ public class ActivityChooser {
 
 
     }
+    public static void isWatchList(String className) {
+        if (className.equals(HappiApplication.getCurrentActivity().getClass().getSimpleName())) {
+            if(!WatchListActivity.pageContext.isEmpty() && WatchListActivity.pageContext.equalsIgnoreCase("Watch List")){
+                HappiApplication.getCurrentActivity().finish();
+            }
+        }
 
+
+    }
     public static void isPlayerOrSubscription(String className) {
         switch (className) {
 

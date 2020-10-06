@@ -15,6 +15,11 @@ import com.happi.android.common.HappiApplication;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 import static com.happi.android.common.HappiApplication.getCurrentActivity;
 
@@ -110,8 +115,9 @@ public class AppUtils {
                 .getActiveNetworkInfo().isConnected());
 
     }
+
     //analytics
-    private static void callAnalyticsEventApi(){
+    private static void callAnalyticsEventApi() {
 
         //Uncomment to enable analytics api call
 
@@ -146,4 +152,76 @@ public class AppUtils {
         }*/
 
     }
+
+    public static String getDay(Date finalStartDateTime) {
+        String status = "";
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentDate = currentCalendar.getTime();
+        int value;
+        if (currentDate.before(finalStartDateTime)) {
+            value = 1;
+        } else if (currentDate.after(finalStartDateTime)) {
+            value = -1;
+        } else {
+            value = 0;
+        }
+
+        if (value == 0) {
+            status = "Today";
+        } else if (value == 1) {
+            int difference = (int) getDateDiff(currentDate, finalStartDateTime, TimeUnit.DAYS);
+            if (difference == 0) {
+                if (finalStartDateTime == currentDate) {
+                    status = "Today";
+                } else {
+                    status = "Tomorrow";
+                }
+            } else if (difference == 1) {
+                SimpleDateFormat sdfLocal = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                String startDateString = sdfLocal.format(finalStartDateTime);
+                boolean isTomorrow = checkTomorrow(startDateString);
+                if (isTomorrow) {
+                    status = "Tomorrow";
+                } else {
+                    String weekday = "";
+                    SimpleDateFormat sdfLocalDay = new SimpleDateFormat("yyyy-MM-dd EEEE", Locale.getDefault());
+
+                    String dayStart = sdfLocalDay.format(finalStartDateTime);
+                    String[] date = dayStart.split(" ");
+                    if (date.length > 1) {
+                        weekday = date[1];
+                    } else {
+                        weekday = "";
+                    }
+
+                    status = weekday;
+                }
+
+            } else {
+                status = "";
+            }
+
+        } else {
+            status = "";
+        }
+
+
+        return status;
+    }
+
+    private static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
+
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+
+    private static boolean checkTomorrow(String date) {
+
+        SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        Calendar today = Calendar.getInstance();
+        today.add(Calendar.DATE, 1);
+        String currentDate = sdfDate.format(today.getTime());
+        return currentDate.equals(date);
+    }
+
 }

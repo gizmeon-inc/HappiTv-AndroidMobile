@@ -429,7 +429,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         //------------------------------------------------------------------------------------------------//
 
         rv_video_grid.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        videoList_adapter = new VideoList_adapter(getApplicationContext(), this::onItemClicked, false);
+        videoList_adapter = new VideoList_adapter(getApplicationContext(), this::onItemClicked, false, true, width);
         rv_video_grid.setAdapter(videoList_adapter);
 
         loadingVideos = Skeleton.bind(rv_video_grid)
@@ -903,7 +903,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     private void populateCategoryHomeList(List<CategoriesHomeListVideoModel> categoriesHomeListVideoModelList) {
 
         rv_categories_home_list.setHasFixedSize(true);
-        CategoriesHomeListAdapter adapter = new CategoriesHomeListAdapter(categoriesHomeListVideoModelList, this);
+        CategoriesHomeListAdapter adapter = new CategoriesHomeListAdapter(categoriesHomeListVideoModelList, this, true, width);
         rv_categories_home_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv_categories_home_list.setAdapter(adapter);
         homeLoaded = true;

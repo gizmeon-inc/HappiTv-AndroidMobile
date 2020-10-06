@@ -83,7 +83,7 @@
                        android:layout_height="wrap_content"
                        android:gravity="center_vertical"
                        android:orientation="horizontal"
-                       android:paddingTop="@dimen/dimen_10dp"
+                       android:paddingTop="@dimen/dimen_7dp"
                        android:paddingBottom="@dimen/dimen_10dp"
                        android:paddingLeft="@dimen/dimen_10dp"
                        android:paddingRight="@dimen/dimen_10dp">
@@ -254,7 +254,7 @@
                        android:layout_below="@+id/rv_watch_free"
                        android:gravity="center_vertical"
                        android:orientation="horizontal"
-                       android:paddingTop="@dimen/dimen_10dp"
+                       android:paddingTop="@dimen/dimen_7dp"
                        android:paddingBottom="@dimen/dimen_10dp"
                        android:paddingLeft="@dimen/dimen_10dp"
                        android:paddingRight="@dimen/dimen_10dp">

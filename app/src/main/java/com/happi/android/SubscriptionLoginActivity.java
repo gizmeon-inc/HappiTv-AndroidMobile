@@ -602,6 +602,13 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                                 ShowDetailsActivity.currentActivity.finish();
                                 goToShowDetailsScreen();
 
+                            } else if (from != null && (from.equalsIgnoreCase("Watch List") || from.equalsIgnoreCase("Favourites"))) {
+                                if (dialog.isShowing()) {
+                                    dialog.dismiss();
+                                }
+                                WatchListActivity.currentActivity.finish();
+                                goToWatchList();
+
                             } else {
                                 HappiApplication.setIsNewLoginFromPremiumPage(false);
                                 goToHomePage();
@@ -824,6 +831,12 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
     private void goToShowDetailsScreen() {
         Intent showIntent = new Intent(SubscriptionLoginActivity.this, ShowDetailsActivity.class);
         startActivity(showIntent);
+        finish();
+    }
+    private void goToWatchList() {
+        Intent watchListIntent = new Intent(SubscriptionLoginActivity.this, WatchListActivity.class);
+        watchListIntent.putExtra("pageContext", from);
+        startActivity(watchListIntent);
         finish();
     }
 

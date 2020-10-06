@@ -330,7 +330,10 @@ public class SubscriptionRegisterActivity extends BaseActivity {
                             } else if (from != null && from.equalsIgnoreCase("showDetails")) {
                                 ShowDetailsActivity.currentActivity.finish();
                                 goToShowDetailsScreen();
-                            } else {
+                            }else if (from != null && (from.equalsIgnoreCase("Watch List") || from.equalsIgnoreCase("Favourites"))) {
+                                WatchListActivity.currentActivity.finish();
+                                goToWatchList();
+                            }else {
                                 hideSoftKeyBoard();
                                 goToHomeScreen();
                             }
@@ -649,7 +652,12 @@ public class SubscriptionRegisterActivity extends BaseActivity {
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
-
+    private void goToWatchList() {
+        Intent watchListIntent = new Intent(SubscriptionRegisterActivity.this, WatchListActivity.class);
+        watchListIntent.putExtra("pageContext", from);
+        startActivity(watchListIntent);
+        finish();
+    }
     private void getNetworkIP() {
         boolean isMobileData = false;
         boolean isWifi = false;

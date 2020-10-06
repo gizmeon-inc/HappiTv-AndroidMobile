@@ -1,9 +1,13 @@
 package com.happi.android;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -25,6 +29,7 @@ import com.happi.android.common.ActivityChooser;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.ItemDecorationAlbumColumns;
+import com.happi.android.customviews.LoginRegisterAlert;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.GetWatchListModel;
 import com.happi.android.recyclerview.AnimationItem;
@@ -37,13 +42,16 @@ import com.github.pwittchen.reactivenetwork.library.rx2.ReactiveNetwork;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-public class WatchListActivity extends BaseActivity implements WatchListAdapter.OnItemClicked, WatchListAdapter.OnLongItemclicked {
+public class WatchListActivity extends BaseActivity implements WatchListAdapter.OnItemClicked,
+        WatchListAdapter.OnLongItemclicked, LoginRegisterAlert.OnLoginRegisterUserNegative,
+        LoginRegisterAlert.OnLoginRegisterUserNeutral {
 
     private CompositeDisposable compositeDisposable;
     private List<GetWatchListModel> watchListModelsList;
@@ -54,7 +62,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     ImageView iv_logo_text;
     TypefacedTextViewRegular tv_title;
     LinearLayout rl_end_icons;
-    private String pageContext = "";
+    public static String pageContext = "";
     ProgressDialog progressDialog;
     SkeletonScreen loadingVideos;
     private AnimationItem[] mAnimationItems;
@@ -63,7 +71,8 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     private TypefacedTextViewRegular tv_errormsg;
     LinearLayout ll_error;
     private SwipeRefreshLayout sw_list;
-
+    public static Activity currentActivity;
+    private String title = "";
 
 
     @Override
@@ -84,8 +93,14 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         }
         setContentView(R.layout.activity_watch_list);
 
+        currentActivity = this;
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+        if (getIntent() != null && getIntent().getStringExtra("pageContext") != null && !getIntent().getStringExtra("pageContext").isEmpty()) {
+            pageContext = getIntent().getStringExtra("pageContext");
+        } else {
+            pageContext = "";
+        }
         //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         mAnimationItems = getAnimationItems();
@@ -108,12 +123,23 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         rv_watchList.setAdapter(watchListAdapter);
         rv_watchList.setVisibility(View.GONE);
 
-        if (getIntent().getStringExtra("pageContext") != null && !getIntent().getStringExtra("pageContext").isEmpty()) {
+        /*if (getIntent().getStringExtra("pageContext") != null && !getIntent().getStringExtra("pageContext").isEmpty()) {
             pageContext = getIntent().getStringExtra("pageContext");
         } else {
             pageContext = "";
-        }
+        }*/
 
+
+        if(pageContext != null && !pageContext.isEmpty()){
+            if(pageContext.equalsIgnoreCase("Favourites")){
+                title = "American Favourites";
+            }else{
+                title = pageContext;
+            }
+
+        }else{
+            title = "";
+        }
 
        // getSessionToken();
 
@@ -140,7 +166,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         iv_back.setVisibility(View.VISIBLE);
         tv_title.setVisibility(View.VISIBLE);
 
-        tv_title.setText(pageContext);
+        tv_title.setText(title);
         setupRecyclerView();
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,6 +190,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
             if(sw_list.isRefreshing()){
                 sw_list.setRefreshing(false);
             }
+            showLoginOrRegisterAlert();
         }else{
             if(HappiApplication.getAppToken()== null || HappiApplication.getAppToken().isEmpty()){
                 getSessionToken();
@@ -187,7 +214,25 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
 //        }
 
     }
-
+    private void showLoginOrRegisterAlert() {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        String screen = "List";
+        if(!title.isEmpty()){
+            /*if(title.equalsIgnoreCase("American Favourites")){
+                screen = title + " List";
+            }*/
+            screen = title;
+        }
+        String message = "Please Login or Register to see your "+screen+".";
+        LoginRegisterAlert alertDialog =
+                new LoginRegisterAlert(this, message, "Ok", "Cancel", this::onLoginRegisterNegativeClick,
+                        this::onLoginRegisterNeutralClick, true);
+        Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertDialog.setCancelable(true);
+        alertDialog.show();
+    }
     private void setupRecyclerView() {
         rv_watchList.setVisibility(View.VISIBLE);
       //  rv_watchList.setLayoutManager(new GridLayoutManager(this, 3));
@@ -217,11 +262,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                         // Toast.makeText(this,"No Internet",Toast.LENGTH_SHORT).show();
                     }
                 });
-        if (getIntent().getStringExtra("pageContext") != null && !getIntent().getStringExtra("pageContext").isEmpty()) {
-            pageContext = getIntent().getStringExtra("pageContext");
-        } else {
-            pageContext = "";
-        }
+
         loadData();
        // getSessionToken();
     }
@@ -250,10 +291,15 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                         } else if (pageContext.equalsIgnoreCase("Watch List")) {
                             getWatchList();
                         }
+                    }else{
+                        displayErrorLayout("Oops!! You don't have any data.");
+                        if(sw_list.isRefreshing()){
+                            sw_list.setRefreshing(false);
+                        }
                     }
 
                 }, throwable -> {
-                  //  displayErrorLayout("Server Error. Please try after sometime.");
+                    displayErrorLayout("Server Error. Please try after sometime.");
                     dismissProgress();
                     Toast.makeText(WatchListActivity.this, "Server error. Please try again after sometime.", Toast.LENGTH_SHORT).show();
                 });
@@ -276,7 +322,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                     } else {
                         rv_watchList.setVisibility(View.GONE);
                         dismissProgress();
-                        displayErrorLayout("Oops! Your Watch List is empty.");
+                        displayErrorLayout("Oops! Your List is empty.");
                     }
 
                 }, throwable -> {
@@ -284,6 +330,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                         sw_list.setRefreshing(false);
                     }
                     dismissProgress();
+                    displayErrorLayout("Server error. Please try again after sometime.");
                     Toast.makeText(WatchListActivity.this, "Server error. Please try again after sometime.", Toast.LENGTH_SHORT).show();
 
                 });
@@ -311,7 +358,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                         }
                         rv_watchList.setVisibility(View.GONE);
                         dismissProgress();
-                        displayErrorLayout("Oops! Your Favourites list is empty.");
+                        displayErrorLayout("Oops! Your List is empty.");
                     }
 
                 }, throwable -> {
@@ -319,6 +366,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                         sw_list.setRefreshing(false);
                     }
                     dismissProgress();
+                    displayErrorLayout("Server error. Please try again after sometime.");
                     Toast.makeText(WatchListActivity.this, "Server error. Please try again after sometime.", Toast.LENGTH_SHORT).show();
                 });
        // dismissProgress();
@@ -378,7 +426,16 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     @Override
     protected void onResume() {
         HappiApplication.setCurrentContext(this);
-        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        if(pageContext != null && !pageContext.isEmpty() && pageContext.equalsIgnoreCase("Watch List")){
+            SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
+            if(getMenuItem() != R.id.item_my_list){
+                updateMenuItem(3);
+            }
+        }else{
+            updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        }
+
+        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
         if(SharedPreferenceUtility.getGuest()){
             sw_list.setEnabled(false);
         }else{
@@ -469,7 +526,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                             watchListAdapter.removeItem(adapterPosition);
                             watchListAdapter.notifyDataSetChanged();
                             if(watchListAdapter.isEmpty()){
-                                displayErrorLayout("Oops! Your Favourites list is empty.");
+                                displayErrorLayout("Oops! Your List is empty.");
                             }
                             dismissProgress();
                         } else {
@@ -496,7 +553,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                             watchListAdapter.removeItem(adapterPosition);
                             watchListAdapter.notifyDataSetChanged();
                             if(watchListAdapter.isEmpty()){
-                                displayErrorLayout("Oops! Your Watch List is empty.");
+                                displayErrorLayout("Oops! Your List is empty.");
                             }
                             dismissProgress();
                         } else {
@@ -535,5 +592,20 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         super.onBackPressed();
         finish();
         overridePendingTransition(0,0);
+    }
+    private void goToLoginScreen() {
+        Intent loginIntent = new Intent(WatchListActivity.this, SubscriptionLoginActivity.class);
+        loginIntent.putExtra("from", pageContext);
+        startActivity(loginIntent);
+        // finish();
+    }
+    @Override
+    public void onLoginRegisterNegativeClick() {
+        goToLoginScreen();
+    }
+
+    @Override
+    public void onLoginRegisterNeutralClick() {
+
     }
 }

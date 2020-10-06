@@ -35,15 +35,18 @@ public class CategoriesHomeListAdapter extends RecyclerView.Adapter<CategoriesHo
     private Context context;
     private RecyclerView.RecycledViewPool recycledViewPool;
     private ICallAdmobAd iCallAdmobAd;
-
+    private boolean isHome = false;
+    private int width = 0;
 
 
     public CategoriesHomeListAdapter(List<CategoriesHomeListVideoModel> categoriesHomeListVideoModelList,
-                                     Context context) {
+                                     Context context, boolean isHome, int width) {
         this.categoriesHomeListVideoModelList = categoriesHomeListVideoModelList;
         this.context = context;
         this.iCallAdmobAd =((ICallAdmobAd) context);
         recycledViewPool = new RecyclerView.RecycledViewPool();
+        this.isHome = isHome;
+        this.width = width;
 
     }
 
@@ -79,7 +82,7 @@ public class CategoriesHomeListAdapter extends RecyclerView.Adapter<CategoriesHo
 
                 CategoriesHomeListAdapter.this.onNestedItemClicked(nestedPosition, parentPosition);
             }
-        }, position, false);
+        }, position, false, isHome,width);
         /*holder.rv_video_grid.setAdapter(videoList_adapter);*/
 
         SkeletonScreen loadingVideos = Skeleton.bind(holder.rv_video_grid)

@@ -17,7 +17,7 @@ import com.happi.android.R;
 import com.happi.android.customviews.TypefacedTextViewBold;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.LiveScheduleResponse;
-import com.happi.android.models.ScheduleUpdatedModel;
+import com.happi.android.utils.AppUtils;
 import com.happi.android.utils.ConstantUtils;
 
 import java.text.SimpleDateFormat;
@@ -27,9 +27,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
+import static com.bumptech.glide.request.RequestOptions.signatureOf;
 
 public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveScheduleHomeListAdapter.LiveHomeViewHolder> {
     private Context context;
@@ -56,12 +58,9 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
             String time = getScheduleItemTime(liveScheduleList.get(position),position);
             holder.tv_schedule_time.setText(time);
 
-            boolean isTomorrow = IsScheduleForToday(liveScheduleList.get(position));
-            if(isTomorrow){
-                holder.tv_schedule_day.setText("Tomorrow");
-            }else{
-                holder.tv_schedule_day.setText("");
-            }
+            String day = getDayForScheduleItem(liveScheduleList.get(position),position);
+            holder.tv_schedule_day.setText(day);
+
             Glide.with(context)
                     .load(ConstantUtils.RELEASE_THUMBNAIL + liveScheduleList.get(position).getThumbnail())
                     .error(Glide.with(context)
@@ -72,7 +71,7 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
         }
     }
     private boolean IsScheduleForToday(LiveScheduleResponse.LiveScheduleModel schedule){
-        boolean isTomorrow = false;
+        boolean isToday = true;
         Calendar currentCalendar = Calendar.getInstance();
         Date currentDate = currentCalendar.getTime();
         Date finalStartDateTime = schedule.getStartDateTime();
@@ -85,7 +84,7 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
             String dateStart = sdfLocal.format(finalStartDateTime);
             if(!dateCurrent.equals(dateStart)){
                 //schedule start is today or not
-                isTomorrow = true;
+                isToday = false;
             }
 
             /*if(finalStartDateTime.after(currentDate)){
@@ -96,8 +95,32 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
 
 
 
-        return isTomorrow;
+        return isToday;
     }
+    private String getDayForScheduleItem(LiveScheduleResponse.LiveScheduleModel schedule, int position){
+        String status = "";
+
+        if(position == 0){
+            status = "Now Playing";
+        }else{
+            if(liveScheduleList.size() > 1){
+                if(position == 1){
+                    status = "Up Next";
+                }else{
+                    Date finalStartDateTime = schedule.getStartDateTime();
+                    if(finalStartDateTime != null){
+                        status = AppUtils.getDay(finalStartDateTime);
+                    }else{
+                        status = "";
+                    }
+                }
+            }
+        }
+        return status;
+    }
+
+
+
     private String getScheduleItemTime(LiveScheduleResponse.LiveScheduleModel itemSchedule, int position){
         String localTime = "";
         String startDateTime = itemSchedule.getStarttime();

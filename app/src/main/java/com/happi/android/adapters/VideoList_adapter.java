@@ -1,12 +1,15 @@
 package com.happi.android.adapters;
 
 import android.content.Context;
+
+import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.happi.android.models.ShowModel;
@@ -34,22 +37,28 @@ public class VideoList_adapter extends RecyclerView.Adapter<VideoList_adapter.My
     private int parentPosition;
     private boolean isNested = false;
     private boolean isVertical = false;
+    private boolean isHome = false;
+    private int width = 0;
 
-    public VideoList_adapter(Context context, itemClickListener itemClickListener, boolean isVertical) {
+    public VideoList_adapter(Context context, itemClickListener itemClickListener, boolean isVertical, boolean isHome, int width) {
         videoList = new ArrayList<>();
         this.itemClickListener = itemClickListener;
         this.context = context;
         this.isVertical = isVertical;
         isNested = false;
+        this.isHome = isHome;
+        this.width = width;
     }
 
-    public VideoList_adapter(Context context, nestedItemClickListener nestedItemClickListener, int parentPosition, boolean isVertical) {
+    public VideoList_adapter(Context context, nestedItemClickListener nestedItemClickListener, int parentPosition, boolean isVertical, boolean isHome, int width) {
         videoList = new ArrayList<>();
         this.nestedItemClickListener = nestedItemClickListener;
         this.context = context;
         this.parentPosition = parentPosition;
         this.isVertical = isVertical;
         isNested = true;
+        this.isHome = isHome;
+        this.width = width;
     }
 
     @Override
@@ -157,7 +166,8 @@ public class VideoList_adapter extends RecyclerView.Adapter<VideoList_adapter.My
         ImageView iv_thumbnail;
         ImageView iv_premium_tag;
         TypefacedTextViewSemiBold tv_video_title;
-
+        FrameLayout ll_main_layout;
+        CardView cv_show_parent;
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -165,6 +175,27 @@ public class VideoList_adapter extends RecyclerView.Adapter<VideoList_adapter.My
             this.iv_thumbnail = itemView.findViewById(R.id.iv_thumbnail);
             this.tv_video_title = itemView.findViewById(R.id.tv_video_title);
             this.iv_premium_tag = itemView.findViewById(R.id.iv_premium_tag);
+            this.ll_main_layout = itemView.findViewById(R.id.ll_main_layout);
+            this.cv_show_parent = itemView.findViewById(R.id.cv_show_parent);
+
+            if(!isVertical) {
+                if (isHome) {
+
+                    int new_width = (width - (width/6))/3;
+                    int new_height = (3*(new_width-15))/2;
+
+                    FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(new_width, new_height);
+                    CardView.LayoutParams cl = new CardView.LayoutParams(new_width,new_height);
+                    cl.rightMargin = 15;
+                    this.ll_main_layout.setLayoutParams(fl);
+                    this.cv_show_parent.setLayoutParams(cl);
+
+                } else {
+                    FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(128, 165);
+                    this.ll_main_layout.setLayoutParams(fl);
+
+                }
+            }
             tv_video_title.setSelected(true);
 
             itemView.setOnClickListener(v -> {

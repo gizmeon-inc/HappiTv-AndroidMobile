@@ -2,16 +2,41 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_black">
+    <LinearLayout
+        android:id="@+id/ll_back"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:gravity="center_vertical|start"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingStart="@dimen/dimen_20dp"
+        android:paddingBottom="@dimen/dimen_5dp">
+       <LinearLayout
+           android:id="@+id/ll_back_to_home"
+           android:layout_width="wrap_content"
+           android:layout_height="match_parent"
+           android:orientation="horizontal"
+           android:gravity="center_vertical|end">
+           <ImageView
+               android:id="@+id/iv_back_to_home"
+               android:layout_width="@dimen/dimen_35dp"
+               android:layout_height="@dimen/dimen_35dp"
+               android:src="@drawable/ic_back"
+               android:tint="@color/colorPrimaryDark" />
 
+       </LinearLayout>
+
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/ll_home"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:gravity="center_vertical|end"
+        android:gravity="center_vertical|start"
         android:orientation="horizontal"
         android:paddingTop="@dimen/dimen_5dp"
-        android:paddingRight="@dimen/dimen_20dp"
-        android:paddingBottom="@dimen/dimen_5dp">
+        android:paddingStart="@dimen/dimen_20dp"
+        android:paddingBottom="@dimen/dimen_5dp"
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/iv_home"
@@ -20,21 +45,23 @@
             android:layout_marginRight="@dimen/dimen_5dp"
             android:padding="@dimen/dimen_6dp"
             android:src="@drawable/ic_home"
-            android:tint="@color/colorPrimaryDark" />
+            android:tint="@color/colorPrimaryDark"
+            android:visibility="gone"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/home"
             android:textColor="@color/colorPrimaryDark"
-            android:textSize="@dimen/text_regular_medium2" />
+            android:textSize="@dimen/text_regular_medium2"
+            android:visibility="gone"/>
 
     </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ll_home"
+        android:layout_below="@id/ll_back"
         android:paddingLeft="@dimen/dimen_20dp"
         android:paddingBottom="@dimen/dimen_20dp">
 

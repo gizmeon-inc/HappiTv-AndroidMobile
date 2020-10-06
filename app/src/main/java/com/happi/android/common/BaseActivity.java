@@ -90,17 +90,23 @@ public class BaseActivity extends AppCompatActivity {
                     case R.id.item_search:
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(1);
                         Log.e("BTM","base"+">>selector>>search");
+
                         ActivityChooser.goToSelectedActivity(ConstantUtils.SEARCH_ACTIVITY);
+                        drawer.closeDrawer(findViewById(R.id.navigation));
                         return true;
                     case R.id.item_categories:
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(2);
                         Log.e("BTM","base"+">>selector>>category");
+
                         ActivityChooser.goToSelectedActivity(ConstantUtils.CATEGORIES_LIST_ACTIVITY);
+                        drawer.closeDrawer(findViewById(R.id.navigation));
                         return true;
-                    case R.id.item_live:
+                    case R.id.item_my_list:
                          SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
-                        Log.e("BTM","base"+">>selector>>language");
-                        ActivityChooser.goToSelectedActivity(ConstantUtils.LIVE_VIDEO_LISTING_ACTIVITY);
+                        Log.e("BTM","base"+">>selector>>my list");
+
+                        ActivityChooser.goToSelectedActivity(ConstantUtils.WATCHLIST_ACTIVITY);
+                        drawer.closeDrawer(findViewById(R.id.navigation));
                      return true;
                 }
 
@@ -145,11 +151,11 @@ public class BaseActivity extends AppCompatActivity {
 
         LinearLayout ll_contact_us = findViewById(R.id.ll_contact_us);
         ll_contact_us.setOnClickListener(v -> {
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             AboutUsDialogClass aboutUsDialogClass =
                     new AboutUsDialogClass(HappiApplication.getCurrentActivity());
             Objects.requireNonNull(aboutUsDialogClass.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            //drawer.closeDrawer(findViewById(R.id.navigation));
+            drawer.closeDrawer(findViewById(R.id.navigation));
             aboutUsDialogClass.show();
         });
 
@@ -164,28 +170,35 @@ public class BaseActivity extends AppCompatActivity {
         });
 
         LinearLayout ll_home = findViewById(R.id.ll_home);
+        ll_home.setVisibility(View.GONE);
         ll_home.setOnClickListener(v -> {
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             finish();
             goToHomePage();
-            // drawer.closeDrawer(findViewById(R.id.navigation));
+             drawer.closeDrawer(findViewById(R.id.navigation));
+        });
+
+        LinearLayout ll_back_to_home = findViewById(R.id.ll_back_to_home);
+        ll_back_to_home.setOnClickListener(v -> {
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_channels = findViewById(R.id.ll_channels);
         ll_channels.setVisibility(View.GONE);
         LinearLayout ll_new = findViewById(R.id.ll_new);
         ll_channels.setOnClickListener(v -> {
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             goToChannels();
             ll_new.setVisibility(View.INVISIBLE);
-            //drawer.closeDrawer(findViewById(R.id.navigation));
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_live = findViewById(R.id.ll_live);
         ll_live.setOnClickListener(v -> {
             //Toast.makeText(HappiApplication.getCurrentContext(),"Coming Soon",Toast.LENGTH_SHORT).show();
-            drawer.closeDrawer(findViewById(R.id.navigation));
+
             goToLive();
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
 
@@ -198,18 +211,18 @@ public class BaseActivity extends AppCompatActivity {
         LinearLayout ll_premium = findViewById(R.id.ll_premium);
         ll_premium.setVisibility(View.GONE);
         ll_premium.setOnClickListener(v -> {
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             goToPremium();
-            // drawer.closeDrawer(findViewById(R.id.navigation));
+             drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_favourite = findViewById(R.id.ll_favourite);
         ll_favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawer.closeDrawer(findViewById(R.id.navigation));
+                //drawer.closeDrawer(findViewById(R.id.navigation));
                 goToShowListingPage("Favourites");
-                // drawer.closeDrawer(findViewById(R.id.navigation));
+                drawer.closeDrawer(findViewById(R.id.navigation));
             }
         });
 
@@ -217,9 +230,9 @@ public class BaseActivity extends AppCompatActivity {
         ll_watch_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawer.closeDrawer(findViewById(R.id.navigation));
-                goToShowListingPage("Watch List");
                 //drawer.closeDrawer(findViewById(R.id.navigation));
+                goToShowListingPage("Watch List");
+                drawer.closeDrawer(findViewById(R.id.navigation));
             }
         });
         LinearLayout ll_payperview_list = findViewById(R.id.ll_payperview_list);
@@ -227,9 +240,9 @@ public class BaseActivity extends AppCompatActivity {
         ll_payperview_list.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                drawer.closeDrawer(findViewById(R.id.navigation));
-                goToShowPayPerViewPage();
                 //drawer.closeDrawer(findViewById(R.id.navigation));
+                goToShowPayPerViewPage();
+                drawer.closeDrawer(findViewById(R.id.navigation));
             }
         });
       /*  LinearLayout ll_watch_history = findViewById(R.id.ll_watch_history);
@@ -241,21 +254,23 @@ public class BaseActivity extends AppCompatActivity {
 
         LinearLayout ll_terms = findViewById(R.id.ll_terms);
         ll_terms.setOnClickListener(v -> {
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             goToWebView("T");
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_privacy = findViewById(R.id.ll_privacy);
         ll_privacy.setOnClickListener(v -> {
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             goToWebView("P");
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
         LinearLayout ll_settings = findViewById(R.id.ll_settings);
         ll_settings.setOnClickListener(v -> {
-            drawer.closeDrawer(findViewById(R.id.navigation));
-            goToSettings();
             //drawer.closeDrawer(findViewById(R.id.navigation));
+            goToSettings();
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
 
@@ -263,9 +278,10 @@ public class BaseActivity extends AppCompatActivity {
         ll_logout.setVisibility(View.VISIBLE);
         ll_logout.setOnClickListener(v -> {
 
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             ll_new.setVisibility(View.INVISIBLE);
             logoutPrompt();
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
 
 
@@ -285,8 +301,9 @@ public class BaseActivity extends AppCompatActivity {
         }
         ll_logoutall.setOnClickListener(v -> {
 
-            drawer.closeDrawer(findViewById(R.id.navigation));
+            //drawer.closeDrawer(findViewById(R.id.navigation));
             logoutAllPrompt();
+            drawer.closeDrawer(findViewById(R.id.navigation));
         });
     }
 

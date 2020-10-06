@@ -194,8 +194,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
 
         if (SharedPreferenceUtility.isNightMode()) {
 
@@ -271,6 +271,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //no live category in home
         rv_live.setVisibility(View.GONE);
         ll_popular_live.setVisibility(View.GONE);
+        //no category
+        ll_category_list.setVisibility(View.GONE);
+        rv_category_list.setVisibility(View.GONE);
 
         mSwipeRefreshLayout = findViewById(R.id.swipeToRefresh);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -298,6 +301,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
+        Log.v("okhttp", "total width >>"+width);
         apiErrorCount = 0;
 
         setupRecyclerView();
@@ -382,7 +386,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         setUserName();
         setLogoutAllVisibility();
 
-        if (apiErrorCount == 4) {
+        if (apiErrorCount == 3) {
             setupRecyclerView();
             recallHomeApis();
         }
@@ -405,6 +409,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
 
     private void setupRecyclerView() {
+        //no free shows
+        ll_watch_free.setVisibility(View.GONE);
+        rv_watch_free.setVisibility(View.GONE);
+        //no live category in home
+        rv_live.setVisibility(View.GONE);
+        ll_popular_live.setVisibility(View.GONE);
+        //no category
+        ll_category_list.setVisibility(View.GONE);
+        rv_category_list.setVisibility(View.GONE);
 
         pb_live.setVisibility(View.VISIBLE);
         ll_error_home.setVisibility(View.GONE);
@@ -466,7 +479,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //-------------------------------------------New Release-----------------------------------------------------//
         ViewCompat.setNestedScrollingEnabled(rv_video_grid, false);
         rv_video_grid.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        videoList_adapter = new VideoList_adapter(this, this::onItemClicked, false);
+        videoList_adapter = new VideoList_adapter(this, this::onItemClicked, false,true, width);
         rv_video_grid.setAdapter(videoList_adapter);
 
         loadingVideos = Skeleton.bind(rv_video_grid)
@@ -530,7 +543,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                                 checkSubscription();
                             }
                             liveNow();
-                            categoryApiCall();
+                            //categoryApiCall();
                             //watchForFreeShowList();
                             newReleases();
                             loadCategoriesHomeList();
@@ -893,9 +906,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             if (liveScheduleHomeListAdapter == null || liveScheduleHomeListAdapter.isEmpty()) {
                 loadLiveSchedule(liveChannelId);
             }
-            if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {
+           /* if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {
                 categoryApiCall();
-            }
+            }*/
             /*if (freeShowList_adapter == null || freeShowList_adapter.isEmpty()) {
                 watchForFreeShowList();
             }*/
@@ -990,7 +1003,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void populateCategoryHomeList(List<CategoriesHomeListVideoModel> categoriesHomeListVideoModelList) {
 
         rv_categories_home_list.setHasFixedSize(true);
-        CategoriesHomeListAdapter adapter = new CategoriesHomeListAdapter(categoriesHomeListVideoModelList, this);
+        CategoriesHomeListAdapter adapter = new CategoriesHomeListAdapter(categoriesHomeListVideoModelList, this, true, width);
         rv_categories_home_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv_categories_home_list.setAdapter(adapter);
         homeLoaded = true;
@@ -999,7 +1012,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
 
     private void displayErrorLayout(String message) {
-        if (apiErrorCount == 4) {
+        if (apiErrorCount == 3) {
 
             hideLivePlayerAndSchedule();
 
@@ -1192,7 +1205,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private static void firstTimeInstallAnalyticsApiCall() {
 
         //Uncomment to enable analytics api call
-
+        try {
         String manufacturer = Build.MANUFACTURER;
         String model = Build.MODEL;
 
@@ -1209,7 +1222,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
             long epoch = currentCalendar.getTimeInMillis() / 1000L;
             String ipAddress = HappiApplication.getIpAddress();
-            if (ipAddress.isEmpty()) {
+            if (ipAddress == null || ipAddress.isEmpty()) {
                 ipAddress = getNetworkIP();
             }
             String userAgent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
@@ -1239,7 +1252,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             details.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
 
 
-            try {
+
                 Log.e("000##", " FRST: " + "api about to call");
                 AnalyticsApi.AnalyticsServiceScalar analyticsServiceScalar = AnalyticsApi.createScalar();
                 Call<String> calls = analyticsServiceScalar.firstTimeInstall(details);
@@ -1255,9 +1268,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                     }
                 });
 
-            } catch (Exception e) {
-                Log.e("000##", "exception: " + "FRST" + " - " + e.toString());
             }
+        }catch (Exception e) {
+            Log.e("000##", "exception: " + "FRST" + " - " + e.toString());
         }
     }
 
@@ -1507,7 +1520,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             }
 
             liveNow();
-            categoryApiCall();
+            //categoryApiCall();
             //watchForFreeShowList();
             newReleases();
             loadCategoriesHomeList();

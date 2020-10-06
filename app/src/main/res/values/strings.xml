@@ -42,6 +42,7 @@
     <string name="home_label">Home</string>
     <string name="categories_label">Categories</string>
     <string name="lang_label">Language</string>
+    <string name="my_list_label">My List</string>
     <string name="search_channel">Search Channels</string>
     <string name="suggested_keyword">Suggested Keyword</string>
     <string name="_05">05</string>
@@ -90,6 +91,7 @@
     <string name="live_guide">Live Guide</string>
     <string name="language">Select Languages</string>
     <string name="home">Home</string>
+    <string name="back">Back to Home</string>
     <string name="channels">Channels</string>
     <string name="programs">Programs</string>
     <string name="notifications">Notifications</string>
@@ -205,7 +207,7 @@
     <string name="logout_prompt_msg">Are you sure you want to Logout?</string>
 
     //watch,fav
-    <string name="favourite_label">Favourites</string>
+    <string name="favourite_label">American Favourites</string>
     <string name="watchlist_label">Watch List</string>
     <string name="image_label">image</string>
     <string name="dislike_label">Dislike</string>

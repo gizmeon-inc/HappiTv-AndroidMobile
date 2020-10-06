@@ -209,11 +209,11 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
     protected void onResume() {
 
         HappiApplication.setCurrentContext(this);
-        SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
+        /*SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
         if(getMenuItem() != R.id.item_live){
             updateMenuItem(3);
-        }
-        //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        }*/
+        updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
         super.onResume();
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");
