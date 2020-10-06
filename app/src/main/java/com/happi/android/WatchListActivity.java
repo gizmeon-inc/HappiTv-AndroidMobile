@@ -132,7 +132,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
 
         if(pageContext != null && !pageContext.isEmpty()){
             if(pageContext.equalsIgnoreCase("Favourites")){
-                title = "American Favorites";
+                title = "Favorites";
             }else{
                 title = pageContext;
             }
@@ -220,9 +220,6 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         }
         String screen = "List";
         if(!title.isEmpty()){
-            /*if(title.equalsIgnoreCase("American Favourites")){
-                screen = title + " List";
-            }*/
             screen = title;
         }
         String message = "Please Login or Register to see your "+screen+".";
