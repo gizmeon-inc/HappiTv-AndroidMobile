@@ -132,7 +132,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
 
         if(pageContext != null && !pageContext.isEmpty()){
             if(pageContext.equalsIgnoreCase("Favourites")){
-                title = "American Favourites";
+                title = "American Favorites";
             }else{
                 title = pageContext;
             }
