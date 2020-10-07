@@ -66,7 +66,9 @@ import com.happi.android.adapters.CategoryCircleViewAdapter;
 import com.happi.android.adapters.CategoryListAdapter;
 import com.happi.android.adapters.ChannelListAdapter;
 import com.happi.android.adapters.ChannelSuggestionAdapter;
+import com.happi.android.adapters.LiveParterInfoAdapter;
 import com.happi.android.adapters.LiveScheduleHomeListAdapter;
+import com.happi.android.adapters.LiveScheduleInfoAdapter;
 import com.happi.android.adapters.ShowList_adapter;
 import com.happi.android.adapters.ShowsAdapter;
 import com.happi.android.adapters.VideoList_adapter;
@@ -82,6 +84,7 @@ import com.happi.android.exoplayercontroller.EventLogger;
 import com.happi.android.models.CategoriesHomeListVideoModel;
 import com.happi.android.models.CategoryModel;
 import com.happi.android.models.ChannelModel;
+import com.happi.android.models.LiveParterInfoModel;
 import com.happi.android.models.LiveScheduleResponse;
 import com.happi.android.models.ShowModel;
 import com.happi.android.models.TokenResponse;
@@ -133,7 +136,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private TypefacedTextViewRegular tv_errormsg;
     private ImageView iv_errorimg;
 
-    SkeletonScreen loadingVideos, loadingCategories, loadingLive, loadingFreeShows, loadingLiveSchedule;
+    SkeletonScreen loadingVideos, loadingCategories, loadingLive, loadingFreeShows, loadingLiveSchedule, loadingPartnerInfo;
     LinearLayout ll_category_list, ll_popular_videos,
             ll_popular_live, ll_watch_free;
     GridRecyclerView rv_video_grid, rv_category_list, rv_categories_home_list, rv_live, rv_watch_free;
@@ -179,7 +182,11 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private static final DefaultBandwidthMeter BANDWIDTH_METER = new DefaultBandwidthMeter();
     private EventLogger eventLogger;
     private LiveScheduleHomeListAdapter liveScheduleHomeListAdapter;
+    private LiveScheduleInfoAdapter liveScheduleInfoAdapter;
+    private LiveParterInfoAdapter liveParterInfoAdapter;
     private int liveChannelId = 0;
+    private LinearLayout ll_live_partner;
+    private GridRecyclerView rv_live_schedule_partner;
     //nested scroll
     private NestedScrollView sv_scrollview;
     private ProgressDialog dialog;
@@ -294,7 +301,11 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         ll_live_guide = findViewById(R.id.ll_live_guide);
         rv_live_schedule_list = findViewById(R.id.rv_live_schedule_list);
         int spacingPixels = getResources().getDimensionPixelSize(R.dimen.default_spacing_small);
-        rv_live_schedule_list.addItemDecoration(new SpacesItemDecoration(spacingPixels));
+        //rv_live_schedule_list.addItemDecoration(new SpacesItemDecoration(spacingPixels));
+        //partner info
+        ll_live_partner = findViewById(R.id.ll_live_partner);
+        rv_live_schedule_partner = findViewById(R.id.rv_live_schedule_partner);
+        rv_live_schedule_partner.addItemDecoration(new SpacesItemDecoration(spacingPixels));
         //scroll view
         sv_scrollview = findViewById(R.id.sv_scrollview);
 
@@ -426,10 +437,28 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //----------------------------------------live schedule-------------------------------------------//
         ViewCompat.setNestedScrollingEnabled(rv_live_schedule_list, false);
         rv_live_schedule_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        liveScheduleHomeListAdapter = new LiveScheduleHomeListAdapter(this);
-        rv_live_schedule_list.setAdapter(liveScheduleHomeListAdapter);
+        liveScheduleInfoAdapter = new LiveScheduleInfoAdapter(this,width);
+        //liveScheduleHomeListAdapter = new LiveScheduleHomeListAdapter(this);
+        //rv_live_schedule_list.setAdapter(liveScheduleHomeListAdapter);
+        rv_live_schedule_list.setAdapter(liveScheduleInfoAdapter);
         loadingLiveSchedule = Skeleton.bind(rv_live_schedule_list)
-                .adapter(liveScheduleHomeListAdapter)
+                //.adapter(liveScheduleHomeListAdapter)
+                .adapter(liveScheduleInfoAdapter)
+                .load(R.layout.item_live_schedule_home_skeleton)
+                .color(R.color.colorLine)
+                .shimmer(true)
+                .angle(30)
+                .count(30)
+                .duration(1000)
+                .frozen(false)
+                .show();
+        //-------------------------------------------------partner info-------------------------------------------------------------------//
+        ViewCompat.setNestedScrollingEnabled(rv_live_schedule_partner, false);
+        rv_live_schedule_partner.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        liveParterInfoAdapter = new LiveParterInfoAdapter(this);
+        rv_live_schedule_partner.setAdapter(liveParterInfoAdapter);
+        loadingPartnerInfo = Skeleton.bind(rv_live_schedule_partner)
+                .adapter(liveParterInfoAdapter)
                 .load(R.layout.item_live_schedule_home_skeleton)
                 .color(R.color.colorLine)
                 .shimmer(true)
@@ -742,7 +771,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void updateLiveScheduleList(List<LiveScheduleResponse.LiveScheduleModel> liveScheduleModelList) {
 
-        liveScheduleHomeListAdapter.clearAll();
+        /*liveScheduleHomeListAdapter.clearAll();
         liveScheduleHomeListAdapter.addAll(liveScheduleModelList);
         loadingLiveSchedule.hide();
         SnapHelper snapHelper;
@@ -754,7 +783,67 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
             ll_live_guide.setVisibility(View.GONE);
             rv_live_schedule_list.setVisibility(View.GONE);
+        } */
+
+
+        liveScheduleInfoAdapter.clearAll();
+        liveScheduleInfoAdapter.addAll(liveScheduleModelList);
+        loadingLiveSchedule.hide();
+        SnapHelper snapHelper;
+        snapHelper = new GravitySnapHelper(Gravity.START);
+        snapHelper.attachToRecyclerView(rv_live_schedule_list);
+        liveScheduleInfoAdapter.notifyDataSetChanged();
+        runLayoutAnimation(rv_live_schedule_list, mSelectedItem);
+        if (liveScheduleInfoAdapter.isEmpty()) {
+
+            ll_live_guide.setVisibility(View.GONE);
+            rv_live_schedule_list.setVisibility(View.GONE);
         }
+
+
+        //partner info
+        List<LiveParterInfoModel> liveParterInfoModels = new ArrayList<>();
+
+        LiveParterInfoModel model1 = new LiveParterInfoModel();
+        model1.setPartnerName("Partner 1");
+        model1.setPartnerDescription("Description 1");
+
+        LiveParterInfoModel model2 = new LiveParterInfoModel();
+        model2.setPartnerName("Partner 2");
+        model2.setPartnerDescription("Description 2");
+
+        LiveParterInfoModel model3 = new LiveParterInfoModel();
+        model3.setPartnerName("Partner 3");
+        model3.setPartnerDescription("Description 3");
+
+        LiveParterInfoModel model4 = new LiveParterInfoModel();
+        model4.setPartnerName("Partner 4");
+        model4.setPartnerDescription("Description 4");
+
+        LiveParterInfoModel model5 = new LiveParterInfoModel();
+        model5.setPartnerName("Partner 5");
+        model5.setPartnerDescription("Description 5");
+
+        liveParterInfoModels.add(model1);
+        liveParterInfoModels.add(model2);
+        liveParterInfoModels.add(model3);
+        liveParterInfoModels.add(model4);
+        liveParterInfoModels.add(model5);
+
+        liveParterInfoAdapter.clearAll();
+        liveParterInfoAdapter.addAll(liveParterInfoModels);
+        loadingPartnerInfo.hide();
+        SnapHelper snapHelper1;
+        snapHelper1 = new GravitySnapHelper(Gravity.START);
+        snapHelper1.attachToRecyclerView(rv_live_schedule_partner);
+        liveParterInfoAdapter.notifyDataSetChanged();
+        runLayoutAnimation(rv_live_schedule_partner, mSelectedItem);
+        if (liveParterInfoAdapter.isEmpty()) {
+
+            ll_live_partner.setVisibility(View.GONE);
+            rv_live_schedule_partner.setVisibility(View.GONE);
+        }
+
 
     }
 
@@ -903,7 +992,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void recallHomeApis() {
         if (!HappiApplication.getAppToken().isEmpty()) {
-            if (liveScheduleHomeListAdapter == null || liveScheduleHomeListAdapter.isEmpty()) {
+//            if (liveScheduleHomeListAdapter == null || liveScheduleHomeListAdapter.isEmpty()) {
+//                loadLiveSchedule(liveChannelId);
+//            }
+            if (liveScheduleInfoAdapter == null || liveScheduleInfoAdapter.isEmpty()) {
                 loadLiveSchedule(liveChannelId);
             }
            /* if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {

@@ -162,6 +162,47 @@
                        android:visibility="visible"
                        android:paddingLeft="@dimen/dimen_10dp" />
 
+                   <!--PARTNER-INFO-->
+                   <LinearLayout
+                       android:id="@+id/ll_live_partner"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:gravity="center_vertical"
+                       android:orientation="horizontal"
+                       android:paddingTop="@dimen/dimen_7dp"
+                       android:paddingBottom="@dimen/dimen_10dp"
+                       android:paddingLeft="@dimen/dimen_10dp"
+                       android:paddingRight="@dimen/dimen_10dp"
+                       android:layout_below="@+id/rv_live_schedule_list">
+
+                       <com.happi.android.customviews.TypefacedTextViewSemiBold
+                           android:id="@+id/tv_live_partner"
+                           android:layout_width="0dp"
+                           android:layout_height="wrap_content"
+                           android:layout_weight="1"
+                           android:singleLine="true"
+                           android:text="Partners"
+                           android:textColor="@color/colorPrimary"
+                           android:textSize="@dimen/text_regular_medium1" />
+
+                       <ImageView
+                           android:layout_width="@dimen/dimen_30dp"
+                           android:layout_height="match_parent"
+                           android:layout_gravity="end"
+                           android:scaleType="centerCrop"
+                           android:src="@drawable/ic_right_arrow_blue"
+                           android:tint="@color/colorPrimaryDark"
+                           android:visibility="invisible"/>
+
+                   </LinearLayout>
+                   <com.happi.android.recyclerview.GridRecyclerView
+                       android:id="@+id/rv_live_schedule_partner"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:layout_below="@id/ll_live_partner"
+                       android:visibility="visible"
+                       android:paddingLeft="@dimen/dimen_10dp" />
+
                    <!--CATEGORIES-->
                    <LinearLayout
                        android:id="@+id/ll_category_list"
@@ -171,7 +212,7 @@
                        android:orientation="horizontal"
                        android:paddingTop="@dimen/dimen_10dp"
                        android:paddingBottom="@dimen/dimen_10dp"
-                       android:layout_below="@+id/rv_live_schedule_list"
+                       android:layout_below="@+id/rv_live_schedule_partner"
                        android:paddingLeft="@dimen/dimen_10dp"
                        android:paddingRight="@dimen/dimen_10dp">
 
