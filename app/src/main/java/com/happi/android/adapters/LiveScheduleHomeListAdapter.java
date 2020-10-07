@@ -178,6 +178,7 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
         SimpleDateFormat sdfYearTimeUTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         sdfYearTimeUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat sdfTime = new SimpleDateFormat("h:mm a", Locale.getDefault());
+        //SimpleDateFormat sdfTime = new SimpleDateFormat("yyyy-MM-dd h:mm a", Locale.getDefault());
 
         try{
             //start

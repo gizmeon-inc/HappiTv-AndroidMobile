@@ -171,7 +171,11 @@ public class AppUtils {
         } else if (value == 1) {
             int difference = (int) getDateDiff(currentDate, finalStartDateTime, TimeUnit.DAYS);
             if (difference == 0) {
-                if (finalStartDateTime == currentDate) {
+                Calendar startCalendar = Calendar.getInstance();
+                startCalendar.setTime(finalStartDateTime);
+
+                if (startCalendar.get(Calendar.DAY_OF_YEAR) == currentCalendar.get(Calendar.DAY_OF_YEAR) &&
+                        startCalendar.get(Calendar.YEAR) == currentCalendar.get(Calendar.YEAR)) {
                     status = "Today";
                 } else {
                     status = "Tomorrow";

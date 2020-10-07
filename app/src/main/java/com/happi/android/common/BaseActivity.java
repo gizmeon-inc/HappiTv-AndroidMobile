@@ -92,21 +92,28 @@ public class BaseActivity extends AppCompatActivity {
                         Log.e("BTM","base"+">>selector>>search");
 
                         ActivityChooser.goToSelectedActivity(ConstantUtils.SEARCH_ACTIVITY);
-                        drawer.closeDrawer(findViewById(R.id.navigation));
+                        if(drawer != null){
+                            drawer.closeDrawer(findViewById(R.id.navigation));
+                        }
+
                         return true;
                     case R.id.item_categories:
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(2);
                         Log.e("BTM","base"+">>selector>>category");
 
                         ActivityChooser.goToSelectedActivity(ConstantUtils.CATEGORIES_LIST_ACTIVITY);
-                        drawer.closeDrawer(findViewById(R.id.navigation));
+                        if(drawer != null){
+                            drawer.closeDrawer(findViewById(R.id.navigation));
+                        }
                         return true;
                     case R.id.item_my_list:
                          SharedPreferenceUtility.setCurrentBottomMenuIndex(3);
                         Log.e("BTM","base"+">>selector>>my list");
 
                         ActivityChooser.goToSelectedActivity(ConstantUtils.WATCHLIST_ACTIVITY);
-                        drawer.closeDrawer(findViewById(R.id.navigation));
+                        if(drawer != null){
+                            drawer.closeDrawer(findViewById(R.id.navigation));
+                        }
                      return true;
                 }
 
