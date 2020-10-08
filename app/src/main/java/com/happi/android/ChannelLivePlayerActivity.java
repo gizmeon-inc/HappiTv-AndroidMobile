@@ -277,8 +277,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
 
@@ -766,7 +766,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         };
     }
 
-    private void loadHome() {
+  /*  private void loadHome() {
 //"android-phone",
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable homeDisposable = usersService.getChannelHome(HappiApplication.getAppToken()
@@ -793,7 +793,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                         }
                 );
         compositeDisposable.add(homeDisposable);
-    }
+    }*/
 
     private void loadChannelDetails() {
 
@@ -871,10 +871,12 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                     if (vodToLiveResponseModel.getData().size() != 0) {
                         updateLiveVideoList(vodToLiveResponseModel.getData());
                     } else {
-                        displayErrorLayout(getString(R.string.no_results_found));
+                        //displayErrorLayout(getString(R.string.no_results_found));
+                        displayErrorLayout("");
                     }
                 }, throwable -> {
-                    displayErrorLayout(getString(R.string.server_error));
+                    //displayErrorLayout(getString(R.string.server_error));
+                    displayErrorLayout("");
                 });
         compositeDisposable.add(vodToLiveDisposable);
     }
@@ -891,7 +893,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         if (vodLiveAdapter.isEmpty()) {
 
             rv_video_grid.setVisibility(GONE);
-            displayErrorLayout(getString(R.string.no_results_found));
+            //displayErrorLayout(getString(R.string.no_results_found));
+            displayErrorLayout("");
         }
 
     }

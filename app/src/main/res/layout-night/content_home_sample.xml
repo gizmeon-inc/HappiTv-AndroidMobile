@@ -27,6 +27,7 @@
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
                    app:controller_layout_id="@layout/live_play_back_control"
+                   app:surface_type="texture_view"
                    app:resize_mode="fill"/>
                <ProgressBar
                    android:id="@+id/pb_live"

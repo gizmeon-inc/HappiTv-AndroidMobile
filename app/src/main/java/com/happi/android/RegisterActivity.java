@@ -115,8 +115,8 @@ public class RegisterActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
         if (SharedPreferenceUtility.isNightMode()) {
 
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_black));
@@ -478,6 +478,10 @@ public class RegisterActivity extends BaseActivity {
                 return false;
             }
         });
+
+        //alert("The email we sent may have landed in your SPAM folder. Please check your SPAM if not found in your INBOX.");
+        alert("The email we sent may have landed in your SPAM folder. Please check your SPAM if it's not there in your INBOX.");
+        //alert("It's possible that the email we sent landed in SPAM");
     }
     private void setTimer() {
         counterdown = 30;
