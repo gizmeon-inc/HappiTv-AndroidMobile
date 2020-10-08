@@ -450,6 +450,10 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                 return false;
             }
         });
+        alert("We have sent an email to your account with the OTP for verification. Please check your SPAM, if it's not there in your INBOX.");
+
+        //alert("The email we sent may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
+        //alert("We have sent an email to your account with the OTP for verification. It may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
 
     }
 
@@ -668,6 +672,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
                         SharedPreferenceUtility.setChannelTimeZone("");
                         SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setPartnerId("");
                         SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
                         SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
 
@@ -719,6 +724,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
                         SharedPreferenceUtility.setChannelTimeZone("");
                         SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setPartnerId("");
                         SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
                         SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
 

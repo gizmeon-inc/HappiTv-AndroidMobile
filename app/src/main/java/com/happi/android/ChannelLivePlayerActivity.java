@@ -1357,13 +1357,15 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         Handler mainHandler = new Handler();
         try {
             Uri videoURI = Uri.parse(pHome.getLiveLink().trim());
+            //Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
+
             // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/livechannel/playlist.m3u8");
             //                          https://gizmeon.s.llnwi.net/livehls/ngrp:CHANNEL275_all/playlist.m3u8
             //   Uri videoURI = Uri.parse("http://gizmeon.s.llnwi.net/livehls/ngrp:CHANNEL275_all/playlist.m3u8");
             //  Uri videoURI = Uri.parse("https://giz.poppo.tv/live/275/playlist.m3u8");
 //            Uri videoURI = Uri.parse("http://34.198.11.177:3002/1/playlist~360p.m3u8");
 //            Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/201911051572939358/playlist.m3u8");
-//            Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
+
 //            Uri videoURI = Uri.parse("http://34.198.11.177:3001/275/playlist.m3u8");
 //            Uri videoURI = Uri.parse("http://playertest.longtailvideo.com/adaptive/oceans_aes/oceans_aes.m3u8");
             // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/ht9izz/playlist~1080p.m3u8");
@@ -1505,15 +1507,27 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                                 isLivePlaying = false;
                                 isLivePaused = true;
 
-                                //video paused
+                                //live paused
                                 if (isLivePaused) {
                                     if(timerSChedule != null){
                                         isTimerActive = false;
                                         timerSChedule.cancel();
                                     }
-                           /* //no pause for live
-                            liveEventAnalyticsApiCall("POP04");*/
+                            //no pause for live
+                            //liveEventAnalyticsApiCall("POP04");
                                 }
+
+                                /*//live pause analytics api call
+                                if (isLivePaused) {
+                                    isLivePaused = false;
+                                    if (timerSChedule != null) {
+                                        isTimerActive = false;
+                                        timerSChedule.cancel();
+                                    }
+//                                    if (!isVideoEndT) {
+                                    liveEventAnalyticsApiCall("POP04");
+                                   // }
+                                }*/
                             }catch(Exception ex){
                                 Log.e("QWERTY5","EXCEPTION : PAUSE : "+ex.toString());
                             }
@@ -1850,8 +1864,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                             // loadVideoList();
                             //  ipAddressApiCall();
                         }, throwable -> {
+                            displayErrorLayout("Some error occurred. Please try again after sometime.");
 
-                            Log.e("getSessionToken", throwable.getLocalizedMessage());
                         });
         compositeDisposable.add(tokenDisposable);
     }
@@ -2286,7 +2300,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                     }
 
                 }, throwable -> {
-                    Toast.makeText(ChannelLivePlayerActivity.this, "Server Error. Please try again after sometime.", Toast.LENGTH_SHORT).show();
+                    displayErrorLayout("Some error occurred. Please try again after sometime.");
+                   // Toast.makeText(ChannelLivePlayerActivity.this, "Server Error. Please try again after sometime.", Toast.LENGTH_SHORT).show();
 
                 });
         compositeDisposable.add(subscriptionDisposable);
@@ -2329,6 +2344,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
                         SharedPreferenceUtility.setChannelTimeZone("");
                         SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setPartnerId("");
                         SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
                         SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
 

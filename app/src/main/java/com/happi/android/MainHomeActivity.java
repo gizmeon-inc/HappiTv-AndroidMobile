@@ -430,6 +430,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         } else {
             new AdvertisingIdAsyncTask().execute();
         }
+
         resumePlayer();
         super.onResume();
     }
@@ -862,6 +863,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         pb_live.setVisibility(View.GONE);
         try {
             Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
+         //   Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
             //Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
 
             boolean needNewPlayer = exoPlayer == null;
@@ -909,7 +911,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                            /* if (isExoPlayerFullscreen) {
                                 closeFullscreen();
                             }*/
-                            exoPlayer.setPlayWhenReady(false);
+                           // exoPlayer.setPlayWhenReady(false);
                         }
                     }
                 });
@@ -1684,6 +1686,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
                         SharedPreferenceUtility.setChannelTimeZone("");
                         SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setPartnerId("");
                         SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
                         SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
 

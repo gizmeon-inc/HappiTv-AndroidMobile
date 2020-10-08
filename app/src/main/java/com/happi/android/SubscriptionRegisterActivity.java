@@ -483,6 +483,10 @@ public class SubscriptionRegisterActivity extends BaseActivity {
                 return false;
             }
         });
+        alert("We have sent an email to your account with the OTP for verification. Please check your SPAM, if it's not there in your INBOX.");
+
+        //alert("We have sent an email to your account with the OTP for verification. It may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
+
     }
     private void setTimer() {
         counterdown = 30;

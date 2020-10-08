@@ -26,7 +26,7 @@
                    android:id="@+id/exo_player_view_home"
                    android:layout_width="match_parent"
                    android:layout_height="match_parent"
-                   app:controller_layout_id="@layout/live_play_back_control"
+                   app:controller_layout_id="@layout/live_play_back_control_home"
                    app:surface_type="texture_view"
                    app:resize_mode="fill"/>
                <ProgressBar

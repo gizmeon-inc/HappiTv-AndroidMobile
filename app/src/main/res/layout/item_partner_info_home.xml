@@ -69,7 +69,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_small_medium"
                 android:gravity="top"
-                android:maxLines="5"
+                android:maxLines="4"
                 android:ellipsize="end"/>
 
         </LinearLayout>

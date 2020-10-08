@@ -412,6 +412,7 @@ public class PremiumActivity extends BaseActivity implements PremiumItemAdapter.
                         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
                         SharedPreferenceUtility.setChannelTimeZone("");
                         SharedPreferenceUtility.setSession_Id("");
+                        SharedPreferenceUtility.setPartnerId("");
                         SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
                         SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
 

@@ -6,15 +6,15 @@
     android:background="@color/dark_black"
     android:focusableInTouchMode="true">
 
-    <com.google.android.exoplayer2.ui.SimpleExoPlayerView
+    <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/exo_player_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_250dp"
         android:visibility="visible"
         app:controller_layout_id="@layout/live_play_back_control"
-        app:resize_mode="fill">
+        app:surface_type="texture_view"
+        app:resize_mode="fill"/>
 
-    </com.google.android.exoplayer2.ui.SimpleExoPlayerView>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/sv_scrollview"
