@@ -261,6 +261,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     private boolean isLiveAvailableForSchedule = false;
     private boolean isForceLogout = false;
 
+    //bottom vnavigation view
+    private RelativeLayout rl_btm_navigation_channel;
 
     @Override
     public void onClick(View view) {
@@ -361,6 +363,9 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         iv_icon = findViewById(R.id.iv_icon);
         ViewGroup mAdUiContainer = findViewById(R.id.exo_player_view);
 
+        //btm nav
+        rl_btm_navigation_channel = findViewById(R.id.rl_btm_navigation_channel);
+        rl_btm_navigation_channel.setVisibility(View.VISIBLE);
         //schedule
 
         ll_schedule = findViewById(R.id.ll_schedule);
@@ -1285,6 +1290,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         rl_exoplayer_parent.setPadding(0, 0, 0, 0);
 
         rl_exoplayer_parent.setLayoutParams(params);
+        rl_btm_navigation_channel.setVisibility(GONE);
         rl_toolbar.setVisibility(GONE);
         rl_video_grid.setVisibility(GONE);
 
@@ -1314,6 +1320,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         params.setMargins(0, actionBarHeight, 0, 0);
         rl_exoplayer_parent.setPadding(0, 0, 0, 0);
         rl_exoplayer_parent.setLayoutParams(params);
+        rl_btm_navigation_channel.setVisibility(View.VISIBLE);
         rl_toolbar.setVisibility(View.VISIBLE);
         rl_video_grid.setVisibility(View.VISIBLE);
 

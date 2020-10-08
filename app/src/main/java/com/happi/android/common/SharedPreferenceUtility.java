@@ -412,4 +412,16 @@ public class SharedPreferenceUtility {
         sharedPreferencesEditor.commit();
     }
 
+    public static void setPartnerId(String partnerId) {
+
+        SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferenceInstance().edit();
+        sharedPreferencesEditor.putString("partnerId", partnerId);
+        sharedPreferencesEditor.commit();
+
+    }
+
+    public static String getPartnerId() {
+        return getSharedPreferenceInstance().getString("partnerId", "0");
+    }
+
 }

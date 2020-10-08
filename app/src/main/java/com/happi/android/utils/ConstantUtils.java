@@ -23,6 +23,7 @@ public class ConstantUtils {
     public static final int SUBSCRIPTION_ACTIVITY = 18;
     public static final int WATCHLIST_ACTIVITY = 19;
     public static final int WEBVIEW_ACTIVITY = 20;
+    public static final int PARTNER_VIDEOS_LISTING_ACTIVITY = 21;
 
 
     public static final String IP_BASE_URL = "https://extreme-ip-lookup.com/";
@@ -46,6 +47,7 @@ public class ConstantUtils {
     //Urls
     public static final String VIDEO_DETAILS = "video_details";
     public static final String CATEGORY_DETAILS = "category_details";
+    public static final String PARTNER_DETAILS = "partner_details";
     public static final String SHOW_DETAILS = "show_details";
     public static final String CHANNEL_ID = "channel_id";
     public static final String SHOW_ID = "show_id";

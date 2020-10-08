@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_live_schedule"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/dimen_5dp"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_2dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <LinearLayout
+        android:id="@+id/ll_schedule_info_parent"
+        android:layout_width="@dimen/dimen_128dp"
+        android:layout_height="@dimen/dimen_165dp"
+        android:background="@color/coolGrey"
+        android:orientation="vertical">
+        <FrameLayout
+            android:id="@+id/fl_schedule_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="@dimen/dimen_3dp"
+                app:cardElevation="@dimen/dimen_0dp"
+                app:cardMaxElevation="@dimen/dimen_0dp"
+                app:cardUseCompatPadding="true"
+                app:cardPreventCornerOverlap="false"
+                app:cardBackgroundColor="@color/coolGrey">
+                <ImageView
+                    android:id="@+id/iv_schedule_image"
+                    android:layout_width = "match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"/>
+
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:id="@+id/ll_schedule_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom"
+                android:weightSum="3">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_0dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:weightSum="2"
+                    android:paddingStart="@dimen/dimen_5dp"
+                    android:paddingEnd="@dimen/dimen_5dp">
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        app:cardCornerRadius="@dimen/dimen_2dp"
+                        app:cardElevation="@dimen/dimen_0dp"
+                        app:cardMaxElevation="@dimen/dimen_0dp"
+                        app:cardUseCompatPadding="true"
+                        app:cardPreventCornerOverlap="false"
+                        app:cardBackgroundColor="@color/whiteThree"
+                        android:layout_weight="0.9"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginBottom="@dimen/dimen_3dp"/>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        app:cardCornerRadius="@dimen/dimen_2dp"
+                        app:cardElevation="@dimen/dimen_0dp"
+                        app:cardMaxElevation="@dimen/dimen_0dp"
+                        app:cardUseCompatPadding="true"
+                        app:cardPreventCornerOverlap="false"
+                        app:cardBackgroundColor="@color/whiteThree"
+                        android:layout_weight="0.9"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_marginTop="@dimen/dimen_3dp"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="110dp"
+    android:layout_height="145dp"
+    android:orientation="horizontal"
+    app:cardCornerRadius="5dp"
+    android:layout_marginRight="@dimen/dimen_7dp"
+    android:elevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <FrameLayout
+        android:id="@+id/ll_main_layout"
+        android:layout_width="110dp"
+        android:layout_height="145dp"
+        android:background="@color/white">
+
+        <View
+            android:id="@+id/iv_thumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/light_transparent" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/dimen_15dp">
+
+            <com.happi.android.customviews.TypefacedTextViewBold
+                android:id="@+id/tv_video_title"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_20dp"
+                android:ellipsize="end"
+                android:lines="2"
+                android:maxLines="2"
+                android:paddingLeft="@dimen/dimen_5dp"
+                android:background="@color/light_transparent"/>
+
+            <View
+                android:id="@+id/tv_video_tag"
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dimen_15dp"
+                android:layout_height="match_parent"
+                android:layout_below="@id/tv_video_title"
+                android:background="@color/light_transparent"
+                android:gravity="center"
+                android:padding="@dimen/dimen_2dp"
+                android:text="@string/genere" />
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</androidx.cardview.widget.CardView>

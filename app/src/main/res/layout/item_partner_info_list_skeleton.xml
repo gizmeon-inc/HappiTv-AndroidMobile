@@ -2,30 +2,32 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/dimen_7dp"
+    android:layout_marginEnd="@dimen/dimen_1dp"
     app:cardCornerRadius="@dimen/dimen_5dp"
     app:cardElevation="@dimen/dimen_0dp"
     app:cardMaxElevation="@dimen/dimen_0dp"
     app:cardUseCompatPadding="false">
+
+
     <LinearLayout
-        android:layout_width="@dimen/dimen_200dp"
-        android:layout_height="@dimen/dimen_80dp"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_82dp"
         android:gravity="start|center_vertical"
-        android:padding="@dimen/dimen_5dp"
         android:background="@color/white"
         android:orientation="horizontal"
         android:weightSum="4">
         <LinearLayout
-            android:id="@+id/ll_schedule_image"
+            android:id="@+id/ll_partner_image"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:layout_weight="1.2"
-            android:layout_marginEnd="@dimen/dimen_5dp"
-            android:padding="@dimen/dimen_3dp">
+            android:layout_marginEnd="@dimen/dimen_2dp"
+            android:layout_gravity="center"
+            android:padding="@dimen/dimen_7dp">
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -35,7 +37,6 @@
                 app:cardUseCompatPadding="true"
                 app:cardPreventCornerOverlap="false"
                 app:cardBackgroundColor="@color/light_transparent"/>
-
 
         </LinearLayout>
         <LinearLayout
@@ -58,7 +59,7 @@
                 app:cardPreventCornerOverlap="false"
                 app:cardBackgroundColor="@color/light_transparent"
                 android:gravity="top"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:layout_marginBottom="@dimen/dimen_7dp"/>
 
             <androidx.cardview.widget.CardView
@@ -77,6 +78,4 @@
         </LinearLayout>
 
     </LinearLayout>
-
-
 </androidx.cardview.widget.CardView>

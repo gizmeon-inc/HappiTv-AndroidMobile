@@ -23,6 +23,7 @@ import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -66,7 +67,7 @@ import com.happi.android.adapters.CategoryCircleViewAdapter;
 import com.happi.android.adapters.CategoryListAdapter;
 import com.happi.android.adapters.ChannelListAdapter;
 import com.happi.android.adapters.ChannelSuggestionAdapter;
-import com.happi.android.adapters.LiveParterInfoAdapter;
+import com.happi.android.adapters.PartnersListingAdapter;
 import com.happi.android.adapters.LiveScheduleHomeListAdapter;
 import com.happi.android.adapters.LiveScheduleInfoAdapter;
 import com.happi.android.adapters.ShowList_adapter;
@@ -84,8 +85,8 @@ import com.happi.android.exoplayercontroller.EventLogger;
 import com.happi.android.models.CategoriesHomeListVideoModel;
 import com.happi.android.models.CategoryModel;
 import com.happi.android.models.ChannelModel;
-import com.happi.android.models.LiveParterInfoModel;
 import com.happi.android.models.LiveScheduleResponse;
+import com.happi.android.models.PartnerResponseModel;
 import com.happi.android.models.ShowModel;
 import com.happi.android.models.TokenResponse;
 import com.happi.android.models.UserSubscriptionModel;
@@ -122,7 +123,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         ShowsAdapter.itemClickListener, ChannelListAdapter.itemClickListener,
         RewardedVideoAdListener, CategoriesHomeListAdapter.ICallAdmobAd,
         CategoryCircleViewAdapter.itemClickListenerForCategory,
-        ChannelListAdapter.RedirectToLive {
+        ChannelListAdapter.RedirectToLive, PartnersListingAdapter.PartnerItemClickListener {
 
 
     VideoList_adapter videoList_adapter;
@@ -183,10 +184,11 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private EventLogger eventLogger;
     private LiveScheduleHomeListAdapter liveScheduleHomeListAdapter;
     private LiveScheduleInfoAdapter liveScheduleInfoAdapter;
-    private LiveParterInfoAdapter liveParterInfoAdapter;
     private int liveChannelId = 0;
-    private LinearLayout ll_live_partner;
-    private GridRecyclerView rv_live_schedule_partner;
+    //partner
+    private LinearLayout ll_partner;
+    private GridRecyclerView rv_partner;
+    private PartnersListingAdapter partnersListingAdapter;
     //nested scroll
     private NestedScrollView sv_scrollview;
     private ProgressDialog dialog;
@@ -201,9 +203,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-//                WindowManager.LayoutParams.FLAG_SECURE);
-
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
 
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_black));
@@ -302,10 +304,14 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         rv_live_schedule_list = findViewById(R.id.rv_live_schedule_list);
         int spacingPixels = getResources().getDimensionPixelSize(R.dimen.default_spacing_small);
         //rv_live_schedule_list.addItemDecoration(new SpacesItemDecoration(spacingPixels));
+
         //partner info
-        ll_live_partner = findViewById(R.id.ll_live_partner);
-        rv_live_schedule_partner = findViewById(R.id.rv_live_schedule_partner);
-        rv_live_schedule_partner.addItemDecoration(new SpacesItemDecoration(spacingPixels));
+        ll_partner = findViewById(R.id.ll_live_partner);
+        rv_partner = findViewById(R.id.rv_live_schedule_partner);
+        int spacingPixelsPartner = getResources().getDimensionPixelSize(R.dimen.default_spacing_2dp);
+        rv_partner.addItemDecoration(new SpacesItemDecoration(spacingPixelsPartner));
+
+
         //scroll view
         sv_scrollview = findViewById(R.id.sv_scrollview);
 
@@ -335,7 +341,17 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             startActivity(intent);
             overridePendingTransition(0, 0);
         });
+        /*ll_partner.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                releasePlayer();
+                Intent intent = new Intent(MainHomeActivity.this, PartnerListingActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
 
+                overridePendingTransition(0, 0);
+            }
+        });*/
         ll_watch_free.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -397,7 +413,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         setUserName();
         setLogoutAllVisibility();
 
-        if (apiErrorCount == 3) {
+        if (apiErrorCount == 4) {
             setupRecyclerView();
             recallHomeApis();
         }
@@ -444,7 +460,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         loadingLiveSchedule = Skeleton.bind(rv_live_schedule_list)
                 //.adapter(liveScheduleHomeListAdapter)
                 .adapter(liveScheduleInfoAdapter)
-                .load(R.layout.item_live_schedule_home_skeleton)
+                .load(R.layout.item_live_schedule_info_home_skeleton)
+                //.load(R.layout.loading_videos_horizontal)
                 .color(R.color.colorLine)
                 .shimmer(true)
                 .angle(30)
@@ -453,12 +470,13 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .frozen(false)
                 .show();
         //-------------------------------------------------partner info-------------------------------------------------------------------//
-        ViewCompat.setNestedScrollingEnabled(rv_live_schedule_partner, false);
-        rv_live_schedule_partner.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        liveParterInfoAdapter = new LiveParterInfoAdapter(this);
-        rv_live_schedule_partner.setAdapter(liveParterInfoAdapter);
-        loadingPartnerInfo = Skeleton.bind(rv_live_schedule_partner)
-                .adapter(liveParterInfoAdapter)
+        ViewCompat.setNestedScrollingEnabled(rv_partner, false);
+        rv_partner.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        partnersListingAdapter = new PartnersListingAdapter(this,true, this::onPartnerItemClicked);
+        rv_partner.setAdapter(partnersListingAdapter);
+        loadingPartnerInfo = Skeleton.bind(rv_partner)
+                .adapter(partnersListingAdapter)
+                //.load(R.layout.item_partner_info_home_skeleton)
                 .load(R.layout.item_live_schedule_home_skeleton)
                 .color(R.color.colorLine)
                 .shimmer(true)
@@ -572,6 +590,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                                 checkSubscription();
                             }
                             liveNow();
+                            loadPartners();
                             //categoryApiCall();
                             //watchForFreeShowList();
                             newReleases();
@@ -768,7 +787,43 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 });
         compositeDisposable.add(tokenDisposable);
     }
+    private void loadPartners() {
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable tokenDisposable = usersService.getPartnerList(HappiApplication.getAppToken(),
+                SharedPreferenceUtility.getPublisher_id())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(partnerResponseModel -> {
 
+                    if (partnerResponseModel.getData().size() != 0) {
+                        updatePartnersList(partnerResponseModel.getData());
+                    } else {
+                        ll_partner.setVisibility(View.GONE);
+                        rv_partner.setVisibility(View.GONE);
+                    }
+                }, throwable -> {
+                    apiErrorCount++;
+                    ll_partner.setVisibility(View.GONE);
+                    rv_partner.setVisibility(View.GONE);
+                });
+        compositeDisposable.add(tokenDisposable);
+    }
+
+    private void updatePartnersList(List<PartnerResponseModel.PartnerModel> partnerModelList) {
+        partnersListingAdapter.clearAll();
+        partnersListingAdapter.addAll(partnerModelList);
+        loadingPartnerInfo.hide();
+        SnapHelper snapHelper1;
+        snapHelper1 = new GravitySnapHelper(Gravity.START);
+        snapHelper1.attachToRecyclerView(rv_partner);
+        partnersListingAdapter.notifyDataSetChanged();
+        runLayoutAnimation(rv_partner, mSelectedItem);
+        if (partnersListingAdapter.isEmpty()) {
+
+            ll_partner.setVisibility(View.GONE);
+            rv_partner.setVisibility(View.GONE);
+        }
+    }
     private void updateLiveScheduleList(List<LiveScheduleResponse.LiveScheduleModel> liveScheduleModelList) {
 
         /*liveScheduleHomeListAdapter.clearAll();
@@ -799,52 +854,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             ll_live_guide.setVisibility(View.GONE);
             rv_live_schedule_list.setVisibility(View.GONE);
         }
-
-
-        //partner info
-        List<LiveParterInfoModel> liveParterInfoModels = new ArrayList<>();
-
-        LiveParterInfoModel model1 = new LiveParterInfoModel();
-        model1.setPartnerName("Partner 1");
-        model1.setPartnerDescription("Description 1");
-
-        LiveParterInfoModel model2 = new LiveParterInfoModel();
-        model2.setPartnerName("Partner 2");
-        model2.setPartnerDescription("Description 2");
-
-        LiveParterInfoModel model3 = new LiveParterInfoModel();
-        model3.setPartnerName("Partner 3");
-        model3.setPartnerDescription("Description 3");
-
-        LiveParterInfoModel model4 = new LiveParterInfoModel();
-        model4.setPartnerName("Partner 4");
-        model4.setPartnerDescription("Description 4");
-
-        LiveParterInfoModel model5 = new LiveParterInfoModel();
-        model5.setPartnerName("Partner 5");
-        model5.setPartnerDescription("Description 5");
-
-        liveParterInfoModels.add(model1);
-        liveParterInfoModels.add(model2);
-        liveParterInfoModels.add(model3);
-        liveParterInfoModels.add(model4);
-        liveParterInfoModels.add(model5);
-
-        liveParterInfoAdapter.clearAll();
-        liveParterInfoAdapter.addAll(liveParterInfoModels);
-        loadingPartnerInfo.hide();
-        SnapHelper snapHelper1;
-        snapHelper1 = new GravitySnapHelper(Gravity.START);
-        snapHelper1.attachToRecyclerView(rv_live_schedule_partner);
-        liveParterInfoAdapter.notifyDataSetChanged();
-        runLayoutAnimation(rv_live_schedule_partner, mSelectedItem);
-        if (liveParterInfoAdapter.isEmpty()) {
-
-            ll_live_partner.setVisibility(View.GONE);
-            rv_live_schedule_partner.setVisibility(View.GONE);
-        }
-
-
     }
 
     private void initializePlayer(ChannelModel liveModel, String playerToken) {
@@ -871,8 +880,17 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 exoPlayer.addVideoDebugListener(eventLogger);
                 exo_player_view_home.setPlayer(exoPlayer);
                 exoPlayer.setPlayWhenReady(shouldAutoPlay);
-                exo_player_view_home.findViewById(R.id.exo_fullscreen_button).setVisibility(View.GONE);
-
+                //exo_player_view_home.findViewById(R.id.exo_fullscreen_button).setVisibility(View.GONE);
+                FrameLayout exo_fullscreen_button = exo_player_view_home.findViewById(R.id.exo_fullscreen_button);
+                exo_fullscreen_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        releasePlayer();
+                        SharedPreferenceUtility.setChannelId(liveModel.getChannelId());
+                        ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, liveModel.getChannelId());
+                        overridePendingTransition(0, 0);
+                    }
+                });
                 // volume = exoPlayer.getVolume();
             }
             DefaultBandwidthMeter bandwidthMeterA = new DefaultBandwidthMeter();
@@ -998,6 +1016,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             if (liveScheduleInfoAdapter == null || liveScheduleInfoAdapter.isEmpty()) {
                 loadLiveSchedule(liveChannelId);
             }
+            if (partnersListingAdapter == null || partnersListingAdapter.isEmpty()) {
+                loadPartners();
+            }
            /* if (circleViewAdapter == null || circleViewAdapter.isEmpty()) {
                 categoryApiCall();
             }*/
@@ -1104,7 +1125,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
 
     private void displayErrorLayout(String message) {
-        if (apiErrorCount == 3) {
+        if (apiErrorCount == 4) {
 
             hideLivePlayerAndSchedule();
 
@@ -1524,6 +1545,17 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         logoutApiCall();
     }
 
+    @Override
+    public void onPartnerItemClicked(int adapterPosition) {
+        releasePlayer();
+        HappiApplication.setRedirect("");
+        String partnerDetails = partnersListingAdapter.getItem(adapterPosition).getPartner_id() + ";" + partnersListingAdapter.getItem
+                (adapterPosition).getName();
+        SharedPreferenceUtility.setPartnerId(partnerDetails);
+        ActivityChooser.goToActivity(ConstantUtils.PARTNER_VIDEOS_LISTING_ACTIVITY, partnerDetails);
+        overridePendingTransition(0, 0);
+    }
+
 
     //async task for advertising id
     public static class AdvertisingIdAsyncTask extends AsyncTask<Void, Void, Void> {
@@ -1612,6 +1644,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             }
 
             liveNow();
+            loadPartners();
             //categoryApiCall();
             //watchForFreeShowList();
             newReleases();

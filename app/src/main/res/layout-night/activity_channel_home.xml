@@ -26,7 +26,7 @@
         <include layout="@layout/channel_content_home" />
     </RelativeLayout>
     <RelativeLayout
-        android:id="@+id/rl_btm_navigation"
+        android:id="@+id/rl_btm_navigation_channel"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_alignParentBottom="true">

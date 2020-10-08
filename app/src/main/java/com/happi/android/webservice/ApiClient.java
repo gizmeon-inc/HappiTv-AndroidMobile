@@ -8,6 +8,8 @@ import com.happi.android.models.HomeVideoModel;
 import com.happi.android.models.LikedFlagResponseModel;
 import com.happi.android.models.LiveScheduleResponse;
 import com.happi.android.models.LogoutResponseModel;
+import com.happi.android.models.PartnerResponseModel;
+import com.happi.android.models.PartnerVideoListResponseModel;
 import com.happi.android.models.PublisherModel;
 import com.happi.android.models.RegisterWithEmailResponseModel;
 import com.happi.android.models.ScheduleUpdatedResponseModel;
@@ -145,7 +147,7 @@ public class ApiClient {
                                            @Body JsonObject jsonObject);
 
 
-        //===================== CHANNEL =============================
+        //===================== CHANNEL / PARTNER=============================
 
         @GET("api/Restallchannel")
         Observable<ChannelListResponse> Restallchannel(@Header("access-token") String header,
@@ -157,11 +159,10 @@ public class ApiClient {
         Observable<ChannelListResponse> getChannels(@Header("access-token") String header,
                                                     @Query("country_code") String country_code,
                                                     @Query("pubid") String publisher_id);
-        //liveSchedule?channelid=275
+
         @GET("api/liveSchedule")
         Observable<LiveScheduleResponse> getLiveSchedule(@Header("access-token") String header,
                                                          @Query("channelid") int channel_id);
-
         @GET("api/PopularChannels")
         Observable<ChannelListResponse> PopularChannels(@Header("access-token") String header,
                                                         @Query("country_code") String country_code,
@@ -174,6 +175,17 @@ public class ApiClient {
                                                     @Query("country_code") String country_code,
                                                     @Query("device_type") String device_type,
                                                     @Query("pubid") String publisher_id);
+
+        @GET("api/partnerList")
+        Observable<PartnerResponseModel> getPartnerList(@Header("access-token") String header,
+                                                        @Query("pubid") String pubid);
+        @GET("api/partnerVideos")
+        Observable<PartnerVideoListResponseModel> getPartnerVideos(@Header("access-token") String header,
+                                                                   @Query("pubid") String pubid,
+                                                                   @Query("partner_id") String partner_id,
+                                                                   @Query("uid") int userId);
+
+
 
         //===========================================================
         //===================== VIDEO ===============================

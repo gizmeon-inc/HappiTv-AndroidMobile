@@ -34,6 +34,7 @@
     <dimen name="dimen_70dp">70dp</dimen>
     <dimen name="dimen_75dp">75dp</dimen>
     <dimen name="dimen_80dp">80dp</dimen>
+    <dimen name="dimen_82dp">82dp</dimen>
     <dimen name="dimen_100dp">100dp</dimen>
     <dimen name="dimen_128dp">128dp</dimen>
     <dimen name="dimen_130dp">130dp</dimen>
@@ -63,6 +64,9 @@
     <dimen name="text_small_medium">11sp</dimen>
 
     <!-- RECYCLERVIEW ITEM SPACES-->
+    <dimen name="default_spacing_1dp">1dp</dimen>
+    <dimen name="default_spacing_2dp">2dp</dimen>
+    <dimen name="default_spacing_3dp">3dp</dimen>
     <dimen name="default_spacing_small">4dp</dimen>
     <dimen name="default_spacing_medium">8dp</dimen>
     <dimen name="default_spacing_huge">128dp</dimen>

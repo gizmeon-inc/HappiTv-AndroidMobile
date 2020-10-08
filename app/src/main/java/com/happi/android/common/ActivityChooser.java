@@ -9,6 +9,7 @@ import com.happi.android.ChannelScheduleActivity;
 import com.happi.android.HomeActivity;
 import com.happi.android.LiveVideoListingActivity;
 import com.happi.android.MainHomeActivity;
+import com.happi.android.PartnerVideosListingActivity;
 import com.happi.android.SearchActivity;
 import com.happi.android.ShowDetailsActivity;
 import com.happi.android.ShowVideoActivity;
@@ -55,6 +56,18 @@ public class ActivityChooser {
                 intent.putExtra(ConstantUtils.CATEGORY_DETAILS, category);
 
                 intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                break;
+
+                case ConstantUtils.PARTNER_VIDEOS_LISTING_ACTIVITY:
+                isSameClass("PartnerVideosListingActivity");
+
+                intent = new Intent(HappiApplication.getCurrentActivity(),
+                        PartnerVideosListingActivity.class);
+
+                String partnerDetails = (String) intentData;
+                intent.putExtra(ConstantUtils.PARTNER_DETAILS, partnerDetails);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
                 break;
 
             case ConstantUtils.SHOWSVIDEO_ACTIVITY:

@@ -40,8 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
-                android:layout_below="@+id/rl_player_live"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+                android:layout_below="@+id/rl_player_live">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -84,7 +83,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_7dp"
                         android:paddingBottom="@dimen/dimen_10dp"
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingRight="@dimen/dimen_10dp">
@@ -109,13 +108,100 @@
                             android:visibility="invisible"/>
 
                     </LinearLayout>
+                    <!-- <RelativeLayout
+                         android:id="@+id/rl_live_sch"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:focusableInTouchMode="true"
+                         android:focusable="true"
+                         android:descendantFocusability="blocksDescendants">
+                         <LinearLayout
+                             android:id="@+id/ll_live_guide"
+                             android:layout_width="match_parent"
+                             android:layout_height="wrap_content"
+                             android:gravity="center_vertical"
+                             android:orientation="horizontal"
+                             android:paddingTop="@dimen/dimen_10dp"
+                             android:paddingBottom="@dimen/dimen_10dp"
+                             android:paddingLeft="@dimen/dimen_10dp"
+                             android:paddingRight="@dimen/dimen_10dp">
+
+                             <com.happi.android.customviews.TypefacedTextViewSemiBold
+                                 android:id="@+id/tv_live_guide"
+                                 android:layout_width="0dp"
+                                 android:layout_height="wrap_content"
+                                 android:layout_weight="1"
+                                 android:singleLine="true"
+                                 android:text="@string/live_guide"
+                                 android:textColor="@color/colorPrimary"
+                                 android:textSize="@dimen/text_regular_medium1" />
+
+                             <ImageView
+                                 android:layout_width="@dimen/dimen_30dp"
+                                 android:layout_height="match_parent"
+                                 android:layout_gravity="end"
+                                 android:scaleType="centerCrop"
+                                 android:src="@drawable/ic_right_arrow_blue"
+                                 android:tint="@color/colorPrimaryDark"
+                                 android:visibility="invisible"/>
+
+                         </LinearLayout>
+                         <com.happi.android.recyclerview.GridRecyclerView
+                             android:id="@+id/rv_live_schedule_list"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_below="@id/ll_live_guide"
+                             android:visibility="visible"
+                             android:paddingLeft="@dimen/dimen_10dp" />
+                     </RelativeLayout>-->
                     <com.happi.android.recyclerview.GridRecyclerView
                         android:id="@+id/rv_live_schedule_list"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_live_guide"
                         android:visibility="visible"
-                        android:paddingLeft="@dimen/dimen_10dp"/>
+                        android:paddingLeft="@dimen/dimen_10dp" />
+
+                    <!--PARTNER-INFO-->
+                    <LinearLayout
+                        android:id="@+id/ll_live_partner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingTop="@dimen/dimen_7dp"
+                        android:paddingBottom="@dimen/dimen_10dp"
+                        android:paddingLeft="@dimen/dimen_10dp"
+                        android:paddingRight="@dimen/dimen_10dp"
+                        android:layout_below="@+id/rv_live_schedule_list">
+
+                        <com.happi.android.customviews.TypefacedTextViewSemiBold
+                            android:id="@+id/tv_live_partner"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:singleLine="true"
+                            android:text="Partners"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="@dimen/text_regular_medium1" />
+
+                        <ImageView
+                            android:layout_width="@dimen/dimen_30dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:scaleType="centerCrop"
+                            android:src="@drawable/ic_right_arrow_blue"
+                            android:tint="@color/colorPrimaryDark"
+                            android:visibility="invisible"/>
+
+                    </LinearLayout>
+                    <com.happi.android.recyclerview.GridRecyclerView
+                        android:id="@+id/rv_live_schedule_partner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/ll_live_partner"
+                        android:visibility="visible"
+                        android:paddingLeft="@dimen/dimen_10dp" />
 
                     <!--CATEGORIES-->
                     <LinearLayout
@@ -126,7 +212,7 @@
                         android:orientation="horizontal"
                         android:paddingTop="@dimen/dimen_10dp"
                         android:paddingBottom="@dimen/dimen_10dp"
-                        android:layout_below="@+id/rv_live_schedule_list"
+                        android:layout_below="@+id/rv_live_schedule_partner"
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingRight="@dimen/dimen_10dp">
 
@@ -152,7 +238,7 @@
 
                     <com.happi.android.recyclerview.GridRecyclerView
                         android:id="@+id/rv_category_list"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_category_list"
                         android:visibility="visible"
@@ -194,7 +280,7 @@
 
                     <com.happi.android.recyclerview.GridRecyclerView
                         android:id="@+id/rv_watch_free"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_watch_free"
                         android:visibility="gone"
@@ -209,7 +295,7 @@
                         android:layout_below="@+id/rv_watch_free"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingTop="@dimen/dimen_10dp"
+                        android:paddingTop="@dimen/dimen_7dp"
                         android:paddingBottom="@dimen/dimen_10dp"
                         android:paddingLeft="@dimen/dimen_10dp"
                         android:paddingRight="@dimen/dimen_10dp">
@@ -236,7 +322,7 @@
 
                     <com.happi.android.recyclerview.GridRecyclerView
                         android:id="@+id/rv_video_grid"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_popular_videos"
                         android:visibility="visible"
@@ -281,7 +367,7 @@
 
                     <com.happi.android.recyclerview.GridRecyclerView
                         android:id="@+id/rv_live"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/ll_popular_live"
                         android:visibility="visible"
@@ -292,8 +378,8 @@
                     <!--TOP-TEN-CATEGORY-->
                     <com.happi.android.recyclerview.GridRecyclerView
                         android:id="@+id/rv_categories_home_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_below="@+id/rv_live"
                         android:layout_marginBottom="@dimen/dimen_7dp"
                         android:nestedScrollingEnabled="false"

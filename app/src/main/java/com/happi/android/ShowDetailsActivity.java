@@ -201,8 +201,8 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-//                WindowManager.LayoutParams.FLAG_SECURE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
