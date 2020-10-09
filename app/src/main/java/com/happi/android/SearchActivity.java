@@ -221,7 +221,7 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.searchByshows(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getPublisher_id(),
-                searchKey)
+                searchKey,SharedPreferenceUtility.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showListResponseModel -> {

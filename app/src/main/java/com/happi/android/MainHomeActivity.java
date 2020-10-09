@@ -44,14 +44,21 @@ import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
+import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.PlaybackParameters;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
+import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.trackselection.TrackSelector;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
@@ -82,6 +89,7 @@ import com.happi.android.customviews.CustomAlertDialog;
 import com.happi.android.customviews.SpacesItemDecoration;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.exoplayercontroller.EventLogger;
+import com.happi.android.exoplayercontroller.TrackSelectionHelper;
 import com.happi.android.models.CategoriesHomeListVideoModel;
 import com.happi.android.models.CategoryModel;
 import com.happi.android.models.ChannelModel;
@@ -735,7 +743,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                         }*/
 
                     } else {
-                        hideLivePlayerAndSchedule();
+                        //hideLivePlayerAndSchedule();
+                        ll_live_guide.setVisibility(View.GONE);
+                        rv_live_schedule_list.setVisibility(View.GONE);
+
                         rv_live.setVisibility(View.GONE);
                         ll_popular_live.setVisibility(View.GONE);
 
@@ -863,8 +874,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         pb_live.setVisibility(View.GONE);
         try {
             Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
-         //   Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
-            //Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
+           // Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
+           // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
 
             boolean needNewPlayer = exoPlayer == null;
 
@@ -872,8 +883,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 boolean shouldAutoPlay = true;
                 TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
                 DefaultTrackSelector trackSelector1 = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
-                eventLogger = new EventLogger(trackSelector1);
+                TrackSelectionHelper trackSelectionHelper = new TrackSelectionHelper(trackSelector1, adaptiveTrackSelectionFactory);
+                EventLogger eventLogger = new EventLogger(trackSelector1);
                 TrackSelector trackSelector = new DefaultTrackSelector(new AdaptiveTrackSelection.Factory(BANDWIDTH_METER));
+                boolean preferExtensionDecoders = false;
                 DefaultRenderersFactory renderersFactory = new DefaultRenderersFactory(this, null, DefaultRenderersFactory.EXTENSION_RENDERER_MODE_OFF); // drmSessionManager = null
                 exoPlayer = ExoPlayerFactory.newSimpleInstance(renderersFactory, trackSelector);
                 exoPlayer.addListener(eventLogger);
@@ -900,28 +913,179 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             DefaultHttpDataSourceFactory factory = new DefaultHttpDataSourceFactory(userAgent, bandwidthMeterA);
             factory.getDefaultRequestProperties().set("token", playerToken);
 
-            videoSource = new HlsMediaSource(videoURI, factory, 1, null, null);
+             videoSource = new HlsMediaSource.Factory(factory).createMediaSource(videoURI);
+            //videoSource = new HlsMediaSource(videoURI, factory,1, null,null);
 
-            try {
+            /*try {
                 exoPlayer.addListener(new Player.DefaultEventListener() {
                     @Override
                     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                         // super.onPlayerStateChanged(playWhenReady, playbackState);
                         if (playbackState == Player.STATE_ENDED) {
-                           /* if (isExoPlayerFullscreen) {
+                           *//* if (isExoPlayerFullscreen) {
                                 closeFullscreen();
-                            }*/
+                            }*//*
                            // exoPlayer.setPlayWhenReady(false);
                         }
                     }
                 });
             } catch (Exception e) {
                 Log.d("MANIFEST##", "error: " + e.getMessage());
-            }
+            }*/
+            try{
 
+
+
+                exoPlayer.addListener(new Player.EventListener() {
+
+                    @Override
+                    public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
+                        /*try{
+                            if (manifest instanceof HlsManifest) {
+                                HlsManifest hlsManifest = (HlsManifest) manifest;
+                                HlsMediaPlaylist hlsMediaPlaylist = hlsManifest.mediaPlaylist;
+                                if (hlsMediaPlaylist != null) {
+                                    List<String> list = hlsMediaPlaylist.tags;
+                                    for (String item : list) {
+                                        if (item.contains("#EXTINF:")) {
+                                            String info = "";
+                                            info = item.replace("#EXTINF:", "");
+                                            if( !info.isEmpty() && info.contains(",")){
+                                                String[] titleList = info.split(",");
+                                                if(titleList.length != 0 && titleList.length > 1 ){
+                                                    if (!tv_channel_title_live.getText().equals(titleList[1])) {
+                                                        tv_channel_title_live.setText(titleList[1]);
+                                                    }
+                                                }else{
+                                                    tv_channel_title_live.setText("");
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                            }
+                        }catch(Exception e){
+                            Log.e("LIVE##", "exception in LIVE : " + e.toString());
+                        }*/
+                    }
+
+                    @Override
+                    public void onTracksChanged(TrackGroupArray trackGroups, TrackSelectionArray trackSelections) {
+
+                    }
+
+                    @Override
+                    public void onLoadingChanged(boolean isLoading) {
+
+                    }
+
+                    @Override
+                    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
+                        if(playbackState == Player.STATE_ENDED){
+                            /*try{
+                                isLivePlaying = false;
+                                isLivePaused = false;
+                                if(timerSChedule != null){
+                                    isTimerActive = false;
+                                    timerSChedule.cancel();
+                                }
+                            }catch(Exception ex){
+                                Log.e("QWERTY5","EXCEPTION : END : "+ex.toString());
+                            }*/
+
+                        }else if(playWhenReady && playbackState == Player.STATE_READY){
+                            /*try{
+                                isLivePlaying = true;
+                                isLivePaused = false;
+                                if(!durationSet) {
+                                    durationSet = true;
+                                    // timerVideoHandler.post(timeRunnable);
+                                    liveEventAnalyticsApiCall("POP02");
+                                }
+                                if(isLivePlaying){
+                                    if(!isTimerActive) {
+                                        initializeTimerScheduler("POP03");
+                                    }
+                                }
+                            }catch(Exception ex){
+                                Log.e("QWERTY5","EXCEPTION : PLAYING : "+ex.toString());
+                            }*/
+
+                        }else if (playWhenReady){
+
+                        }else{
+                            /*try{
+                                isLivePlaying = false;
+                                isLivePaused = true;
+
+                                //live paused
+                                if (isLivePaused) {
+                                    if(timerSChedule != null){
+                                        isTimerActive = false;
+                                        timerSChedule.cancel();
+                                    }
+                                    //no pause for live
+                                    //liveEventAnalyticsApiCall("POP04");
+                                }
+
+//                                //live pause analytics api call
+//                                if (isLivePaused) {
+//                                    isLivePaused = false;
+//                                    if (timerSChedule != null) {
+//                                        isTimerActive = false;
+//                                        timerSChedule.cancel();
+//                                    }
+////                                    if (!isVideoEndT) {
+//                                    liveEventAnalyticsApiCall("POP04");
+//                                   // }
+//                                }
+                            }catch(Exception ex){
+                                Log.e("QWERTY5","EXCEPTION : PAUSE : "+ex.toString());
+                            }*/
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onRepeatModeChanged(int repeatMode) {
+
+                    }
+
+                    @Override
+                    public void onShuffleModeEnabledChanged(boolean shuffleModeEnabled) {
+
+                    }
+
+                    @Override
+                    public void onPlayerError(ExoPlaybackException error) {
+
+                    }
+
+                    @Override
+                    public void onPositionDiscontinuity(int reason) {
+
+                    }
+
+                    @Override
+                    public void onPlaybackParametersChanged(PlaybackParameters playbackParameters) {
+
+                    }
+
+                    @Override
+                    public void onSeekProcessed() {
+
+                    }
+                });
+            }catch(Exception e){
+                Log.e("MainAcvtivity error", " exoplayer error " + e.getMessage());
+            }
         } catch (Exception e) {
             liveError();
-            Log.e("MainAcvtivity error", " exoplayer error " + e.toString());
+            Log.e("MainAcvtivity error", " exoplayer error " + e.getMessage());
         }
 
 
@@ -1129,7 +1293,14 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void displayErrorLayout(String message) {
         if (apiErrorCount == 4) {
 
-            hideLivePlayerAndSchedule();
+            //hideLivePlayerAndSchedule();
+            releaseExoPlayer();
+            pb_live.setVisibility(View.GONE);
+            rl_player_live.setVisibility(View.GONE);
+            exo_player_view_home.setVisibility(View.GONE);
+            ll_live_guide.setVisibility(View.GONE);
+            rv_live_schedule_list.setVisibility(View.GONE);
+
 
             rv_watch_free.setVisibility(View.GONE);
             rv_video_grid.setVisibility(View.GONE);
@@ -1607,18 +1778,18 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void hideLivePlayerAndSchedule() {
-        releaseExoPlayer();
+        /*releaseExoPlayer();
         pb_live.setVisibility(View.GONE);
         rl_player_live.setVisibility(View.GONE);
         exo_player_view_home.setVisibility(View.GONE);
         ll_live_guide.setVisibility(View.GONE);
-        rv_live_schedule_list.setVisibility(View.GONE);
+        rv_live_schedule_list.setVisibility(View.GONE);*/
     }
 
     private void liveError() {
-        Toast.makeText(this, "Oops!! Can't play video. Please try again later.", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Oops!! Can't play video. Please try again.", Toast.LENGTH_SHORT).show();
 
-        hideLivePlayerAndSchedule();
+        //hideLivePlayerAndSchedule();
     }
 
     private void releaseExoPlayer() {

@@ -100,6 +100,7 @@ public class RegisterActivity extends BaseActivity {
     private int user_id = 0;
     private String email = "";
     private String password = "";
+    private String phoneNo = "";
 
     public static boolean isValidEmail(String email) {
 
@@ -229,8 +230,11 @@ public class RegisterActivity extends BaseActivity {
                     c_code = countryCode;
                     email = et_email.getText().toString().trim().toLowerCase();
                     password = et_password.getText().toString().trim();
-                    registerWithEmailApiCall(email, password, et_name.getText().toString().trim(), "",
-                            c_code + et_phone_number.getText().toString().trim(),
+                    phoneNo = "";
+                    if(!et_phone_number.getText().toString().trim().isEmpty()){
+                        phoneNo = c_code + et_phone_number.getText().toString().trim();
+                    }
+                    registerWithEmailApiCall(email, password, et_name.getText().toString().trim(), "",phoneNo,
                             SharedPreferenceUtility.getAdvertisingId(), "android-phone",
                             "gmail-login", "0", verified, c_code);
 
@@ -325,7 +329,7 @@ public class RegisterActivity extends BaseActivity {
 
                             SharedPreferenceUtility.saveUserDetails(
                                     loginResponseModel.getData().get(0).getUser_id(), loginResponseModel.getData().get(0).getUser_name(), email,
-                                    password, "", "", "", "", false, c_code + et_phone_number.getText().toString().trim());
+                                    password, "", "", "", "", false, phoneNo);
 
                             isOtpScreenOpen = false;
 

@@ -1357,6 +1357,9 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         Handler mainHandler = new Handler();
         try {
             Uri videoURI = Uri.parse(pHome.getLiveLink().trim());
+            //Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
+
+
             //Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
 
             // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/livechannel/playlist.m3u8");
@@ -1415,8 +1418,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             DefaultHttpDataSourceFactory factory = new DefaultHttpDataSourceFactory(userAgent, bandwidthMeterA);
             factory.getDefaultRequestProperties().set("token", token);
 
-            // videoSource = new HlsMediaSource.Factory(factory).createMediaSource(videoURI);
-            videoSource = new HlsMediaSource(videoURI, factory,1, null,null);
+            videoSource = new HlsMediaSource.Factory(factory).createMediaSource(videoURI);
+            //videoSource = new HlsMediaSource(videoURI, factory,1, null,null);
 
             try{
 

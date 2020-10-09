@@ -467,10 +467,12 @@ public class ApiClient {
                                                @Query("uid") Integer uid,
                                                @Query("country_code") String country_code,
                                                @Query("pubid") String publisher_id);
-        @GET("api/SearchshowsUpdated2")
+        //@GET("api/SearchshowsUpdated2")
+        @GET("api/searchShows")
         Observable<ShowListResponseModel> searchByshows (@Header("access-token") String header,
                                                          @Query("pubid") String publisher_id,
-                                                         @Query("key") String key );
+                                                         @Query("key") String key,
+                                                         @Query("uid") Integer uid);
 
         @GET("GetHomeVideoUpdated2")
         Observable<CategorisHomeListResponseModel> GetHomeVideo (@Header("access-token") String header,
