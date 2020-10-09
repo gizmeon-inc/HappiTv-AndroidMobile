@@ -60,8 +60,8 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
             String time = getScheduleItemTime(liveScheduleList.get(position),position);
             holder.tv_schedule_time.setText(time);
 
-            //String day = getDayForScheduleItem(liveScheduleList.get(position),position);
-            //holder.tv_schedule_day.setText(day);
+            String day = getDayForScheduleItem(liveScheduleList.get(position),position);
+            holder.tv_schedule_status.setText(day);
 
             Glide.with(context)
                     .load(ConstantUtils.RELEASE_THUMBNAIL + liveScheduleList.get(position).getThumbnail())
@@ -173,6 +173,7 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
         FrameLayout fl_schedule_image;
         ImageView iv_schedule_image;
         TypefacedTextViewRegular tv_schedule_time;
+        TypefacedTextViewBold tv_schedule_status;
         TypefacedTextViewBold tv_schedule_title;
         CardView cv_live_schedule;
 
@@ -185,6 +186,7 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
             this.ll_schedule_info_parent = itemView.findViewById(R.id.ll_schedule_info_parent);
             this.fl_schedule_image = itemView.findViewById(R.id.fl_schedule_image);
             this.cv_live_schedule = itemView.findViewById(R.id.cv_live_schedule);
+            this.tv_schedule_status = itemView.findViewById(R.id.tv_schedule_status);
             //this.tv_schedule_day = itemView.findViewById(R.id.tv_schedule_day);
 
             int new_width = (width - (width/6))/3;

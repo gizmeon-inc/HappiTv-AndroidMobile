@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
@@ -43,6 +44,7 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
     ChannelListAdapter channelListAdapter;
     TypefacedTextViewRegular tv_errormsg;
     ImageView iv_errorimg;
+    RelativeLayout rl_errorlayout;
     SkeletonScreen loadingLive;
     private CompositeDisposable compositeDisposable;
 
@@ -75,6 +77,7 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
         rv_live_list = findViewById(R.id.rv_live_list);
         tv_errormsg = findViewById(R.id.tv_errormsg);
         iv_errorimg = findViewById(R.id.iv_errorimg);
+        rl_errorlayout = findViewById(R.id.rl_errorlayout);
 
         iv_menu.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
@@ -82,8 +85,7 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText(R.string.live_channel);
         iv_search.setVisibility(View.GONE);
-        tv_errormsg.setVisibility(View.GONE);
-        iv_errorimg.setVisibility(View.GONE);
+        rl_errorlayout.setVisibility(View.GONE);
 
         compositeDisposable = new CompositeDisposable();
         int userId = SharedPreferenceUtility.getUserId();
@@ -159,12 +161,15 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
     }
 
     private void updateChannelList(List<ChannelModel> data) {
+        rl_errorlayout.setVisibility(View.GONE);
+
         channelListAdapter.clearAll();
         channelListAdapter.addAll(data);
         loadingLive.hide();
         runLayoutAnimation(rv_live_list, mSelectedItem);
         if (channelListAdapter.isEmpty()) {
             rv_live_list.setVisibility(View.GONE);
+            rl_errorlayout.setVisibility(View.VISIBLE);
             tv_errormsg.setVisibility(View.VISIBLE);
             iv_errorimg.setVisibility(View.VISIBLE);
             tv_errormsg.setText(getString(R.string.no_channels));
@@ -173,6 +178,7 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
 
     private void displayErrorLayout(String message) {
         rv_live_list.setVisibility(View.GONE);
+        rl_errorlayout.setVisibility(View.VISIBLE);
         tv_errormsg.setVisibility(View.VISIBLE);
         iv_errorimg.setVisibility(View.VISIBLE);
         tv_errormsg.setText(message);

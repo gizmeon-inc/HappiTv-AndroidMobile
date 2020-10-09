@@ -202,7 +202,19 @@ public class AppUtils {
                 }
 
             } else {
-                status = "";
+               // status = "";
+                String weekDay = "";
+                SimpleDateFormat sdfLocalDay = new SimpleDateFormat("yyyy-MM-dd EEEE", Locale.getDefault());
+
+                String dayStart = sdfLocalDay.format(finalStartDateTime);
+                String[] date = dayStart.split(" ");
+                if (date.length > 1) {
+                    weekDay = date[1];
+                } else {
+                    weekDay = "";
+                }
+
+                status = weekDay;
             }
 
         } else {

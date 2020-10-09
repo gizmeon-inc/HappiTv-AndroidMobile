@@ -200,6 +200,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     //nested scroll
     private NestedScrollView sv_scrollview;
     private ProgressDialog dialog;
+    private static Context context;
     @Override
 
     public void onClick(View view) {
@@ -251,6 +252,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         getDisplayMetrics();
 
         compositeDisposable = new CompositeDisposable();
+
+        context = this;
 
         //progress dialog
         dialog = new ProgressDialog(this, R.style.MyTheme);
@@ -433,7 +436,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //analytics
         if (!SharedPreferenceUtility.getAdvertisingId().isEmpty()) {
             setSessionId();
-            firstTimeInstallAnalyticsApiCall();
+            firstTimeInstallAnalyticsApiCall(context);
             appLaunchAnalyticsApiCall();
         } else {
             new AdvertisingIdAsyncTask().execute();
@@ -851,7 +854,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             ll_live_guide.setVisibility(View.GONE);
             rv_live_schedule_list.setVisibility(View.GONE);
         } */
-
 
         liveScheduleInfoAdapter.clearAll();
         liveScheduleInfoAdapter.addAll(liveScheduleModelList);
@@ -1488,7 +1490,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     }
 
-    private static void firstTimeInstallAnalyticsApiCall() {
+    private static void firstTimeInstallAnalyticsApiCall(Context context) {
 
         //Uncomment to enable analytics api call
         try {
@@ -1511,7 +1513,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             if (ipAddress == null || ipAddress.isEmpty()) {
                 ipAddress = getNetworkIP();
             }
-            String userAgent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+            //String userAgent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+
+            String userAgent = "";
+            try {
+                userAgent = new WebView(context).getSettings().getUserAgentString();
+            } catch (Exception ex) {
+                userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+            }
+
             String deviceId = SharedPreferenceUtility.getAdvertisingId();
 
             JsonObject details = new JsonObject();
@@ -1628,7 +1638,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private static void appLaunchAnalyticsApiCall() {
 
         //Uncomment to enable analytics api call
-
+        try {
         if (HappiApplication.isApplaunch()) {
             HappiApplication.setApplaunch(false);
             String deviceId = SharedPreferenceUtility.getAdvertisingId();
@@ -1646,7 +1656,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             eventDetails.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
 
 
-            try {
+
                 Log.e("000##", " POP01: " + "api about to call");
                 AnalyticsApi.AnalyticsServiceScalar analyticsServiceScalar = AnalyticsApi.createScalar();
                 Call<String> call = analyticsServiceScalar.eventCall2(eventDetails);
@@ -1662,9 +1672,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                     }
                 });
 
-            } catch (Exception e) {
-                Log.e("000##", "exception: " + "POP01" + " - " + e.toString());
             }
+        }catch (Exception e) {
+            Log.e("000##", "exception: " + "POP01" + " - " + e.toString());
         }
     }
 
@@ -1755,7 +1765,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             setSessionId();
-            firstTimeInstallAnalyticsApiCall();
+            firstTimeInstallAnalyticsApiCall(context);
             appLaunchAnalyticsApiCall();
         }
     }

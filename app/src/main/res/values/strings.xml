@@ -52,6 +52,7 @@
     <string name="video_title">Video Title</string>
     <string name="count">Count</string>
     <string name="more_videos_by">More Videos </string>
+    <string name="more_label">More</string>
     <string name="more_shows_by">You may also like </string>
     <string name="load_them_up">Load them up</string>
 

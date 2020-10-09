@@ -116,8 +116,8 @@ public class RegisterActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-//                WindowManager.LayoutParams.FLAG_SECURE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
         if (SharedPreferenceUtility.isNightMode()) {
 
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_black));
@@ -217,11 +217,11 @@ public class RegisterActivity extends BaseActivity {
                     et_phone_number.requestFocus();
                 //}else if (et_phone_number.getText().toString().trim().length() > 15) {
                 }*/
-                else if ((!et_phone_number.getText().toString().trim().isEmpty()) && (et_phone_number.getText().toString().trim().length() > 15)) {
+               /* else if ((!et_phone_number.getText().toString().trim().isEmpty()) && (et_phone_number.getText().toString().trim().length() > 15)) {
                     et_phone_number.setError("Invalid phone number");
                     et_phone_number.setFocusable(true);
                     et_phone_number.requestFocus();
-                } else {
+                } */else {
                     deviceId = SharedPreferenceUtility.getAdvertisingId();
                     dialog.show();
                     hideSoftKeyBoard();
@@ -231,9 +231,9 @@ public class RegisterActivity extends BaseActivity {
                     email = et_email.getText().toString().trim().toLowerCase();
                     password = et_password.getText().toString().trim();
                     phoneNo = "";
-                    if(!et_phone_number.getText().toString().trim().isEmpty()){
-                        phoneNo = c_code + et_phone_number.getText().toString().trim();
-                    }
+//                    if(!et_phone_number.getText().toString().trim().isEmpty()){
+//                        phoneNo = c_code + et_phone_number.getText().toString().trim();
+//                    }
                     registerWithEmailApiCall(email, password, et_name.getText().toString().trim(), "",phoneNo,
                             SharedPreferenceUtility.getAdvertisingId(), "android-phone",
                             "gmail-login", "0", verified, c_code);
@@ -483,12 +483,8 @@ public class RegisterActivity extends BaseActivity {
             }
         });
 
-        //alert("The email we sent may have landed in your SPAM folder. Please check your SPAM if not found in your INBOX.");
-       // alert("The email we sent may have landed in your SPAM folder. Please check your SPAM, if it's not there in your INBOX.");
-       // alert("The email we sent may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
-       // alert("We have sent an email to your account with the OTP for verification. It may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
-        alert("We have sent an email to your account with the OTP for verification. Please check your SPAM, if it's not there in your INBOX.");
-        //alert("It's possible that the email we sent landed in SPAM");
+        alert("Please check your email for verification code. If not found in your Inbox, please check the SPAM folder.");
+
     }
     private void setTimer() {
         counterdown = 30;

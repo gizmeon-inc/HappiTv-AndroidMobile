@@ -107,7 +107,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:background="@android:color/transparent">
+                    android:background="@android:color/transparent"
+                    android:visibility="gone">
 
 
                     <com.hbb20.CountryCodePicker
@@ -148,7 +149,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
                     android:layout_marginTop="5dp"
-                    android:background="@color/whiteThree" />
+                    android:background="@color/whiteThree"
+                    android:visibility="gone"/>
                 <EditText
                     android:id="@+id/et_password"
                     android:layout_width="match_parent"

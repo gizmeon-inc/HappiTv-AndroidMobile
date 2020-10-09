@@ -91,8 +91,6 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
             showId = data.getQueryParameter("show");
         }
 
-
-        HappiApplication.setCurrentContext(this);
         compositeDisposable = new CompositeDisposable();
 
         setCredentials();
@@ -141,11 +139,11 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                       check();
 
                     }else{
-                        Toast.makeText(this,"Server error",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"Some error occurred. Please try again later.",Toast.LENGTH_SHORT).show();
                     }
 
                     }, throwable -> {
-                    Toast.makeText(this,"Server error",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,"Some error occurred. Please try again later.",Toast.LENGTH_SHORT).show();
 
                 });
         compositeDisposable.add(pubidDisposable);

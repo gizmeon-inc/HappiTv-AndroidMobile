@@ -165,7 +165,6 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         tv_verfication_code_number = findViewById(R.id.tv_verfication_code_number);
         tv_timer = findViewById(R.id.tv_timer);
         tv_resend_otp = findViewById(R.id.tv_resend_otp);
-        tv_resend_otp.setVisibility(View.INVISIBLE);
         ll_resend = findViewById(R.id.ll_resend);
 
         tv_signup.setOnClickListener(v -> {
@@ -432,6 +431,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rl_otp_screen.getLayoutParams();
         rl_otp_screen.setLayoutParams(params);
         rl_otp_verification_screen.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+        setTimer();
         tv_verfication_code_number.setText(getText(R.string.please_type_verf_code) + " " + et_email.getText().toString().trim().toLowerCase());
         rl_otp_verification_screen.setVisibility(View.VISIBLE);
         otpView.setText("");
@@ -450,10 +450,8 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                 return false;
             }
         });
-        alert("We have sent an email to your account with the OTP for verification. Please check your SPAM, if it's not there in your INBOX.");
 
-        //alert("The email we sent may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
-        //alert("We have sent an email to your account with the OTP for verification. It may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
+        alert("Please check your email for verification code. If not found in your Inbox, please check the SPAM folder.");
 
     }
 

@@ -505,21 +505,21 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-        if (!isNetworkConnected()) {
-
-            if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
-
-                Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
-                        NoInternetActivity.class);
-                startActivity(noInternetIntent);
-            } else {
-
-                Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
-                        .LENGTH_SHORT).show();
-            }
-        }
-
-        registerReceiver();
+//        if (!isNetworkConnected()) {
+//
+//            if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
+//
+//                Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
+//                        NoInternetActivity.class);
+//                startActivity(noInternetIntent);
+//            } else {
+//
+//                Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
+//                        .LENGTH_SHORT).show();
+//            }
+//        }
+//
+//        registerReceiver();
 
         super.onResume();
     }
@@ -532,9 +532,9 @@ public class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        if (networkReceiver != null) {
-            unregisterReceiver(networkReceiver);
-        }
+//        if (networkReceiver != null) {
+//            unregisterReceiver(networkReceiver);
+//        }
         super.onPause();
     }
 
@@ -583,7 +583,15 @@ public class BaseActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
 
             if (Objects.equals(intent.getAction(), ConnectivityManager.CONNECTIVITY_ACTION)) {
-                NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                //NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                ConnectivityManager connectivityManager = (ConnectivityManager) HappiApplication.getCurrentContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = null;
+                if(connectivityManager != null && connectivityManager.getActiveNetworkInfo() != null){
+                     networkInfo = connectivityManager.getActiveNetworkInfo();
+                }else{
+                     networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                }
+
                 if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
 
                 } else if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {

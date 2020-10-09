@@ -188,7 +188,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/watch_list_label"
-                        android:textSize="@dimen/dimen_12dp"
+                        android:textSize="12sp"
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:textColor="@color/whiteThree"/>
 
@@ -212,7 +212,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/share_label"
-                        android:textSize="@dimen/dimen_12dp"
+                        android:textSize="12sp"
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:textColor="@color/whiteThree"/>
 
@@ -224,9 +224,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dimen_10dp"
-                android:text="10 Eco Getaways"
                 android:textColor="@color/orange"
-                android:textSize="@dimen/dimen_20dp"
+                android:textSize="20sp"
                 android:visibility="gone"
                 android:layout_below="@+id/ll_icons"/>
             <TextView
@@ -235,9 +234,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tv_show_name"
                 android:layout_marginTop="@dimen/dimen_5dp"
-                android:text="10 x 52 Min HD TV Series"
                 android:textColor="@color/colorWhite"
-                android:textSize="@dimen/dimen_18dp"
+                android:textSize="18sp"
                 android:visibility="gone" />
             <LinearLayout
                 android:id="@+id/ll_producer"
@@ -253,16 +251,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/producer_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_producer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" UHD Lab Production"
                     android:textColor="@color/orange"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -281,16 +278,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/year_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_year"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" 2019"
                     android:textColor="@color/whiteTwo"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -310,16 +306,15 @@
                     android:layout_height="wrap_content"
                     android:text="@string/audio_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/tv_audio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" English"
                     android:textColor="@color/whiteTwo"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -337,7 +332,6 @@
                     android:layout_height="wrap_content"
                     android:text="@string/director_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_15dp"
                     android:visibility="gone" />
 
                 <TextView
@@ -346,7 +340,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/whiteTwo"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -364,7 +358,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/cast_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
                 <TextView
@@ -373,7 +367,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/whiteTwo"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -392,7 +386,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/theme_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
                 <me.gujun.android.taggroup.TagGroup
@@ -405,7 +399,7 @@
                     app:atg_checkedBorderColor="@color/error_tint"
                     app:atg_checkedTextColor="@color/error_tint"
                     app:atg_textColor="@color/error_tint"
-                    app:atg_textSize="@dimen/dimen_12dp"
+                    app:atg_textSize="12sp"
                     app:atg_backgroundColor="@color/dark_black"
                     app:atg_pressedBackgroundColor="@color/dark_black"
                     app:atg_horizontalSpacing="@dimen/dimen_10dp"
@@ -434,8 +428,8 @@
                         android:id="@+id/ll_play_now"
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_7dp"
-                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:layout_marginStart="@dimen/dimen_7dp"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_solid_blue"
                         android:gravity="center_vertical|center_horizontal"
@@ -449,14 +443,14 @@
                             android:text="@string/play_now"
                             android:textAllCaps="true"
                             android:textColor="@color/whiteTwo"
-                            android:textSize="@dimen/dimen_15dp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
                     <LinearLayout
                         android:id="@+id/ll_watch_trailer"
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_5dp"
-                        android:layout_marginRight="@dimen/dimen_7dp"
+                        android:layout_marginStart="@dimen/dimen_5dp"
+                        android:layout_marginEnd="@dimen/dimen_7dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_outline_blue"
                         android:gravity="center_vertical|center_horizontal"
@@ -469,7 +463,7 @@
                             android:layout_height="wrap_content"
                             android:text="@string/watch_trailer"
                             android:textColor="@color/colorPrimaryDark"
-                            android:textSize="@dimen/dimen_15dp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -485,8 +479,8 @@
                         android:id="@+id/ll_play_now_overlap"
                         android:layout_width="@dimen/dimen_0dp"
                         android:layout_height="match_parent"
-                        android:layout_marginLeft="@dimen/dimen_7dp"
-                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:layout_marginStart="@dimen/dimen_7dp"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
                         android:layout_weight="1"
                         android:background="@drawable/bg_solid_blue"
                         android:gravity="center_vertical|center_horizontal"
@@ -505,7 +499,7 @@
                             android:text="@string/play_now"
                             android:textAllCaps="true"
                             android:textColor="@color/whiteTwo"
-                            android:textSize="@dimen/dimen_15dp" />
+                            android:textSize="15sp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -528,7 +522,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/synopsis_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="@dimen/dimen_15dp"
+                    android:textSize="15sp"
                     android:visibility="gone" />
 
                 <LinearLayout
@@ -543,16 +537,16 @@
                         android:layout_height="wrap_content"
                         android:maxLines="7"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/dimen_12dp"
+                        android:textSize="12sp"
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:ellipsize="end"/>
                     <TextView
                         android:id="@+id/tv_more_click"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="More"
+                        android:text="@string/more_label"
                         android:layout_gravity="end"
-                        android:layout_marginRight="@dimen/dimen_5dp"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
                         android:textColor="@color/orange"/>
 
                 </LinearLayout>

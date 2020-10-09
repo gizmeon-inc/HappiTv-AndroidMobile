@@ -158,8 +158,8 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
         rl_otp_verification_screen = findViewById(R.id.rl_otp_verification_screen);
         tv_verfication_code_number = findViewById(R.id.tv_verfication_code_number);
         tv_timer = findViewById(R.id.tv_timer);
+
         tv_resend_otp = findViewById(R.id.tv_resend_otp);
-        tv_resend_otp.setVisibility(View.INVISIBLE);
         ll_resend = findViewById(R.id.ll_resend);
 
         iv_back_to_page.setOnClickListener(new View.OnClickListener() {
@@ -193,6 +193,8 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
 
             }
         });
+
+
         tv_resend_otp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -355,7 +357,49 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
         getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         exitAppDialogClass.show();
     }
+
     private void showOtpVerificationPage() {
+        isOtpScreenOpen = true;
+        btLogin.setEnabled(false);
+        et_email.setEnabled(false);
+        et_password.setEnabled(false);
+
+
+        if ((dialog.isShowing())) {
+            dialog.dismiss();
+        }
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) rl_otp_screen.getLayoutParams();
+        rl_otp_screen.setLayoutParams(params);
+        rl_otp_verification_screen.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+        setTimer();
+        tv_verfication_code_number.setText(getText(R.string.please_type_verf_code) + " " + et_email.getText().toString().trim().toLowerCase());
+        rl_otp_verification_screen.setVisibility(View.VISIBLE);
+        otpView.setText("");
+        otpView.requestFocus();
+        otpView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (event != null && event.getAction() != KeyEvent.ACTION_DOWN) {
+                    return false;
+                } else if (actionId == EditorInfo.IME_ACTION_DONE
+                        || event == null
+                        || event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    //  Log.d("&&&&","enter pressed");
+                    tv_done.performClick();
+                }
+                return false;
+            }
+        });
+
+        alert("Please check your email for verification code. If not found in your Inbox, please check the SPAM folder.");
+
+    }
+
+   /* private void showOtpVerificationPage() {
         isOtpScreenOpen = true;
         btLogin.setEnabled(false);
         et_email.setEnabled(false);
@@ -395,7 +439,7 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
         // alert("The email we sent may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
         //alert("We have sent an email to your account with the OTP for verification. Please check your SPAM, if not found in your INBOX.");
         //alert("We have sent an email to your account with the OTP for verification. It may have landed in your SPAM folder. Please check your SPAM, if not found in your INBOX.");
-    }
+    }*/
     //verify otp sent to mail
     private void verifyOtpFromEmailApiCall(String otp) {
         ApiClient.UsersService usersService = ApiClient.create();

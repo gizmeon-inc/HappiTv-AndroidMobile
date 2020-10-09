@@ -38,7 +38,6 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 public class CategoriesListActivity extends BaseActivity implements CategoryCircleViewAdapter.itemClickListenerForCategory {
-
     TypefacedTextViewRegular tv_title;
     ImageView iv_menu, iv_back, iv_logo_text, iv_search;
     TypefacedTextViewRegular tv_errormsg;

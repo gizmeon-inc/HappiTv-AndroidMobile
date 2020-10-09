@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cv_live_schedule"
@@ -73,6 +74,99 @@
                         android:gravity="center_horizontal|top"
                         android:layout_gravity="center_vertical|center_horizontal"
                         android:layout_weight="0.9"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </FrameLayout>
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>-->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_live_schedule"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/dimen_5dp"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_2dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+    <LinearLayout
+        android:id="@+id/ll_schedule_info_parent"
+        android:layout_width="@dimen/dimen_80dp"
+        android:layout_height="@dimen/dimen_100dp"
+        android:background="@color/btm_nav"
+        android:orientation="vertical">
+        <FrameLayout
+            android:id="@+id/fl_schedule_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="@dimen/dimen_3dp"
+                app:cardElevation="@dimen/dimen_0dp"
+                app:cardMaxElevation="@dimen/dimen_0dp"
+                app:cardUseCompatPadding="true"
+                app:cardPreventCornerOverlap="false"
+                app:cardBackgroundColor="@color/btm_nav">
+                <ImageView
+                    android:id="@+id/iv_schedule_image"
+                    android:layout_width = "match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"/>
+
+            </androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:id="@+id/ll_schedule_details"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="bottom"
+                android:weightSum="4">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dimen_0dp"
+                    android:background="@color/dark_overlay"
+                    android:layout_weight="1.9"
+                    android:orientation="vertical"
+                    android:weightSum="3">
+                    <com.happi.android.customviews.TypefacedTextViewBold
+                        android:id="@+id/tv_schedule_status"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        android:textColor="@color/orange"
+                        android:textSize="@dimen/text_small_medium"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:layout_weight="0.8"/>
+                    <com.happi.android.customviews.TypefacedTextViewBold
+                        android:id="@+id/tv_schedule_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_small_medium"
+                        android:gravity="center_horizontal|center_vertical"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:maxLines="2"
+                        android:ellipsize="end"
+                        android:layout_weight="1.1"/>
+                    <com.happi.android.customviews.TypefacedTextViewRegular
+                        android:id="@+id/tv_schedule_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/dimen_0dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_small_medium"
+                        android:gravity="center_horizontal|top"
+                        android:layout_gravity="center_vertical|center_horizontal"
+                        android:layout_weight="1"/>
 
                 </LinearLayout>
 
