@@ -747,6 +747,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
                     } else {
                         //hideLivePlayerAndSchedule();
+                        pb_live.setVisibility(View.GONE);
                         ll_live_guide.setVisibility(View.GONE);
                         rv_live_schedule_list.setVisibility(View.GONE);
 
@@ -1522,6 +1523,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
             }
 
+            if(userAgent == null || userAgent.isEmpty()){
+                userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+            }
             String deviceId = SharedPreferenceUtility.getAdvertisingId();
 
             JsonObject details = new JsonObject();
@@ -1797,6 +1801,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void liveError() {
+        pb_live.setVisibility(View.GONE);
         //Toast.makeText(this, "Oops!! Can't play video. Please try again.", Toast.LENGTH_SHORT).show();
 
         //hideLivePlayerAndSchedule();
