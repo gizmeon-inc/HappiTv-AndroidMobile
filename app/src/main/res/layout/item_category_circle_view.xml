@@ -22,11 +22,10 @@
         android:layout_width="@dimen/dimen_100dp"
         android:layout_height="@dimen/dimen_100dp"
         android:ellipsize="end"
-        android:lines="1"
         android:gravity="center"
         android:textColor="@color/white"
         android:text=""
-        android:textSize="@dimen/text_regular_medium1"
+        android:textSize="@dimen/text_regular"
         android:paddingStart="@dimen/dimen_2dp"
         android:paddingEnd="@dimen/dimen_2dp"
         android:layout_gravity="center_vertical"/>

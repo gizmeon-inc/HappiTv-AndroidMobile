@@ -834,7 +834,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             if (showDetails.getLogo() != null && !showDetails.getLogo().isEmpty()) {
                 rl_image.setVisibility(View.VISIBLE);
                 iv_show_image.setVisibility(View.VISIBLE);
-                Glide.with(getApplicationContext())
+                Glide.with(this)
                         .load(ConstantUtils.RELEASE_THUMBNAIL + showDetails.getLogo())
                         .into(iv_show_image);
             } else {

@@ -1,59 +1,78 @@
 package com.happi.android;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.core.widget.NestedScrollView;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.content.Context;
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 
-import com.ethanhua.skeleton.Skeleton;
-import com.ethanhua.skeleton.SkeletonScreen;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.happi.android.adapters.CategoriesHomeListAdapter;
 import com.happi.android.adapters.PartnerVideoListAdapter;
-import com.happi.android.adapters.SearchResultsAdapter;
-import com.happi.android.adapters.ShowList_adapter;
 import com.happi.android.common.ActivityChooser;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
-import com.happi.android.customviews.ItemDecorationAlbumColumns;
 import com.happi.android.customviews.TypefacedTextViewRegular;
+import com.happi.android.models.CategoryWiseShowsModel;
 import com.happi.android.models.PartnerVideoListResponseModel;
-import com.happi.android.models.ShowModel;
-import com.happi.android.recyclerview.AnimationItem;
 import com.happi.android.recyclerview.GridRecyclerView;
+import com.happi.android.utils.AppUtils;
 import com.happi.android.utils.ConstantUtils;
 import com.happi.android.webservice.ApiClient;
 
 import java.util.List;
 
+import at.blogc.android.views.ExpandableTextView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class PartnerVideosListingActivity extends BaseActivity implements PartnerVideoListAdapter.PartnerVideoItemClickListener {
+import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
+import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
+import static com.bumptech.glide.request.RequestOptions.overrideOf;
+import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
-    TypefacedTextViewRegular tv_title;
-    ImageView iv_menu;
-    ImageView iv_back;
-    ImageView iv_logo_text;
-    ImageView iv_search;
+public class PartnerVideosListingActivity extends BaseActivity {
 
-    TypefacedTextViewRegular tv_errormsg;
-    ImageView iv_errorimg;
-    GridRecyclerView rv_video_list;
-    PartnerVideoListAdapter partnerVideoListAdapter;
-    private AnimationItem mSelectedItem;
+    private TypefacedTextViewRegular tv_title;
+    private ImageView iv_menu;
+    private ImageView iv_back;
+    private ImageView iv_logo_text;
+    private ImageView iv_search;
+
     private CompositeDisposable compositeDisposable;
-    SkeletonScreen loadingVideos;
+
+
+    private LinearLayout ll_error;
+    private TypefacedTextViewRegular tv_errormsg;
+    private TypefacedTextViewRegular tv_error_video_list;
+    private LinearLayout ll_image;
+    private ImageView iv_partner_image;
+    private LinearLayout ll_description;
+    private ExpandableTextView ex_description;
+    private TextView tv_more;
+    private NestedScrollView sv_scrollview_partner;
+    private GridRecyclerView rv_partner_video_list;
+
+    private ProgressDialog progressDialog;
+
+    private int width = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +88,20 @@ public class PartnerVideosListingActivity extends BaseActivity implements Partne
             int flags = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
-        setContentView(R.layout.activity_category_view);
+        setContentView(R.layout.activity_partner_videos_listing);
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
 
-        AnimationItem[] mAnimationItems = getAnimationItems();
-        mSelectedItem = mAnimationItems[0];
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        width = displayMetrics.widthPixels;
+
+        int modifiedWidth = (int) ((21.44 * width)/ 100);
+
+        float widthImage = AppUtils.convertDpToPx(this,modifiedWidth);
+        float heightImage = (float) (widthImage * 1.34);
+
 
         tv_title = findViewById(R.id.tv_title);
         iv_menu = findViewById(R.id.iv_menu);
@@ -90,13 +116,41 @@ public class PartnerVideosListingActivity extends BaseActivity implements Partne
         iv_logo_text.setVisibility(View.GONE);
         iv_search.setVisibility(View.GONE);
 
-        rv_video_list = findViewById(R.id.rv_video_list);
-        iv_errorimg = findViewById(R.id.iv_errorimg);
+
+        ll_error = findViewById(R.id.ll_error);
         tv_errormsg = findViewById(R.id.tv_errormsg);
+        tv_error_video_list = findViewById(R.id.tv_error_video_list);
+        ll_error.setVisibility(View.GONE);
+        tv_error_video_list.setVisibility(View.GONE);
+
+        ll_image = findViewById(R.id.ll_image);
+        iv_partner_image = findViewById(R.id.iv_partner_image);
+
+       /* RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams((int)widthImage, (int)heightImage);
+        rl.setMargins(0,5,0,0);
+        rl.addRule(RelativeLayout.CENTER_HORIZONTAL, 0);
+        ll_image.setLayoutParams(rl);
+        ll_image.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.TOP);
+
+        int w = ll_image.getWidth();
+        int h =  ll_image.getHeight();*/
+
+        LinearLayout.LayoutParams rl = new LinearLayout.LayoutParams((int)widthImage, (int)heightImage);
+        rl.gravity = Gravity.CENTER_HORIZONTAL;
+        iv_partner_image.setLayoutParams(rl);
+
+        ll_description = findViewById(R.id.ll_description);
+        ex_description = findViewById(R.id.ex_description);
+        tv_more = findViewById(R.id.tv_more);
+        tv_more.setVisibility(View.GONE);
+        sv_scrollview_partner = findViewById(R.id.sv_scrollview_partner);
+        rv_partner_video_list = findViewById(R.id.rv_partner_video_list);
 
         compositeDisposable = new CompositeDisposable();
 
-        setupRecyclerview();
+        progressDialog = new ProgressDialog(this, R.style.MyTheme);
+        progressDialog.setCancelable(false);
+
 
         String partnerId = "";
         String partner = "";
@@ -134,6 +188,7 @@ public class PartnerVideosListingActivity extends BaseActivity implements Partne
     }
 
     private void getVideosByPartner(String id){
+        progressDialog.show();
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable showDisposable = usersService.getPartnerVideos(HappiApplication.getAppToken(),
@@ -142,11 +197,13 @@ public class PartnerVideosListingActivity extends BaseActivity implements Partne
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(partnerVideoListResponseModel -> {
-                    if(partnerVideoListResponseModel.getData().size() != 0){
-                        updateShowList(partnerVideoListResponseModel.getData());
+
+                    if(partnerVideoListResponseModel.getData() != null){
+                        setUpPartnerDetails(partnerVideoListResponseModel.getData());
                     }else{
                         displayErrorLayout(getString(R.string.no_results_found));
                     }
+
 
 
                 }, new Consumer<Throwable>() {
@@ -161,67 +218,109 @@ public class PartnerVideosListingActivity extends BaseActivity implements Partne
     }
 
 
-    private void updateShowList(List<PartnerVideoListResponseModel.PartnerVideoModel> partnerVideoModels) {
-        partnerVideoListAdapter.clearAll();
-        partnerVideoListAdapter.addAll(partnerVideoModels);
-        loadingVideos.hide();
-        iv_errorimg.setVisibility(View.GONE);
-        tv_errormsg.setVisibility(View.GONE);
-        rv_video_list.setVisibility(View.VISIBLE);
-        partnerVideoListAdapter.notifyDataSetChanged();
-        runLayoutAnimation(rv_video_list, mSelectedItem);
-        if (partnerVideoListAdapter.isEmpty()) {
-            rv_video_list.setVisibility(View.GONE);
-            displayErrorLayout(getString(R.string.no_results_found));
+
+
+    private void hideProgressDialog(){
+        if(progressDialog.isShowing()){
+            progressDialog.dismiss();
         }
     }
-
     private void displayErrorLayout(String errorMessage) {
-        rv_video_list.setVisibility(View.GONE);
-        loadingVideos.hide();
+       ll_error.setVisibility(View.VISIBLE);
+       tv_errormsg.setText(errorMessage);
 
-        iv_errorimg.setVisibility(View.VISIBLE);
-        tv_errormsg.setVisibility(View.VISIBLE);
-        tv_errormsg.setText(errorMessage);
+       ll_image.setVisibility(View.GONE);
+       sv_scrollview_partner.setVisibility(View.GONE);
     }
 
-    private void setupRecyclerview() {
+    private void setUpPartnerDetails(PartnerVideoListResponseModel.PartnerDataModel partnerDataModel) {
+        ll_error.setVisibility(View.GONE);
+        ll_image.setVisibility(View.VISIBLE);
+        sv_scrollview_partner.setVisibility(View.VISIBLE);
 
-        rv_video_list.setLayoutManager(new GridLayoutManager(this, 3));
-        rv_video_list.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
-        partnerVideoListAdapter = new PartnerVideoListAdapter(this,
-                this);
-        rv_video_list.setAdapter(partnerVideoListAdapter);
+        if (partnerDataModel != null) {
 
-        loadingVideos = Skeleton.bind(rv_video_list)
-                .adapter(partnerVideoListAdapter)
-                .load(R.layout.loading_videos_vertical)
-                .color(R.color.colorLine)
-                .shimmer(true)
-                .angle(30)
-                .count(30)
-                .duration(1000)
-                .frozen(false)
-                .show();
+            if (partnerDataModel.getPartner_image() != null && !partnerDataModel.getPartner_image().isEmpty()) {
+
+                Glide.with(this)
+                        .load(ConstantUtils.THUMBNAIL_URL + partnerDataModel.getPartner_image())
+                        .error(Glide.with(this)
+                                .load(ContextCompat.getDrawable(this, R.drawable.ic_placeholder)))
+                        .apply(placeholderOf(R.drawable.ic_placeholder))
+                        .into(iv_partner_image);
+
+                iv_partner_image.setVisibility(View.VISIBLE);
+            } else {
+                iv_partner_image.setVisibility(View.GONE);
+            }
+
+            sv_scrollview_partner.setScrollY(0);
+            sv_scrollview_partner.setScrollX(0);
+
+            if (partnerDataModel.getPartner_description() != null && !partnerDataModel.getPartner_description().isEmpty()) {
+                String description = partnerDataModel.getPartner_description();
+                if (description.contains("\r\n")) {
+                    description = description.replace("\r\n", " ");
+                }
+                tv_more.setVisibility(View.VISIBLE);
+                ll_description.setVisibility(View.VISIBLE);
+                ex_description.setVisibility(View.VISIBLE);
+
+                //for truncating description
+                ex_description.setText(description);
+                // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
+                ex_description.setAnimationDuration(750L);
+
+                // set interpolators for both expanding and collapsing animations
+                ex_description.setInterpolator(new OvershootInterpolator());
+
+               // toggle the ExpandableTextView
+                tv_more.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        // buttonToggle.setText(expandableTextView.isExpanded() ? R.string.expand : R.string.collapse);
+                        ex_description.toggle();
+                        tv_more.setVisibility(View.GONE);
+                    }
+                });
+
+                // truncateDescription(showDetails.getSynopsis());
+
+            } else {
+
+                ll_description.setVisibility(View.GONE);
+            }
+
+            if(partnerDataModel.getCategories()!= null && partnerDataModel.getCategories().size() > 0){
+                sv_scrollview_partner.setVisibility(View.VISIBLE);
+                loadPartnerVideoList(partnerDataModel.getCategories());
+
+            }else{
+                rv_partner_video_list.setVisibility(View.GONE);
+                tv_error_video_list.setVisibility(View.VISIBLE);
+            }
+
+        }
+
+        hideProgressDialog();
+
+    }
+
+    private void loadPartnerVideoList(List<CategoryWiseShowsModel> categoryWiseShowsModelList) {
+        tv_error_video_list.setVisibility(View.GONE);
+        rv_partner_video_list.setVisibility(View.VISIBLE);
+
+        rv_partner_video_list.setHasFixedSize(true);
+        PartnerVideoListAdapter adapter = new PartnerVideoListAdapter(categoryWiseShowsModelList, this, width);
+        rv_partner_video_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        rv_partner_video_list.setAdapter(adapter);
+
     }
 
 
 
-    private void runLayoutAnimation(final RecyclerView recyclerView, final AnimationItem item) {
-        final Context context = recyclerView.getContext();
-        final LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(context, item.getResourceId());
-        recyclerView.setLayoutAnimation(controller);
-        recyclerView.getAdapter().notifyDataSetChanged();
-        recyclerView.scheduleLayoutAnimation();
-    }
 
-    private AnimationItem[] getAnimationItems() {
-        return new AnimationItem[]{
-                new AnimationItem("Slide from bottom", R.anim.grid_layout_animation_from_bottom),
-                new AnimationItem("Scale", R.anim.grid_layout_animation_scale),
-                new AnimationItem("Scale random", R.anim.grid_layout_animation_scale_random)
-        };
-    }
+
 
     @Override
     protected void onDestroy() {
@@ -252,10 +351,4 @@ public class PartnerVideosListingActivity extends BaseActivity implements Partne
         }
     }
 
-
-    @Override
-    public void onPartnerVideoItemClicked(int adapterPosition) {
-        SharedPreferenceUtility.setShowId(partnerVideoListAdapter.getItem(adapterPosition).getShow_id());
-        ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY,partnerVideoListAdapter.getItem(adapterPosition).getShow_id());
-    }
 }

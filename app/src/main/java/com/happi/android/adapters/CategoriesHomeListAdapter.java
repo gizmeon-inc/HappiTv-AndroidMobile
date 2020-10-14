@@ -110,8 +110,9 @@ public class CategoriesHomeListAdapter extends RecyclerView.Adapter<CategoriesHo
             ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY,
                     categoriesHomeListVideoModelList.get(position).getCategoryId() + ";" +
                             categoriesHomeListVideoModelList.get(position).getCategoryName());
-            HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R
-                    .anim.fade_out);
+//            HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R
+//                    .anim.fade_out);
+            HappiApplication.getCurrentActivity().overridePendingTransition(0, 0);
         });
 
     }

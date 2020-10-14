@@ -12,6 +12,7 @@
     <string name="error_message_loading_users">There seems to have some error loading.</string>
     <string name="server_error">There seems to have some trouble reaching server.</string>
     <string name="no_results_found">No results available.</string>
+    <string name="no_partner_shows">No videos are available for this partner.</string>
     <string name="server_error_please_try_again">Server is currently busy. Please try after sometime.</string>
     <string name="selection_disabled">Disabled</string>
     <string name="selection_default">Default</string>

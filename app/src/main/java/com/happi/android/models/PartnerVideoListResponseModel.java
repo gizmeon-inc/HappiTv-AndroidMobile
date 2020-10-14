@@ -10,50 +10,48 @@ public class PartnerVideoListResponseModel implements Serializable {
 
     @SerializedName("data")
     @Expose
-    private List<PartnerVideoModel> data;
+    private PartnerDataModel data;
 
-    public List<PartnerVideoModel> getData() {
+    public PartnerDataModel getData() {
         return data;
     }
 
-    public void setData(List<PartnerVideoModel> data) {
-        this.data = data;
-    }
+    public  static class PartnerDataModel implements Serializable{
 
-    public  static class PartnerVideoModel implements Serializable{
-
-        @SerializedName("show_id")
+        @SerializedName("partner_id")
         @Expose
-        private String show_id;
-        @SerializedName("show_name")
+        private String partner_id;
+        @SerializedName("partner_name")
         @Expose
-        private String show_name;
-        @SerializedName("logo")
+        private String partner_name;
+        @SerializedName("partner_description")
         @Expose
-        private String logo;
+        private String partner_description;
+        @SerializedName("partner_image")
+        @Expose
+        private String partner_image;
+        @SerializedName("categories")
+        @Expose
+        private List<CategoryWiseShowsModel> categories;
 
-        public String getShow_id() {
-            return show_id;
+        public String getPartner_id() {
+            return partner_id;
         }
 
-        public void setShow_id(String show_id) {
-            this.show_id = show_id;
+        public String getPartner_name() {
+            return partner_name;
         }
 
-        public String getShow_name() {
-            return show_name;
+        public String getPartner_description() {
+            return partner_description;
         }
 
-        public void setShow_name(String show_name) {
-            this.show_name = show_name;
+        public String getPartner_image() {
+            return partner_image;
         }
 
-        public String getLogo() {
-            return logo;
-        }
-
-        public void setLogo(String logo) {
-            this.logo = logo;
+        public List<CategoryWiseShowsModel> getCategories() {
+            return categories;
         }
     }
 }

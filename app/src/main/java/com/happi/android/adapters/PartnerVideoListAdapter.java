@@ -1,113 +1,119 @@
 package com.happi.android.adapters;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ethanhua.skeleton.Skeleton;
+import com.ethanhua.skeleton.SkeletonScreen;
+import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 import com.happi.android.R;
+import com.happi.android.common.ActivityChooser;
+import com.happi.android.common.HappiApplication;
 import com.happi.android.customviews.TypefacedTextViewSemiBold;
-import com.happi.android.models.PartnerVideoListResponseModel;
+import com.happi.android.models.CategoryWiseShowsModel;
+import com.happi.android.models.ShowModel;
 import com.happi.android.utils.ConstantUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
-import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
-import static com.bumptech.glide.request.RequestOptions.overrideOf;
-import static com.bumptech.glide.request.RequestOptions.placeholderOf;
+public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoListAdapter
+        .ItemRowHolder> implements ShowList_adapter.nestedItemClickListener {
 
-public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoListAdapter.MyViewHolder>  {
-
-    private List<PartnerVideoListResponseModel.PartnerVideoModel> partnerVideoModelList;
+    private List<CategoryWiseShowsModel> categoryWiseShowsModels;
     private Context context;
-    private PartnerVideoItemClickListener partnerVideoItemClickListener;
+    private RecyclerView.RecycledViewPool recycledViewPool;
+    private int width = 0;
 
-    public PartnerVideoListAdapter(Context context, PartnerVideoItemClickListener itemClickListener) {
 
-        partnerVideoModelList = new ArrayList<>();
-        this.partnerVideoItemClickListener = itemClickListener;
+    public PartnerVideoListAdapter(List<CategoryWiseShowsModel> categoryWiseShowsModels,
+                                   Context context, int width) {
+        this.categoryWiseShowsModels = categoryWiseShowsModels;
         this.context = context;
+        recycledViewPool = new RecyclerView.RecycledViewPool();
+        this.width = width;
+
     }
 
-
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int position) {
+    public PartnerVideoListAdapter.ItemRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_videos_vertical, parent, false);
-            return new MyViewHolder(view);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_vertical_list, null);
+        PartnerVideoListAdapter.ItemRowHolder rowHolder = new ItemRowHolder(v);
+        return rowHolder;
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull PartnerVideoListAdapter.ItemRowHolder holder, int position) {
 
-        holder.tv_video_title.setText("");
-        Glide.with(context)
-                .load(ConstantUtils.THUMBNAIL_URL + partnerVideoModelList.get(position).getLogo().trim())
-                .error(Glide.with(context)
-                        .load(ContextCompat.getDrawable(context, R.drawable.ic_placeholder)))
-                .apply(placeholderOf(R.drawable.ic_placeholder))
-                .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
-                .apply(fitCenterTransform())
-                .apply(overrideOf(400,600))
-                //   .apply(centerCropTransform())
-                .into(holder.iv_thumbnail);
+        final String sectionTitle = categoryWiseShowsModels.get(position).getCategory_name();
+        List<ShowModel> videoModelList = new ArrayList<>();
+
+        if (categoryWiseShowsModels.get(position).getVideos().size() >= 10) {
+            videoModelList = categoryWiseShowsModels.get(position).getVideos().subList(0,
+                    10);
+        } else {
+            videoModelList = categoryWiseShowsModels.get(position).getVideos();
+        }
+        holder.tv_title.setText(sectionTitle);
+
+        holder.rv_video_grid.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager
+                .HORIZONTAL, false));
+        VideoList_adapter videoList_adapter = new VideoList_adapter(context, new VideoList_adapter.nestedItemClickListener() {
+
+            @Override
+            public void onNestedItemClicked(int nestedPosition, int parentPosition) {
+
+                PartnerVideoListAdapter.this.onNestedItemClicked(nestedPosition, parentPosition);
+            }
+        }, position, false, true, width);
+        /*holder.rv_video_grid.setAdapter(videoList_adapter);*/
+
+        SkeletonScreen loadingVideos = Skeleton.bind(holder.rv_video_grid)
+                .adapter(videoList_adapter)
+                .load(R.layout.loading_videos_horizontal)
+                .color(R.color.colorLine)
+                .shimmer(true)
+                .angle(30)
+                .count(30)
+                .duration(1000)
+                .frozen(false)
+                .show();
+
+        videoList_adapter.clearAll();
+        videoList_adapter.addAll(videoModelList);
+        //loadingVideos.hide();
+        SnapHelper snapHelper;
+        snapHelper = new GravitySnapHelper(Gravity.START);
+        snapHelper.attachToRecyclerView(holder.rv_video_grid);
+        holder.rv_video_grid.setAdapter(videoList_adapter);
+        holder.rv_video_grid.setRecycledViewPool(recycledViewPool);
+
+        holder.ll_title.setOnClickListener(view -> {
+
+            ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY,
+                    categoryWiseShowsModels.get(position).getCategory_id() + ";" +
+                            categoryWiseShowsModels.get(position).getCategory_name());
+            HappiApplication.getCurrentActivity().overridePendingTransition(0, 0);
+        });
 
     }
 
     @Override
     public int getItemCount() {
 
-        return partnerVideoModelList.size();
-    }
-
-    public void updateList(List<PartnerVideoListResponseModel.PartnerVideoModel> list) {
-        partnerVideoModelList = list;
-        notifyDataSetChanged();
-    }
-
-    public void addAll(List<PartnerVideoListResponseModel.PartnerVideoModel> moveResults) {
-        for (PartnerVideoListResponseModel.PartnerVideoModel result : moveResults) {
-            add(result);
-        }
-    }
-
-    public void add(PartnerVideoListResponseModel.PartnerVideoModel r) {
-        partnerVideoModelList.add(r);
-        notifyItemInserted(partnerVideoModelList.size() - 1);
-    }
-
-    public void clear() {
-        while (getItemCount() > 0) {
-            remove(getItem(0));
-        }
-    }
-
-    public PartnerVideoListResponseModel.PartnerVideoModel getItem(int position) {
-        return partnerVideoModelList.get(position);
-    }
-
-    public void remove(PartnerVideoListResponseModel.PartnerVideoModel model) {
-        int position = partnerVideoModelList.indexOf(model);
-        if (position > -1) {
-            partnerVideoModelList.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
-    public void clearAll() {
-        partnerVideoModelList.clear();
-        notifyDataSetChanged();
+        return (null != categoryWiseShowsModels ? categoryWiseShowsModels.size
+                () : 0);
     }
 
     public boolean isEmpty() {
@@ -115,41 +121,33 @@ public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoLi
     }
 
 
+    public static class ItemRowHolder extends RecyclerView.ViewHolder {
+        LinearLayout ll_title;
+        TypefacedTextViewSemiBold tv_title;
+        RecyclerView rv_video_grid;
 
+        public ItemRowHolder(View itemView) {
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        ImageView iv_thumbnail;
-        ImageView iv_premium_tag;
-        TypefacedTextViewSemiBold tv_video_title;
-        FrameLayout ll_main_layout;
-        CardView cv_show_parent;
-
-        public MyViewHolder(View itemView) {
             super(itemView);
-
-            this.iv_thumbnail = itemView.findViewById(R.id.iv_thumbnail);
-            this.tv_video_title = itemView.findViewById(R.id.tv_video_title);
-            this.iv_premium_tag = itemView.findViewById(R.id.iv_premium_tag);
-            this.ll_main_layout = itemView.findViewById(R.id.ll_main_layout);
-            this.cv_show_parent = itemView.findViewById(R.id.cv_show_parent);
-
-
-            tv_video_title.setSelected(true);
-
-            itemView.setOnClickListener(v -> {
-                partnerVideoItemClickListener.onPartnerVideoItemClicked(getAdapterPosition());
-
-            });
+            this.ll_title = itemView.findViewById(R.id.ll_title);
+            this.tv_title = itemView.findViewById(R.id.tv_title);
+            this.rv_video_grid = itemView.findViewById(R.id.rv_video_grid);
         }
     }
 
-    public interface PartnerVideoItemClickListener {
+    @Override
+    public void onNestedItemClicked(int nestedPosition, int parentPosition) {
 
-        void onPartnerVideoItemClicked(int adapterPosition);
 
+        ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY,
+                categoryWiseShowsModels.get(parentPosition).getVideos().get
+                        (nestedPosition).getShow_id());
+        // SharedPreferenceUtility.setShowId( categoriesHomeListVideoModelList.get(parentPosition).getVideoModelList().get(nestedPosition).getShow_id());
+
+
+        HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R.anim
+                .fade_out);
     }
-
 
 }
 

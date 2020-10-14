@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dark_black">
+
+    <RelativeLayout
+        android:id="@+id/rl_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+
+        <include layout="@layout/content_toolbar" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_toolbar"
+        android:layout_marginBottom="?attr/actionBarSize">
+
+        <LinearLayout
+            android:id="@+id/ll_error"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/iv_errorimg"
+                android:layout_width="@dimen/dimen_75dp"
+                android:layout_height="@dimen/dimen_75dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
+                android:src="@drawable/no_channels"
+                android:tint="@color/error_tint" />
+
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_errormsg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dimen_5dp"
+                android:padding="@dimen/dimen_10dp"
+                android:textColor="@color/error_tint"
+                android:text="@string/error_message_loading_users"/>
+        </LinearLayout>
+
+       <LinearLayout
+           android:id="@+id/ll_image"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:gravity="center_horizontal">
+           <ImageView
+               android:id="@+id/iv_partner_image"
+               android:layout_height="@dimen/dimen_150dp"
+               android:layout_width="@dimen/dimen_200dp"
+               android:scaleType="fitXY"/>
+       </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/sv_scrollview_partner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/ll_image"
+            android:overScrollMode="never"
+            android:layout_marginTop="@dimen/dimen_10dp">
+            <RelativeLayout
+                android:id="@+id/rl_partner_data"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/ll_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingStart="@dimen/dimen_10dp"
+                    android:paddingEnd="@dimen/dimen_10dp">
+
+                    <at.blogc.android.views.ExpandableTextView
+                        android:id="@+id/ex_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:ellipsize="end"
+                        android:maxLines="4"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/tv_more"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_marginEnd="@dimen/dimen_5dp"
+                        android:text="@string/more_label"
+                        android:textColor="@color/orange" />
+
+                </LinearLayout>
+
+
+                    <RelativeLayout
+                        android:id="@+id/rl_list_parent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/ll_description"
+                        android:layout_marginTop="@dimen/dimen_10dp">
+
+                        <com.happi.android.recyclerview.GridRecyclerView
+                            android:id="@+id/rv_partner_video_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/dimen_7dp"
+                            android:nestedScrollingEnabled="false"
+                            android:paddingStart="@dimen/dimen_10dp"
+                            android:paddingEnd="@dimen/dimen_10dp"/>
+                        <com.happi.android.customviews.TypefacedTextViewRegular
+                            android:id="@+id/tv_error_video_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/dimen_5dp"
+                            android:padding="@dimen/dimen_20dp"
+                            android:textColor="@color/error_tint"
+                            android:layout_centerInParent="true"
+                            android:text="@string/no_partner_shows"
+                            android:visibility="gone"/>
+                    </RelativeLayout>
+
+
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rl_btm_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_alignParentBottom="true">
+
+        <include layout="@layout/btm_navigation_view" />
+    </RelativeLayout>
+</RelativeLayout>
