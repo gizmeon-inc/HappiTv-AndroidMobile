@@ -512,7 +512,6 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
                                     goToHomePage();
                                 }*/
 
-                            HappiApplication.setIsNewLoginFromPremiumPage(false);
                             if (SharedPreferenceUtility.getGuest()) {
                                 goToHomePage();
                             } else {

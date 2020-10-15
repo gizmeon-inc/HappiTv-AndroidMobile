@@ -62,8 +62,8 @@
             android:id="@+id/sv_scrollview_partner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/ll_image"
             android:overScrollMode="never"
+            android:layout_below="@+id/ll_image"
             android:layout_marginTop="@dimen/dimen_10dp">
             <RelativeLayout
                 android:id="@+id/rl_partner_data"

@@ -18,9 +18,11 @@ import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
 import com.happi.android.R;
 import com.happi.android.common.ActivityChooser;
 import com.happi.android.common.HappiApplication;
+import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.TypefacedTextViewSemiBold;
-import com.happi.android.models.CategoryWiseShowsModel;
+import com.happi.android.models.PartnerShowsModel;
 import com.happi.android.models.ShowModel;
+import com.happi.android.models.VideoModelUpdated;
 import com.happi.android.utils.ConstantUtils;
 
 import java.util.ArrayList;
@@ -29,15 +31,15 @@ import java.util.List;
 public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoListAdapter
         .ItemRowHolder> implements ShowList_adapter.nestedItemClickListener {
 
-    private List<CategoryWiseShowsModel> categoryWiseShowsModels;
+    private List<PartnerShowsModel> partnerShowsModels;
     private Context context;
     private RecyclerView.RecycledViewPool recycledViewPool;
     private int width = 0;
 
 
-    public PartnerVideoListAdapter(List<CategoryWiseShowsModel> categoryWiseShowsModels,
+    public PartnerVideoListAdapter(List<PartnerShowsModel> partnerShowsModels,
                                    Context context, int width) {
-        this.categoryWiseShowsModels = categoryWiseShowsModels;
+        this.partnerShowsModels = partnerShowsModels;
         this.context = context;
         recycledViewPool = new RecyclerView.RecycledViewPool();
         this.width = width;
@@ -48,7 +50,7 @@ public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoLi
     @Override
     public PartnerVideoListAdapter.ItemRowHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_vertical_list, null);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_partner_video_list, null);
         PartnerVideoListAdapter.ItemRowHolder rowHolder = new ItemRowHolder(v);
         return rowHolder;
     }
@@ -56,27 +58,28 @@ public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoLi
     @Override
     public void onBindViewHolder(@NonNull PartnerVideoListAdapter.ItemRowHolder holder, int position) {
 
-        final String sectionTitle = categoryWiseShowsModels.get(position).getCategory_name();
-        List<ShowModel> videoModelList = new ArrayList<>();
+        final String sectionTitle = partnerShowsModels.get(position).getShow_name();
+        List<VideoModelUpdated> videoModelList = new ArrayList<>();
 
-        if (categoryWiseShowsModels.get(position).getVideos().size() >= 10) {
-            videoModelList = categoryWiseShowsModels.get(position).getVideos().subList(0,
+        if (partnerShowsModels.get(position).getVideoModelUpdatedList().size() >= 10) {
+            videoModelList = partnerShowsModels.get(position).getVideoModelUpdatedList().subList(0,
                     10);
         } else {
-            videoModelList = categoryWiseShowsModels.get(position).getVideos();
+            videoModelList = partnerShowsModels.get(position).getVideoModelUpdatedList();
         }
         holder.tv_title.setText(sectionTitle);
 
         holder.rv_video_grid.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager
                 .HORIZONTAL, false));
-        VideoList_adapter videoList_adapter = new VideoList_adapter(context, new VideoList_adapter.nestedItemClickListener() {
+
+        ShowVideoListAdapter videoList_adapter = new ShowVideoListAdapter(context, new ShowVideoListAdapter.nestedItemClickListener() {
 
             @Override
             public void onNestedItemClicked(int nestedPosition, int parentPosition) {
 
                 PartnerVideoListAdapter.this.onNestedItemClicked(nestedPosition, parentPosition);
             }
-        }, position, false, true, width);
+        }, position,  true, width);
         /*holder.rv_video_grid.setAdapter(videoList_adapter);*/
 
         SkeletonScreen loadingVideos = Skeleton.bind(holder.rv_video_grid)
@@ -101,9 +104,9 @@ public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoLi
 
         holder.ll_title.setOnClickListener(view -> {
 
-            ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY,
-                    categoryWiseShowsModels.get(position).getCategory_id() + ";" +
-                            categoryWiseShowsModels.get(position).getCategory_name());
+            SharedPreferenceUtility.setShowId(partnerShowsModels.get(position).getShow_id());
+            ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, partnerShowsModels.get(position).getShow_id());
+
             HappiApplication.getCurrentActivity().overridePendingTransition(0, 0);
         });
 
@@ -112,7 +115,7 @@ public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoLi
     @Override
     public int getItemCount() {
 
-        return (null != categoryWiseShowsModels ? categoryWiseShowsModels.size
+        return (null != partnerShowsModels ? partnerShowsModels.size
                 () : 0);
     }
 
@@ -137,16 +140,12 @@ public class PartnerVideoListAdapter extends RecyclerView.Adapter<PartnerVideoLi
 
     @Override
     public void onNestedItemClicked(int nestedPosition, int parentPosition) {
+        SharedPreferenceUtility.setVideoId(partnerShowsModels.get(parentPosition).getVideoModelUpdatedList().get
+                (nestedPosition).getVideo_id());
+        ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, partnerShowsModels.get(parentPosition).getVideoModelUpdatedList().get
+                (nestedPosition).getVideo_id());
 
-
-        ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY,
-                categoryWiseShowsModels.get(parentPosition).getVideos().get
-                        (nestedPosition).getShow_id());
-        // SharedPreferenceUtility.setShowId( categoriesHomeListVideoModelList.get(parentPosition).getVideoModelList().get(nestedPosition).getShow_id());
-
-
-        HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R.anim
-                .fade_out);
+        HappiApplication.getCurrentActivity().overridePendingTransition(0,0);
     }
 
 }

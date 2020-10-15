@@ -581,8 +581,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             }
         });
 
-        timerSChedule = new Timer();
-
     }
 
     private void showProgressDialog() {

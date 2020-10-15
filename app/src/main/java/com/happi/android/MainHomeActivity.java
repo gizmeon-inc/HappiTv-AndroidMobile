@@ -842,20 +842,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
     private void updateLiveScheduleList(List<LiveScheduleResponse.LiveScheduleModel> liveScheduleModelList) {
 
-        /*liveScheduleHomeListAdapter.clearAll();
-        liveScheduleHomeListAdapter.addAll(liveScheduleModelList);
-        loadingLiveSchedule.hide();
-        SnapHelper snapHelper;
-        snapHelper = new GravitySnapHelper(Gravity.START);
-        snapHelper.attachToRecyclerView(rv_live_schedule_list);
-        liveScheduleHomeListAdapter.notifyDataSetChanged();
-        runLayoutAnimation(rv_live_schedule_list, mSelectedItem);
-        if (liveScheduleHomeListAdapter.isEmpty()) {
-
-            ll_live_guide.setVisibility(View.GONE);
-            rv_live_schedule_list.setVisibility(View.GONE);
-        } */
-
         liveScheduleInfoAdapter.clearAll();
         liveScheduleInfoAdapter.addAll(liveScheduleModelList);
         loadingLiveSchedule.hide();
@@ -1379,7 +1365,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onShowsItemClicked(int adapterPosition) {
         releasePlayer();
-        HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(freeShowList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, freeShowList_adapter.getItem(adapterPosition).getShow_id());
 
@@ -1389,7 +1374,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onItemClicked(int adapterPosition) {
         releasePlayer();
-        HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(videoList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, videoList_adapter.getItem(adapterPosition).getShow_id());
 
@@ -1400,9 +1384,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onCategoryItemClicked(int adapterPosition) {
         releasePlayer();
-        HappiApplication.setRedirect("");
-        HappiApplication.setCategoryId(categoryList_adapter.getItem(adapterPosition).getCategoryid()
-                + ";" + categoryList_adapter.getItem(adapterPosition).getCategory());
         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, categoryList_adapter
                 .getItem(adapterPosition).getCategoryid() + ";" + categoryList_adapter.getItem
                 (adapterPosition).getCategory());
@@ -1686,9 +1667,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onCategoryItemClickedForCircleView(int adapterPosition) {
         releasePlayer();
-        HappiApplication.setRedirect("");
-        HappiApplication.setCategoryId(circleViewAdapter.getItem(adapterPosition).getCategoryid()
-                + ";" + circleViewAdapter.getItem(adapterPosition).getCategory());
+
         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, circleViewAdapter
                 .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
                 (adapterPosition).getCategory());
@@ -1735,7 +1714,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onPartnerItemClicked(int adapterPosition) {
         releasePlayer();
-        HappiApplication.setRedirect("");
         String partnerDetails = partnersListingAdapter.getItem(adapterPosition).getPartner_id() + ";" + partnersListingAdapter.getItem
                 (adapterPosition).getName();
         SharedPreferenceUtility.setPartnerId(partnerDetails);

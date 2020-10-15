@@ -30,9 +30,9 @@ public class PartnerVideoListResponseModel implements Serializable {
         @SerializedName("partner_image")
         @Expose
         private String partner_image;
-        @SerializedName("categories")
+        @SerializedName("shows")
         @Expose
-        private List<CategoryWiseShowsModel> categories;
+        private List<PartnerShowsModel> shows;
 
         public String getPartner_id() {
             return partner_id;
@@ -50,8 +50,8 @@ public class PartnerVideoListResponseModel implements Serializable {
             return partner_image;
         }
 
-        public List<CategoryWiseShowsModel> getCategories() {
-            return categories;
+        public List<PartnerShowsModel> getShows() {
+            return shows;
         }
     }
 }

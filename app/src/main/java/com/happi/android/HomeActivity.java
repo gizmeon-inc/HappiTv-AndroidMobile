@@ -981,7 +981,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onShowsItemClicked(int adapterPosition) {
-        HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(freeShowList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, freeShowList_adapter.getItem(adapterPosition).getShow_id());
 
@@ -990,7 +989,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onItemClicked(int adapterPosition) {
-        HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(videoList_adapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, videoList_adapter.getItem(adapterPosition).getShow_id());
 
@@ -1000,9 +998,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onCategoryItemClicked(int adapterPosition) {
-        HappiApplication.setRedirect("");
-        HappiApplication.setCategoryId(categoryList_adapter.getItem(adapterPosition).getCategoryid()
-                + ";" + categoryList_adapter.getItem(adapterPosition).getCategory());
+
         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, categoryList_adapter
                 .getItem(adapterPosition).getCategoryid() + ";" + categoryList_adapter.getItem
                 (adapterPosition).getCategory());
@@ -1020,7 +1016,6 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onBannerItemClicked(int adapterPosition) {
-        HappiApplication.setRedirect("");
         SharedPreferenceUtility.setShowId(pagerAdapter.getItem(adapterPosition).getShow_id());
         ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY, pagerAdapter.getItem(adapterPosition).getShow_id());
 
@@ -1291,9 +1286,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
     @Override
     public void onCategoryItemClickedForCircleView(int adapterPosition) {
-        HappiApplication.setRedirect("");
-        HappiApplication.setCategoryId(circleViewAdapter.getItem(adapterPosition).getCategoryid()
-                + ";" + circleViewAdapter.getItem(adapterPosition).getCategory());
+
         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, circleViewAdapter
                 .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
                 (adapterPosition).getCategory());

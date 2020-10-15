@@ -100,7 +100,7 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
     private String getDayForScheduleItem(LiveScheduleResponse.LiveScheduleModel schedule, int position){
         String status = "";
 
-        if(position == 0){
+        /*if(position == 0){
             status = "Now Playing";
         }else{
             if(liveScheduleList.size() > 1){
@@ -114,6 +114,23 @@ public class LiveScheduleHomeListAdapter extends RecyclerView.Adapter<LiveSchedu
                         status = "";
                     }
                 }
+            }
+        }*/
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentDate = currentCalendar.getTime();
+
+        Date finalStartDateTime = schedule.getStartDateTime();
+        Date finalEndDateTime = schedule.getEndDateTime();
+
+        if(finalStartDateTime != null){
+            status = AppUtils.getDay(finalStartDateTime, finalEndDateTime);
+        }else{
+            status = "";
+        }
+
+        if(status.equalsIgnoreCase("Today")){
+            if(currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)){
+                status = "Now Playing";
             }
         }
         return status;

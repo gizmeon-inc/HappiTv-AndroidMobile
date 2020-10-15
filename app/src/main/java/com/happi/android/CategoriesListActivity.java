@@ -256,9 +256,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
 
     @Override
     public void onCategoryItemClickedForCircleView(int adapterPosition) {
-        HappiApplication.setCategoryId(circleViewAdapter
-                .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
-                (adapterPosition).getCategory());
+
         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, circleViewAdapter
                 .getItem(adapterPosition).getCategoryid() + ";" + circleViewAdapter.getItem
                 (adapterPosition).getCategory());

@@ -34,10 +34,7 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     public static List<String> sub_id = new ArrayList<>();
 
     //------------------------new changes------------------------------------//
-    public static ShowModel showModel = new ShowModel();
     public static FeaturedShowsModel featureShowModel = new FeaturedShowsModel();
-    public static boolean isFeaturedShow = false;
-    public static String redirect = "";
     public static String categoryId = "";
     public static boolean isNewSubscriber = false;
     public static boolean isNewLoginFromPremiumPage = false;
@@ -101,13 +98,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
         HappiApplication.isFromLink = isFromLink;
     }
 
-    public static boolean isIsNewLoginFromPremiumPage() {
-        return isNewLoginFromPremiumPage;
-    }
-
-    public static void setIsNewLoginFromPremiumPage(boolean isNewLoginFromPremiumPage) {
-        HappiApplication.isNewLoginFromPremiumPage = isNewLoginFromPremiumPage;
-    }
 
     public static boolean isIsNewSubscriber() {
         return isNewSubscriber;
@@ -118,45 +108,8 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     }
 
 
-    public static String getCategoryId() {
-        return categoryId;
-    }
 
-    public static void setCategoryId(String categoryId) {
-        HappiApplication.categoryId = categoryId;
-    }
 
-    public static String getRedirect() {
-        return redirect;
-    }
-
-    public static void setRedirect(String redirect) {
-        HappiApplication.redirect = redirect;
-    }
-
-    public static boolean isIsFeaturedShow() {
-        return isFeaturedShow;
-    }
-
-    public static void setIsFeaturedShow(boolean isFeaturedShow) {
-        HappiApplication.isFeaturedShow = isFeaturedShow;
-    }
-
-    public static ShowModel getShowModel() {
-        return showModel;
-    }
-
-    public static void setShowModel(ShowModel showModel) {
-        HappiApplication.showModel = showModel;
-    }
-
-    public static FeaturedShowsModel getFeatureShowModel() {
-        return featureShowModel;
-    }
-
-    public static void setFeatureShowModel(FeaturedShowsModel featureShowModel) {
-        HappiApplication.featureShowModel = featureShowModel;
-    }
 
     //--------------------------------------------------------------------//
 

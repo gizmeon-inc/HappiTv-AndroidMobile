@@ -154,10 +154,53 @@ public class AppUtils {
     }
 
 
-    public static String getDay(Date finalStartDateTime) {
+    public static String getDay(Date finalStartDateTime, Date finalEndDateTime) {
         String status = "";
         Calendar currentCalendar = Calendar.getInstance();
         Date currentDate = currentCalendar.getTime();
+       /* int value = 2;
+        if (currentDate.before(finalStartDateTime) && currentCalendar.before(finalEndDateTime)) {
+            value = 1;
+        } else if (currentDate.after(finalStartDateTime) && currentDate.after(finalEndDateTime)) {
+            value = -1;
+        } else if (currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)){
+            value = 0;
+        }else if(currentDate.equals(finalStartDateTime) || currentDate.equals(finalEndDateTime)){
+            value = 0;
+        }else{
+            value = 2;
+        }*/
+
+        /*int value;
+        if (currentDate.before(finalStartDateTime)) {
+            value = 1;
+        } else if (currentDate.after(finalStartDateTime)) {
+            if(currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)){
+                value = 0;
+            }else{
+                value = -1;
+            }
+
+        } else {
+            value = 0;
+        }*/
+
+        /*int value;
+        if (currentDate.before(finalStartDateTime) && currentDate.before(finalEndDateTime)) {
+            value = 1;
+        } else if(currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)) {
+            value = 0;
+        }else if(currentDate.after(finalStartDateTime) && currentDate.after(finalEndDateTime)){
+            value = -1;
+        }else if(currentDate.equals(finalStartDateTime)){
+            value = 0;
+        }else{
+            value = 2;
+        }*/
+
+
+
+       //original
         int value;
         if (currentDate.before(finalStartDateTime)) {
             value = 1;
@@ -218,8 +261,8 @@ public class AppUtils {
                 status = weekDay;
             }
 
-        } else {
-            status = "";
+        } else{
+            status = String.valueOf(value);
         }
 
 

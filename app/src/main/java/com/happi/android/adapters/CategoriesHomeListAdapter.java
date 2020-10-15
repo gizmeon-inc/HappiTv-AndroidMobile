@@ -155,8 +155,10 @@ public class CategoriesHomeListAdapter extends RecyclerView.Adapter<CategoriesHo
 
 
 
-        HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R.anim
-                .fade_out);
+//        HappiApplication.getCurrentActivity().overridePendingTransition(R.anim.fade_in, R.anim
+//                .fade_out);
+
+        HappiApplication.getCurrentActivity().overridePendingTransition(0, 0);
     }
 
 

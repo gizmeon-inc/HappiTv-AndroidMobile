@@ -612,7 +612,6 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
                                 goToWatchList();
 
                             } else {
-                                HappiApplication.setIsNewLoginFromPremiumPage(false);
                                 goToHomePage();
                             }
                         } else {

@@ -13,20 +13,15 @@ import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.happi.android.adapters.CategoriesHomeListAdapter;
 import com.happi.android.adapters.PartnerVideoListAdapter;
-import com.happi.android.common.ActivityChooser;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.TypefacedTextViewRegular;
-import com.happi.android.models.CategoryWiseShowsModel;
+import com.happi.android.models.PartnerShowsModel;
 import com.happi.android.models.PartnerVideoListResponseModel;
 import com.happi.android.recyclerview.GridRecyclerView;
 import com.happi.android.utils.AppUtils;
@@ -42,8 +37,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-import static com.bumptech.glide.request.RequestOptions.diskCacheStrategyOf;
-import static com.bumptech.glide.request.RequestOptions.fitCenterTransform;
 import static com.bumptech.glide.request.RequestOptions.overrideOf;
 import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
@@ -97,7 +90,7 @@ public class PartnerVideosListingActivity extends BaseActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
 
-        int modifiedWidth = (int) ((21.44 * width)/ 100);
+        int modifiedWidth = (int) ((21.46 * width)/ 100);
 
         float widthImage = AppUtils.convertDpToPx(this,modifiedWidth);
         float heightImage = (float) (widthImage * 1.34);
@@ -226,6 +219,8 @@ public class PartnerVideosListingActivity extends BaseActivity {
         }
     }
     private void displayErrorLayout(String errorMessage) {
+        hideProgressDialog();
+
        ll_error.setVisibility(View.VISIBLE);
        tv_errormsg.setText(errorMessage);
 
@@ -291,9 +286,9 @@ public class PartnerVideosListingActivity extends BaseActivity {
                 ll_description.setVisibility(View.GONE);
             }
 
-            if(partnerDataModel.getCategories()!= null && partnerDataModel.getCategories().size() > 0){
+            if(partnerDataModel.getShows()!= null && partnerDataModel.getShows().size() > 0){
                 sv_scrollview_partner.setVisibility(View.VISIBLE);
-                loadPartnerVideoList(partnerDataModel.getCategories());
+                loadPartnerVideoList(partnerDataModel.getShows());
 
             }else{
                 rv_partner_video_list.setVisibility(View.GONE);
@@ -306,12 +301,12 @@ public class PartnerVideosListingActivity extends BaseActivity {
 
     }
 
-    private void loadPartnerVideoList(List<CategoryWiseShowsModel> categoryWiseShowsModelList) {
+    private void loadPartnerVideoList(List<PartnerShowsModel> partnerShowsModels) {
         tv_error_video_list.setVisibility(View.GONE);
         rv_partner_video_list.setVisibility(View.VISIBLE);
 
         rv_partner_video_list.setHasFixedSize(true);
-        PartnerVideoListAdapter adapter = new PartnerVideoListAdapter(categoryWiseShowsModelList, this, width);
+        PartnerVideoListAdapter adapter = new PartnerVideoListAdapter(partnerShowsModels, this, width);
         rv_partner_video_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         rv_partner_video_list.setAdapter(adapter);
 

@@ -622,14 +622,12 @@ public class SubscriptionRegisterActivity extends BaseActivity {
         }
     }
     private void goToVideoPlayer(){
-        HappiApplication.setIsNewLoginFromPremiumPage(true);
         Intent intent = new Intent(SubscriptionRegisterActivity.this, VideoPlayerActivity.class);
         startActivity(intent);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
     private void goToLivePlayer(){
-        HappiApplication.setIsNewLoginFromPremiumPage(true);
         Intent intent = new Intent(SubscriptionRegisterActivity.this, ChannelLivePlayerActivity.class);
         startActivity(intent);
         finish();
@@ -637,14 +635,12 @@ public class SubscriptionRegisterActivity extends BaseActivity {
     }
     private void goToSubscriptionScreen(){
         SubscriptionActivity.currentActivity.finish();
-        HappiApplication.setIsNewLoginFromPremiumPage(true);
         Intent intent = new Intent(SubscriptionRegisterActivity.this, SubscriptionActivity.class);
         startActivity(intent);
         finish();
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
     private void goToHomeScreen(){
-        HappiApplication.setIsNewLoginFromPremiumPage(false);
         //Intent intent = new Intent(SubscriptionRegisterActivity.this, HomeActivity.class);
         Intent intent = new Intent(SubscriptionRegisterActivity.this, MainHomeActivity.class);
         intent.putExtra("from", "register");

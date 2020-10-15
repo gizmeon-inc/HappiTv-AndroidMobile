@@ -25,6 +25,7 @@ import com.happi.android.utils.ConstantUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -57,14 +58,21 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
         if (liveScheduleList.size() != 0) {
             holder.tv_schedule_title.setText(liveScheduleList.get(position).getVideo_title());
 
-            String time = getScheduleItemTime(liveScheduleList.get(position),position);
+            String time = getScheduleItemTime(liveScheduleList.get(position), position);
             holder.tv_schedule_time.setText(time);
 
-            String day = getDayForScheduleItem(liveScheduleList.get(position),position);
-            holder.tv_schedule_status.setText(day);
+
+            // String day = getDayForScheduleItem(liveScheduleList.get(position));
+//            String status = getStatus(day, liveScheduleList.get(position).getStartDateTime(),
+//                    liveScheduleList.get(position).getEndDateTime(), position);
+
+            String status = getDay(liveScheduleList.get(position).getStartDateTime(),
+                    liveScheduleList.get(position).getEndDateTime(),
+                    position);
+            holder.tv_schedule_status.setText(status);
 
             Glide.with(context)
-                    .load(ConstantUtils.RELEASE_THUMBNAIL + liveScheduleList.get(position).getThumbnail())
+                    .load(ConstantUtils.THUMBNAIL_URL + liveScheduleList.get(position).getThumbnail())
                     .error(Glide.with(context)
                             .load(ContextCompat.getDrawable(context, R.drawable.ic_placeholder)))
                     .apply(placeholderOf(R.drawable.ic_placeholder))
@@ -73,31 +81,100 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
         }
     }
 
-    private String getDayForScheduleItem(LiveScheduleResponse.LiveScheduleModel schedule, int position){
-        String status = "";
+    private String getStatus(String day, Date finalStartDateTime, Date finalEndDateTime, int position) {
+        String dayStatus = "";
 
-        if(position == 0){
-            status = "Now Playing";
-        }else{
-            if(liveScheduleList.size() > 1){
-                if(position == 1){
-                    status = "Up Next";
-                }else{
-                    Date finalStartDateTime = schedule.getStartDateTime();
-                    if(finalStartDateTime != null){
-                        status = AppUtils.getDay(finalStartDateTime);
-                    }else{
-                        status = "";
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentDate = currentCalendar.getTime();
+
+        if (day.equalsIgnoreCase("Today")) {
+            if ((currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)) ||
+                    (currentDate.equals(finalStartDateTime))) {
+
+                dayStatus = "Now Playing";
+                liveScheduleList.get(position).setLive(true);
+
+            } else {
+                if (position > 1) {
+                    int prev = --position;
+                    if (liveScheduleList.get(prev).isLive()) {
+                        dayStatus = "Up Next";
                     }
                 }
             }
+        }
+
+        return dayStatus;
+
+    }
+
+    private String getDay(Date finalStartDateTime, Date finalEndDateTime, int position) {
+        String status = "";
+
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentDate = currentCalendar.getTime();
+
+        if (finalStartDateTime != null && finalEndDateTime != null) {
+
+            if ((currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)) ||
+                    (currentDate.equals(finalStartDateTime))) {
+                status = "Now Playing";
+                //nextIndex = ++position;
+                liveScheduleList.get(position).setLive(true);
+            } else {
+                status = getDayForScheduleItem(liveScheduleList.get(position));
+
+                /*if(position == nextIndex && status.equalsIgnoreCase("Today")){
+                    status = "Up Next";
+                }*/
+                if (status.equalsIgnoreCase("Today")) {
+                    if (position > 0) {
+                        int previous = --position;
+                        if (liveScheduleList.get(previous).isLive()) {
+                            status = "Up Next";
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        return status;
+    }
+
+    private String getDayForScheduleItem(LiveScheduleResponse.LiveScheduleModel schedule) {
+        String status = "";
+
+//        if(position == 0){
+//            status = "Now Playing";
+//        }else{
+//            if(liveScheduleList.size() > 1){
+//                if(position == 1){
+//                    status = "Up Next";
+//                }else{
+//                    Date finalStartDateTime = schedule.getStartDateTime();
+//                    if(finalStartDateTime != null){
+//                        status = AppUtils.getDay(finalStartDateTime);
+//                    }else{
+//                        status = "";
+//                    }
+//                }
+//            }
+//        }
+
+        Date finalStartDateTime = schedule.getStartDateTime();
+        Date finalEndDateTime = schedule.getEndDateTime();
+        if (finalStartDateTime != null && finalEndDateTime != null) {
+            status = AppUtils.getDay(finalStartDateTime, finalEndDateTime);
+        } else {
+            status = "";
         }
         return status;
     }
 
 
-
-    private String getScheduleItemTime(LiveScheduleResponse.LiveScheduleModel itemSchedule, int position){
+    private String getScheduleItemTime(LiveScheduleResponse.LiveScheduleModel itemSchedule, int position) {
         String localTime = "";
         String startDateTime = itemSchedule.getStarttime();
         String endDateTime = itemSchedule.getEndtime();
@@ -114,22 +191,20 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
         Date finalStartDateTime = null;
         Date finalEndDateTime = null;
 
-        if(startDateTime.contains("T")){
-            String[] start= startDateTime.split("T");
-            if(start.length == 2){
+        if (startDateTime.contains("T")) {
+            String[] start = startDateTime.split("T");
+            if (start.length == 2) {
                 startDateString = start[0];
                 startTimeString = start[1];
             }
         }
-        if(endDateTime.contains("T")){
-            String[] end= endDateTime.split("T");
-            if(end.length == 2){
+        if (endDateTime.contains("T")) {
+            String[] end = endDateTime.split("T");
+            if (end.length == 2) {
                 endDateString = end[0];
                 endTimeString = end[1];
             }
         }
-
-
 
 
         SimpleDateFormat sdfYearTimeLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
@@ -137,28 +212,28 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
         sdfYearTimeUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
         SimpleDateFormat sdfTime = new SimpleDateFormat("h:mm a", Locale.getDefault());
 
-        try{
+        try {
             //start
-            String startString = startDateString+" "+startTimeString;
+            String startString = startDateString + " " + startTimeString;
 
             Date d1 = sdfYearTimeUTC.parse(startString);
             String s1 = sdfYearTimeLocal.format(d1);
             finalStartTime = sdfTime.format(d1);
             finalStartDateTime = sdfYearTimeLocal.parse(s1);
             //end
-            String endString = endDateString+" "+endTimeString;
+            String endString = endDateString + " " + endTimeString;
 
             Date d2 = sdfYearTimeUTC.parse(endString);
             String s2 = sdfYearTimeLocal.format(d2);
             finalEndTime = sdfTime.format(d2);
             finalEndDateTime = sdfYearTimeLocal.parse(s2);
-        }catch(Exception ex){
-            Log.e("exception date","");
+        } catch (Exception ex) {
+            Log.e("exception date", "");
         }
         liveScheduleList.get(position).setStartDateTime(finalStartDateTime);
         liveScheduleList.get(position).setEndDateTime(finalEndDateTime);
 
-        localTime = finalStartTime +" - "+finalEndTime;
+        localTime = finalStartTime + " - " + finalEndTime;
 
         return localTime;
     }
@@ -174,7 +249,7 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
         ImageView iv_schedule_image;
         TypefacedTextViewRegular tv_schedule_time;
         TypefacedTextViewBold tv_schedule_status;
-        TypefacedTextViewBold tv_schedule_title;
+        TypefacedTextViewRegular tv_schedule_title;
         CardView cv_live_schedule;
 
 
@@ -189,13 +264,13 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
             this.tv_schedule_status = itemView.findViewById(R.id.tv_schedule_status);
             //this.tv_schedule_day = itemView.findViewById(R.id.tv_schedule_day);
 
-            int new_width = (width - (width/6))/3;
-            int new_height = (3*(new_width-15))/2;
+            int new_width = (width - (width / 6)) / 3;
+            int new_height = (3 * (new_width - 15)) / 2;
 
             int widthAdd = (int) context.getResources().getDimension(R.dimen.dimen_5dp);
 
             FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(new_width, new_height);
-            CardView.LayoutParams cl = new CardView.LayoutParams(new_width,new_height);
+            CardView.LayoutParams cl = new CardView.LayoutParams(new_width, new_height);
             cl.rightMargin = 15;
             this.ll_schedule_info_parent.setLayoutParams(fl);
             this.cv_live_schedule.setLayoutParams(cl);

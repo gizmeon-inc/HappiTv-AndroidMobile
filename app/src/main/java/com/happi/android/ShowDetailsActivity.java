@@ -194,7 +194,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     private LinearLayout ll_error;
     private ImageView iv_errorimg;
     private TypefacedTextViewRegular tv_errormsg;
-    private boolean isFromSubsc = false;
 
     //bottom navigation view
     private RelativeLayout rl_btm_navigation_show;
@@ -254,7 +253,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         ll_watch_list.setEnabled(false);
         ll_like.setEnabled(false);
         ll_dislike.setEnabled(false);
-        isFromSubsc = false;
 
 
         compositeDisposable = new CompositeDisposable();
@@ -489,6 +487,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
     private void displayErrorLayout() {
         progressDialogDismiss();
+        releasePlayer();
 
         rl_details.setVisibility(View.GONE);
         sc_meta.setVisibility(View.GONE);
@@ -522,6 +521,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     }
 
     private void goToLoginScreen() {
+        releasePlayer();
         SharedPreferenceUtility.setShowId(showId);
         Intent loginIntent = new Intent(ShowDetailsActivity.this, SubscriptionLoginActivity.class);
         loginIntent.putExtra("from", "showDetails");
@@ -875,8 +875,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 tv_producer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        HappiApplication.setCategoryId(showDetails.getProducer());
                         releaseExoplayer();
                         ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, showDetails.getProducer().trim());
 
@@ -967,7 +965,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         for (DataModel.CategoryModelUpdated category : categoryModelUpdatedList) {
                             if (tag.equals(category.getCategory_name())) {
 
-                                HappiApplication.setCategoryId(category.getCategory_id() + ";" + category.getCategory_name());
                                 releaseExoplayer();
                                 ActivityChooser.goToActivity(ConstantUtils.CATEGORYVIEW_ACTIVITY, category.getCategory_id() + ";" + category.getCategory_name());
                                 break;
@@ -1589,7 +1586,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     @Override
     protected void onResume() {
         HappiApplication.setCurrentContext(this);
-        int menu = SharedPreferenceUtility.getCurrentBottomMenu();
         updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
         resumePlayer();
        /* if(!SharedPreferenceUtility.getGuest()){
@@ -1605,18 +1601,14 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
     @Override
     protected void onPause() {
-        if (Util.SDK_INT <= 23) {
-            releasePlayer();
-        }
+        releasePlayer();
         super.onPause();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (Util.SDK_INT > 23) {
-            releasePlayer();
-        }
+        releasePlayer();
     }
 
     @Override

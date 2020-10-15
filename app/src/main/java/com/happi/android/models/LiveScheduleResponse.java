@@ -37,6 +37,16 @@ public class LiveScheduleResponse implements Serializable {
         private Date startDateTime = null;
         private Date endDateTime = null;
 
+        private boolean isLive = false;
+
+        public boolean isLive() {
+            return isLive;
+        }
+
+        public void setLive(boolean live) {
+            isLive = live;
+        }
+
         public Date getStartDateTime() {
             return startDateTime;
         }
