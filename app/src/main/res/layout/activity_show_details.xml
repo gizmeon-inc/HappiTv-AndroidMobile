@@ -522,7 +522,7 @@
                         android:id="@+id/ex_synopsis"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:maxLines="7"
+                        android:maxLines="4"
                         android:textColor="@color/black"
                         android:textSize="12sp"
                         android:layout_marginTop="@dimen/dimen_5dp"

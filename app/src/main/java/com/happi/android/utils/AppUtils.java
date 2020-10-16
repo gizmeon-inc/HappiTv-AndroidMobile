@@ -262,7 +262,7 @@ public class AppUtils {
             }
 
         } else{
-            status = String.valueOf(value);
+            status = "";
         }
 
 

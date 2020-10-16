@@ -14,10 +14,20 @@ public class PartnerShowsModel implements Serializable {
     @Expose
     private String show_name;
 
+    @SerializedName("single_video")
+    private int single_video;
+
     @SerializedName("videos")
     @Expose
     private List<VideoModelUpdated> videoModelUpdatedList;
 
+    public int getSingle_video() {
+        return single_video;
+    }
+
+    public void setSingle_video(int single_video) {
+        this.single_video = single_video;
+    }
 
     public String getShow_id() {
         return show_id;

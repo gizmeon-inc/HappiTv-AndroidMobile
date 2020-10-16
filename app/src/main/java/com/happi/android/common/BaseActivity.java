@@ -24,6 +24,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.happi.android.ChannelLivePlayerActivity;
 import com.happi.android.ChannelsListingActivity;
 import com.happi.android.LiveVideoListingActivity;
 import com.happi.android.LoginActivity;
@@ -501,116 +502,6 @@ public class BaseActivity extends AppCompatActivity {
 
         alertDialog.show();
     }
-
-    @Override
-    protected void onResume() {
-
-//        if (!isNetworkConnected()) {
-//
-//            if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
-//
-//                Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
-//                        NoInternetActivity.class);
-//                startActivity(noInternetIntent);
-//            } else {
-//
-//                Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
-//                        .LENGTH_SHORT).show();
-//            }
-//        }
-//
-//        registerReceiver();
-
-        super.onResume();
-    }
-
-    public void registerReceiver() {
-
-        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
-        registerReceiver(networkReceiver, filter);
-    }
-
-    @Override
-    protected void onPause() {
-//        if (networkReceiver != null) {
-//            unregisterReceiver(networkReceiver);
-//        }
-        super.onPause();
-    }
-
-    public boolean isNetworkConnected() {
-
-        ConnectivityManager cm =
-                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-
-
-        return false;
-    }
-
-    /*private BroadcastReceiver networkReceiver123 = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (intent.getExtras() != null) {
-
-                NetworkInfo ni = (NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
-                if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
-                    // we're connected
-                } else {
-
-                    if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
-
-                        Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
-                                NoInternetActivity.class);
-                        startActivity(noInternetIntent);
-                    } else {
-
-                        Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
-                                .LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }
-    };*/
-
-
-    public BroadcastReceiver networkReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-            if (Objects.equals(intent.getAction(), ConnectivityManager.CONNECTIVITY_ACTION)) {
-                //NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                ConnectivityManager connectivityManager = (ConnectivityManager) HappiApplication.getCurrentContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = null;
-                if(connectivityManager != null && connectivityManager.getActiveNetworkInfo() != null){
-                     networkInfo = connectivityManager.getActiveNetworkInfo();
-                }else{
-                     networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                }
-
-                if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
-
-                } else if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
-
-                    if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
-
-                        Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
-                                NoInternetActivity.class);
-                        startActivity(noInternetIntent);
-                    } else {
-
-                        Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
-                                .LENGTH_SHORT).show();
-                    }
-                }
-            }
-        }
-    };
-
     private void logoutApiCall() {
 
         ApiClient.UsersService usersService = ApiClient.create();
@@ -663,7 +554,7 @@ public class BaseActivity extends AppCompatActivity {
 
                     if (logoutResponseModel.getStatus() == 100) {
 
-                       SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                        SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
                         SharedPreferenceUtility.setGuest(false);
                         SharedPreferenceUtility.setIsFirstTimeInstall(false);
                         SharedPreferenceUtility.setChannelId(0);
@@ -694,6 +585,107 @@ public class BaseActivity extends AppCompatActivity {
                 });
 
     }
+    @Override
+    protected void onResume() {
+
+        if (!isNetworkConnected()) {
+
+            if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
+
+                Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
+                        NoInternetActivity.class);
+                startActivity(noInternetIntent);
+            } else {
+
+                Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
+                        .LENGTH_SHORT).show();
+            }
+        }
+
+        registerReceiver();
+
+        super.onResume();
+    }
+
+    public void registerReceiver() {
+
+        IntentFilter filter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        registerReceiver(networkReceiver, filter);
+    }
+
+    @Override
+    protected void onPause() {
+        unregisterReceiver(networkReceiver);
+        super.onPause();
+    }
+
+    public boolean isNetworkConnected() {
+
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+
+
+        return false;
+    }
+
+    /*private BroadcastReceiver networkReceiver123 = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent.getExtras() != null) {
+
+                NetworkInfo ni = (NetworkInfo) intent.getExtras().get(ConnectivityManager.EXTRA_NETWORK_INFO);
+                if (ni != null && ni.getState() == NetworkInfo.State.CONNECTED) {
+                    // we're connected
+                } else {
+
+                    if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity)) {
+
+                        Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
+                                NoInternetActivity.class);
+                        startActivity(noInternetIntent);
+                    } else {
+
+                        Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
+                                .LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+    };*/
+
+
+    public BroadcastReceiver networkReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
+                NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
+                if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
+
+                } else if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {
+
+                    if (!(HappiApplication.getCurrentContext() instanceof VideoPlayerActivity) &&
+                            !(HappiApplication.getCurrentContext() instanceof ChannelLivePlayerActivity)) {
+
+                        Intent noInternetIntent = new Intent(HappiApplication.getCurrentContext(),
+                                NoInternetActivity.class);
+                        startActivity(noInternetIntent);
+                    } else {
+
+                        Toast.makeText(HappiApplication.getCurrentContext(), "No internet", Toast
+                                .LENGTH_SHORT).show();
+                    }
+                }
+            }
+        }
+    };
+
+
 
 
 

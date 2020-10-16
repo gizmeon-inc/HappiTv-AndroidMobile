@@ -129,7 +129,7 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
                 }*/
                 if (status.equalsIgnoreCase("Today")) {
                     if (position > 0) {
-                        int previous = --position;
+                        int previous = position - 1;
                         if (liveScheduleList.get(previous).isLive()) {
                             status = "Up Next";
                         }

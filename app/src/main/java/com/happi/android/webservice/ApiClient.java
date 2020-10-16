@@ -185,7 +185,8 @@ public class ApiClient {
         @GET("api/partnerList")
         Observable<PartnerResponseModel> getPartnerList(@Header("access-token") String header,
                                                         @Query("pubid") String pubid);
-        @GET("api/partnerVideos")
+        //@GET("api/partnerVideos")
+        @GET("api/partnerVideosByShows")
         Observable<PartnerVideoListResponseModel> getPartnerVideos(@Header("access-token") String header,
                                                                    @Query("pubid") String pubid,
                                                                    @Query("partner_id") String partner_id,

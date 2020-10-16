@@ -15,13 +15,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 
-public class NoInternetActivity extends BaseActivity {
+public class NoInternetActivity extends AppCompatActivity {
 
     ImageView iv_retry;
     LinearLayout ll_retry;
@@ -76,11 +77,7 @@ public class NoInternetActivity extends BaseActivity {
 
         ConnectivityManager cm =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-       // NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        NetworkInfo netInfo = null;
-        if(cm != null && cm.getActiveNetworkInfo() != null){
-            netInfo = cm.getActiveNetworkInfo();
-        }
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
             return true;
         }
@@ -124,14 +121,7 @@ public class NoInternetActivity extends BaseActivity {
         public void onReceive(Context context, Intent intent) {
 
             if (intent.getAction().equals(ConnectivityManager.CONNECTIVITY_ACTION)) {
-                //NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                ConnectivityManager connectivityManager = (ConnectivityManager) HappiApplication.getCurrentContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo networkInfo = null;
-                if(connectivityManager != null && connectivityManager.getActiveNetworkInfo() != null){
-                    networkInfo = connectivityManager.getActiveNetworkInfo();
-                }else{
-                    networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
-                }
+                NetworkInfo networkInfo = intent.getParcelableExtra(ConnectivityManager.EXTRA_NETWORK_INFO);
                 if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.CONNECTED) {
                     NoInternetActivity.this.finish();
                 } else if (networkInfo != null && networkInfo.getDetailedState() == NetworkInfo.DetailedState.DISCONNECTED) {

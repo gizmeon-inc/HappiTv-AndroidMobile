@@ -466,13 +466,13 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         ll_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!SharedPreferenceUtility.getGuest()) {
+                /*if (!SharedPreferenceUtility.getGuest()) {
                     Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
                 } else {
                     //showLoginAlert();
                     showLoginOrRegisterAlert();
-                }
-
+                }*/
+                Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -510,7 +510,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         if (progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
-        releaseExoplayer();
+
         String message = "Please Login or Register to use this feature.";
         LoginRegisterAlert alertDialog =
                 new LoginRegisterAlert(this, message, "Ok", "Cancel", this::onLoginRegisterNegativeClick,
@@ -1104,7 +1104,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
                 // set interpolators for both expanding and collapsing animations
                 ex_synopsis.setInterpolator(new OvershootInterpolator());
-
 // toggle the ExpandableTextView
                 tv_more_click.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -331,7 +331,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         width = displayMetrics.widthPixels;
         Log.v("okhttp", "total width >>"+width);
         apiErrorCount = 0;
-
+        homeLoaded = false;
         setupRecyclerView();
         getSessionToken();
 
@@ -404,7 +404,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         });
 
 
-        homeLoaded = false;
+
 
 
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
@@ -425,6 +425,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         setLogoutAllVisibility();
 
         if (apiErrorCount == 4) {
+       // if (!homeLoaded) {
             setupRecyclerView();
             recallHomeApis();
         }
@@ -443,9 +444,12 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
 
         resumePlayer();
+        if(liveChannelId != 0){
+            Log.e("HOME","ONRESUME");
+            loadLiveSchedule(liveChannelId);
+        }
         super.onResume();
     }
-
 
     private void setupRecyclerView() {
         //no free shows
@@ -735,6 +739,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                     //load all live - player and channels list
                     if (!channelModelList.isEmpty()) {
                         liveChannelId = channelModelList.get(0).getChannelId();
+                        Log.e("HOME","GETALLCHANNEL");
                         loadLiveSchedule(liveChannelId);
                         generateToken(channelModelList.get(0));
 
@@ -1168,7 +1173,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 //            if (liveScheduleHomeListAdapter == null || liveScheduleHomeListAdapter.isEmpty()) {
 //                loadLiveSchedule(liveChannelId);
 //            }
-            if (liveScheduleInfoAdapter == null || liveScheduleInfoAdapter.isEmpty()) {
+            if (liveScheduleInfoAdapter == null || liveScheduleInfoAdapter.isEmpty() && liveChannelId != 0) {
                 loadLiveSchedule(liveChannelId);
             }
             if (partnersListingAdapter == null || partnersListingAdapter.isEmpty()) {
