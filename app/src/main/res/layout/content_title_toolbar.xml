@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/white"
+    android:gravity="center_horizontal|center_vertical"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/dimen_5dp"
+    android:paddingRight="@dimen/dimen_5dp">
+
+
+    <ImageView
+        android:id="@+id/iv_back"
+        android:layout_width="@dimen/dimen_48dp"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="center_vertical"
+        android:padding="@dimen/dimen_3dp"
+        android:src="@drawable/ic_back"
+        android:tint="@color/colorPrimaryDark"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/rl_logo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal|center_vertical"
+        android:layout_marginEnd="@dimen/dimen_45dp">
+
+        <com.happi.android.customviews.TypefacedTextViewRegular
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:ellipsize="end"
+            android:lines="1"
+            android:paddingBottom="@dimen/dimen_3dp"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="@dimen/text_large1"
+            android:visibility="visible"
+            android:text=""/>
+    </LinearLayout>
+
+</LinearLayout>

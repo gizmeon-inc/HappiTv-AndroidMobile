@@ -263,6 +263,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
     //bottom vnavigation view
     private RelativeLayout rl_btm_navigation_channel;
+    private int actionBarHeight = 0;
 
     @Override
     public void onClick(View view) {
@@ -1268,6 +1269,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     private void openFullscreen() {
 
         isExoPlayerFullscreen = true;
+        actionBarHeight = rl_toolbar.getHeight();
 
         exo_fullscreen_icon.setImageDrawable(ContextCompat.getDrawable(ChannelLivePlayerActivity.this, R.drawable.ic_fullscreen_skrink));
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -1303,7 +1305,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
     private void closeFullscreen() {
 
-        int actionBarHeight;
+
         isExoPlayerFullscreen = false;
 
         exo_fullscreen_icon.setImageDrawable(ContextCompat.getDrawable(ChannelLivePlayerActivity.this, R.drawable.ic_fullscreen_white));
@@ -1319,8 +1321,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
-        actionBarHeight = rl_toolbar.getHeight();
-        params.setMargins(0, actionBarHeight, 0, 0);
+        params.setMargins(0, actionBarHeight, 0, actionBarHeight);
         rl_exoplayer_parent.setPadding(0, 0, 0, 0);
         rl_exoplayer_parent.setLayoutParams(params);
         rl_btm_navigation_channel.setVisibility(View.VISIBLE);

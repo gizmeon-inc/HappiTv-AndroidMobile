@@ -50,8 +50,8 @@ public class ShowDetailsAdapter extends RecyclerView.Adapter<ShowDetailsAdapter.
                 public void onClick(View v) {
                     thisItemClickListener.onFeaturedShowItemClicked(getAdapterPosition());
                     row_index = getAdapterPosition();
-                    activity.scrollPosition = getAdapterPosition();
-                    activity.recyclerViewState = activity.rv_show_list.getLayoutManager().onSaveInstanceState();
+//                    activity.scrollPosition = getAdapterPosition();
+//                    activity.recyclerViewState = activity.rv_show_list.getLayoutManager().onSaveInstanceState();
                     notifyDataSetChanged();
                 }
             });

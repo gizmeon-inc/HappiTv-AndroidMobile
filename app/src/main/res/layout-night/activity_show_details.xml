@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
-        <include layout="@layout/content_toolbar" />
+        <include layout="@layout/content_title_toolbar" />
 
     </RelativeLayout>
 
@@ -97,10 +97,11 @@
     </RelativeLayout>
 
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:id="@+id/sc_meta"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         android:layout_below="@+id/rl_details"
         android:layout_marginBottom="?attr/actionBarSize">
 
@@ -567,17 +568,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/dimen_10dp"
                 android:layout_below="@+id/ll_synopsis">
-                <androidx.core.widget.NestedScrollView
-                    android:id="@+id/sv_scrollview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:overScrollMode="never">
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_show_list"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:visibility="gone" />
-                </androidx.core.widget.NestedScrollView>
+
             </RelativeLayout>
 
 
@@ -587,7 +584,7 @@
         </RelativeLayout>
 
 
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <RelativeLayout
         android:id="@+id/rl_btm_navigation_show"

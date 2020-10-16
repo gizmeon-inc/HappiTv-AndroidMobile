@@ -118,22 +118,24 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
 
             if ((currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)) ||
                     (currentDate.equals(finalStartDateTime))) {
-                status = "Now Playing";
-                //nextIndex = ++position;
+                //status = "Now Playing";
+                status = "";
                 liveScheduleList.get(position).setLive(true);
             } else {
                 status = getDayForScheduleItem(liveScheduleList.get(position));
 
-                /*if(position == nextIndex && status.equalsIgnoreCase("Today")){
-                    status = "Up Next";
-                }*/
                 if (status.equalsIgnoreCase("Today")) {
+                    /*//uncomment for up next
                     if (position > 0) {
                         int previous = position - 1;
                         if (liveScheduleList.get(previous).isLive()) {
                             status = "Up Next";
                         }
-                    }
+                    }*/
+                    status = "";
+                }else{
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                    status = sdfDate.format(finalStartDateTime);
                 }
 
             }

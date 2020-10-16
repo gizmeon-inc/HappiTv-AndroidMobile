@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -101,9 +102,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         LoginRegisterAlert.OnLoginRegisterUserNeutral {
 
     TagGroup tag_theme;
-    ImageView iv_menu;
+    //ImageView iv_menu;
     ImageView iv_back;
-    ImageView iv_logo_text;
+    //ImageView iv_logo_text;
     ImageView iv_show_image;
     TextView tv_show_name;
     TextView tv_resolution;
@@ -126,7 +127,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     TextView tv_synopsis_label;
 
     TypefacedTextViewRegular tv_title;
-    LinearLayout rl_end_icons;
+    //LinearLayout rl_end_icons;
     public RecyclerView rv_show_list;
     ShowDetailsAdapter showDetailsAdapter;
     String showId;
@@ -155,14 +156,13 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     private boolean isExoPlayerFullscreen = false;
     private RelativeLayout rl_toolbar;
     private RelativeLayout rl_details;
-    private RelativeLayout rl_meta_data;
-    private RelativeLayout rl_container_show_details;
     private RelativeLayout rl_player;
-    private ScrollView sc_meta;
+    //private ScrollView sc_meta;
+    private NestedScrollView sc_meta;
     private Integer videoId = 0;
     //save instance
-    public Integer scrollPosition = null;
-    public Parcelable recyclerViewState;
+    //public Integer scrollPosition = null;
+    //public Parcelable recyclerViewState;
     //like, add to watchlist, share
     LinearLayout ll_icons;
     LinearLayout ll_like;
@@ -259,11 +259,11 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
 
         tag_theme = findViewById(R.id.tag_theme);
-        iv_menu = findViewById(R.id.iv_menu);
+      //  iv_menu = findViewById(R.id.iv_menu);
         iv_back = findViewById(R.id.iv_back);
-        iv_logo_text = findViewById(R.id.iv_logo_text);
+     //   iv_logo_text = findViewById(R.id.iv_logo_text);
         tv_title = findViewById(R.id.tv_title);
-        rl_end_icons = findViewById(R.id.rl_end_icons);
+      //  rl_end_icons = findViewById(R.id.rl_end_icons);
         rv_show_list = findViewById(R.id.rv_show_list);
         iv_show_image = findViewById(R.id.iv_show_image);
         tv_show_name = findViewById(R.id.tv_show_name);
@@ -295,9 +295,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         tv_director_label = findViewById(R.id.tv_director_label);
         tv_cast_label = findViewById(R.id.tv_cast_label);
 
-        iv_menu.setVisibility(View.GONE);
-        iv_logo_text.setVisibility(View.GONE);
-        rl_end_icons.setVisibility(View.GONE);
+        //iv_menu.setVisibility(View.GONE);
+        //iv_logo_text.setVisibility(View.GONE);
+        //rl_end_icons.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
         tv_title.setVisibility(View.VISIBLE);
 
@@ -317,8 +317,6 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
         rl_toolbar = findViewById(R.id.rl_toolbar);
         rl_details = findViewById(R.id.rl_details);
-        rl_meta_data = findViewById(R.id.rl_meta_data);
-        rl_container_show_details = findViewById(R.id.rl_container_show_details);
         rl_player = findViewById(R.id.rl_player);
         sc_meta = findViewById(R.id.sc_meta);
         FrameLayout yt_fragment = findViewById(R.id.yt_fragment);
@@ -844,13 +842,14 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
             //show name
             if (showDetails.getShow_name() != null  && !showDetails.getShow_name().isEmpty()) {
-                if (showDetails.getShow_name().length() > 19) {
-                    String title = showDetails.getShow_name().substring(0, 19) + "...";
+/*                if (showDetails.getShow_name().length() > 26) {
+                    String title = showDetails.getShow_name().substring(0, 26) + "...";
                     tv_title.setText(title);
                 } else {
                     tv_title.setText(showDetails.getShow_name());
-                }
+                }*/
 
+                tv_title.setText(showDetails.getShow_name());
                 tv_show_name.setVisibility(View.VISIBLE);
                 tv_show_name.setText(showDetails.getShow_name());
 
@@ -981,9 +980,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
             //show video list
             if (videoModelUpdatedList.size() != 0) {
-                if (scrollPosition != null) {
-                    Objects.requireNonNull(rv_show_list.getLayoutManager()).onRestoreInstanceState(recyclerViewState);
-                }
+//                if (scrollPosition != null) {
+//                    Objects.requireNonNull(rv_show_list.getLayoutManager()).onRestoreInstanceState(recyclerViewState);
+//                }
                 isPlayNow = true;
                 videoId = videoModelUpdatedList.get(0).getVideo_id();
                 if (videoModelUpdatedList.size() == 1) {
@@ -1096,6 +1095,10 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 ll_synopsis_text.setVisibility(View.VISIBLE);
                 tv_more_click.setVisibility(View.VISIBLE);
 
+                String description = showDetails.getSynopsis();
+                if(description.contains("\r\n")){
+                    description = description.replace("\r\n"," ");
+                }
                 //for truncating description
                 ex_synopsis.setText(showDetails.getSynopsis());
                 progressDialogDismiss();
@@ -1541,25 +1544,35 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
         RelativeLayout.LayoutParams exo_params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_200dp)
-        );
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+                //(int) getResources().getDimension(R.dimen.dimen_200dp));
+
         //exo_params.addRule(RelativeLayout.BELOW, R.id.rl_video_title);
         exo_player_view.setLayoutParams(exo_params);
 
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_250dp));
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+                //(int) getResources().getDimension(R.dimen.dimen_250dp));
         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 (int) getResources().getDimension(R.dimen.dimen_250dp));
-        // actionBarHeight = rl_toolbar.getHeight();
+
+        RelativeLayout.LayoutParams paramsImage = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                (int) getResources().getDimension(R.dimen.dimen_200dp));
+
         params.setMargins(0, actionBarHeight, 0, 0);
         params2.setMargins(0, 0, 0, 0);
+        paramsImage.setMargins(5, 5, 5, 5);
+
         rl_player.setPadding(0, 0, 0, 0);
         rl_details.setPadding(0, 0, 0, 0);
+        rl_image.setPadding(5, 5, 5, 5);
 
         rl_player.setLayoutParams(params2);
         rl_details.setLayoutParams(params);
+        rl_image.setLayoutParams(paramsImage);
         rl_details.setVisibility(View.VISIBLE);
         rl_player.setVisibility(View.VISIBLE);
         rl_toolbar.setVisibility(View.VISIBLE);

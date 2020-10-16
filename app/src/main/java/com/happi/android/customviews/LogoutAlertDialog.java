@@ -30,6 +30,8 @@ public class LogoutAlertDialog extends Dialog {
         TypefacedTextViewRegular tv_logoutall = findViewById(R.id.tv_logoutall);
         TypefacedTextViewRegular tv_logout = findViewById(R.id.tv_logout);
 
+        tv_logoutall.setVisibility(View.GONE);
+
         tv_logoutall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

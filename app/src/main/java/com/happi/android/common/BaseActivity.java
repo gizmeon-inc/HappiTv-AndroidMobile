@@ -305,7 +305,8 @@ public class BaseActivity extends AppCompatActivity {
         if(SharedPreferenceUtility.getGuest()){
             ll_logoutall.setVisibility(View.GONE);
         }else{
-            ll_logoutall.setVisibility(View.VISIBLE);
+            //ll_logoutall.setVisibility(View.VISIBLE);
+            ll_logoutall.setVisibility(View.GONE);
         }
         ll_logoutall.setOnClickListener(v -> {
 

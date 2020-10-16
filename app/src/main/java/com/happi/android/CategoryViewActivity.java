@@ -39,10 +39,10 @@ import io.reactivex.schedulers.Schedulers;
 public class CategoryViewActivity extends BaseActivity implements SearchResultsAdapter.itemClickListener,ShowList_adapter.itemClickListener {
 
     TypefacedTextViewRegular tv_title;
-    ImageView iv_menu;
+    //ImageView iv_menu;
     ImageView iv_back;
-    ImageView iv_logo_text;
-    ImageView iv_search;
+    //ImageView iv_logo_text;
+    //ImageView iv_search;
 
     TypefacedTextViewRegular tv_errormsg;
     ImageView iv_errorimg;
@@ -81,17 +81,17 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
         mSelectedItem = mAnimationItems[0];
 
         tv_title = findViewById(R.id.tv_title);
-        iv_menu = findViewById(R.id.iv_menu);
+        //iv_menu = findViewById(R.id.iv_menu);
         iv_back = findViewById(R.id.iv_back);
-        iv_logo_text = findViewById(R.id.iv_logo_text);
-        iv_search = findViewById(R.id.iv_search);
+        //iv_logo_text = findViewById(R.id.iv_logo_text);
+        //iv_search = findViewById(R.id.iv_search);
 
         tv_title.setVisibility(View.VISIBLE);
         iv_back.setVisibility(View.VISIBLE);
 
-        iv_menu.setVisibility(View.GONE);
-        iv_logo_text.setVisibility(View.GONE);
-        iv_search.setVisibility(View.GONE);
+        //iv_menu.setVisibility(View.GONE);
+       // iv_logo_text.setVisibility(View.GONE);
+       // iv_search.setVisibility(View.GONE);
 
         rv_video_list = findViewById(R.id.rv_video_list);
         iv_errorimg = findViewById(R.id.iv_errorimg);
@@ -113,13 +113,13 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
                 getShowByCategory(categoryId);
             }else{
                 String producername = category;
-                if(producername.length() > 19){
-                    String title = producername.substring(0,19)+"...";
+                /*if(producername.length() > 26){
+                    String title = producername.substring(0,26)+"...";
                     tv_title.setText(title);
                 }else{
                     tv_title.setText(producername);
-                }
-                //tv_title.setText(producername);
+                }*/
+                tv_title.setText(producername);
                 getShowByproducer(producername);
             }
 

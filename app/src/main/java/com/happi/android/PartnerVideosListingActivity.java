@@ -43,10 +43,10 @@ import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 public class PartnerVideosListingActivity extends BaseActivity {
 
     private TypefacedTextViewRegular tv_title;
-    private ImageView iv_menu;
+    //private ImageView iv_menu;
     private ImageView iv_back;
-    private ImageView iv_logo_text;
-    private ImageView iv_search;
+    //private ImageView iv_logo_text;
+    //private ImageView iv_search;
 
     private CompositeDisposable compositeDisposable;
 
@@ -97,17 +97,17 @@ public class PartnerVideosListingActivity extends BaseActivity {
 
 
         tv_title = findViewById(R.id.tv_title);
-        iv_menu = findViewById(R.id.iv_menu);
+        //iv_menu = findViewById(R.id.iv_menu);
         iv_back = findViewById(R.id.iv_back);
-        iv_logo_text = findViewById(R.id.iv_logo_text);
-        iv_search = findViewById(R.id.iv_search);
+        //iv_logo_text = findViewById(R.id.iv_logo_text);
+       // iv_search = findViewById(R.id.iv_search);
 
         tv_title.setVisibility(View.VISIBLE);
         iv_back.setVisibility(View.VISIBLE);
 
-        iv_menu.setVisibility(View.GONE);
-        iv_logo_text.setVisibility(View.GONE);
-        iv_search.setVisibility(View.GONE);
+       // iv_menu.setVisibility(View.GONE);
+       // iv_logo_text.setVisibility(View.GONE);
+       // iv_search.setVisibility(View.GONE);
 
 
         ll_error = findViewById(R.id.ll_error);

@@ -238,6 +238,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     //bottom navigation view
     private RelativeLayout rl_btm_navigation_video;
     private boolean isForceLogout = false;
+    private int actionBarHeight = 0;
 
     public void loadRemoteMedia() {
         Log.e("CAST", "loadRemoteMedia called");
@@ -1575,6 +1576,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     private void openFullscreen() {
         isExoPlayerFullscreen = true;
+        actionBarHeight = rl_toolbar.getHeight();
         // adContainer.setVisibility(View.GONE);
         //  moPubBannerView.setVisibility(View.GONE);
         exo_fullscreen_icon.setImageDrawable(ContextCompat.getDrawable(VideoPlayerActivity.this, R.drawable.ic_fullscreen_skrink));
@@ -1614,7 +1616,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     private void closeFullscreen() {
 
-        int actionBarHeight;
+
         isExoPlayerFullscreen = false;
 
         exo_fullscreen_icon.setImageDrawable(ContextCompat.getDrawable(VideoPlayerActivity.this, R.drawable.ic_fullscreen_white));
@@ -1631,8 +1633,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
         );
-        actionBarHeight = rl_toolbar.getHeight();
-        params.setMargins(0, actionBarHeight, 0, 0);
+//        actionBarHeight = rl_toolbar.getHeight();
+        params.setMargins(0, actionBarHeight, 0, actionBarHeight);
         rl_exoplayer_parent.setPadding(0, 0, 0, 0);
 
         rl_exoplayer_parent.setLayoutParams(params);
