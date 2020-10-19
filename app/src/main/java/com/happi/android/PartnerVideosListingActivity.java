@@ -186,7 +186,7 @@ public class PartnerVideosListingActivity extends BaseActivity {
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable showDisposable = usersService.getPartnerVideos(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getPublisher_id(),
-                id,SharedPreferenceUtility.getUserId())
+                id,SharedPreferenceUtility.getCountryCode(),SharedPreferenceUtility.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(partnerVideoListResponseModel -> {

@@ -805,7 +805,7 @@ public class ChannelHomeActivity extends BaseActivity implements View.OnClickLis
 
     private void loadVodToLive() {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable vodToLiveDisposable = usersService.getSimilarListForLive(HappiApplication.getAppToken(),
+        Disposable vodToLiveDisposable = usersService.getSimilarListForLive(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

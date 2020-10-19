@@ -306,7 +306,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     private void getWatchList() {
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable watchListDisposable = usersService.getWatchlist(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id(),
-                SharedPreferenceUtility.getUserId())
+                SharedPreferenceUtility.getCountryCode(),SharedPreferenceUtility.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getWatchListResponseModel -> {
@@ -338,7 +338,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     private void getFavouriteList() {
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable favouriteDisposable = usersService.getFavouritesList(HappiApplication.getAppToken(),
-                SharedPreferenceUtility.getPublisher_id(), SharedPreferenceUtility.getUserId())
+                SharedPreferenceUtility.getPublisher_id(), SharedPreferenceUtility.getCountryCode(),SharedPreferenceUtility.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(getResponseModel -> {

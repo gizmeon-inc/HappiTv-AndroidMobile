@@ -753,7 +753,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable similarShowDisposable = usersService.getSimilarShows(HappiApplication.getAppToken(),
-                String.valueOf(userId), SharedPreferenceUtility.getPublisher_id(), String.valueOf(videoId))
+                String.valueOf(userId), SharedPreferenceUtility.getPublisher_id(), SharedPreferenceUtility.getCountryCode(),
+                String.valueOf(videoId))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showListResponseModel -> {
@@ -796,7 +797,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.updateWatchlist(HappiApplication.getAppToken
-                (), videoId, userId, SharedPreferenceUtility.getPublisher_id())
+                (), videoId, userId, SharedPreferenceUtility.getCountryCode(),SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(basicResponse -> {
@@ -1231,7 +1232,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.getSelectedVideo(HappiApplication.getAppToken(),
-                SharedPreferenceUtility.getPublisher_id(), "android-phone", videoId)
+                SharedPreferenceUtility.getPublisher_id(), "android-phone",SharedPreferenceUtility.getCountryCode(),
+                videoId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(selectedVideoResponseModel -> {

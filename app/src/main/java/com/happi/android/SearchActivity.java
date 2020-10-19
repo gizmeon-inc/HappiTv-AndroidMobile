@@ -221,7 +221,7 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.searchByshows(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getPublisher_id(),
-                searchKey,SharedPreferenceUtility.getUserId())
+                searchKey,SharedPreferenceUtility.getCountryCode(),SharedPreferenceUtility.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showListResponseModel -> {
@@ -475,9 +475,19 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
     @Override
     public void onShowsItemClicked(int adapterPosition) {
         hideSoftKeyBoard();
-        SharedPreferenceUtility.setShowId(showList_adapter.getItem(adapterPosition).getShow_id());
-        ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY,
-                showList_adapter.getItem(adapterPosition).getShow_id());
+        if(showList_adapter.getItem(adapterPosition).getVideo_id() == null){
+
+            SharedPreferenceUtility.setShowId(showList_adapter.getItem(adapterPosition).getShow_id());
+            ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY,
+                    showList_adapter.getItem(adapterPosition).getShow_id());
+
+        }else{
+
+            int videoId = showList_adapter.getItem(adapterPosition).getVideo_id();
+            SharedPreferenceUtility.setVideoId(videoId);
+            ActivityChooser.goToActivity(ConstantUtils.VIDEO_PLAYER_ACTIVITY, videoId);
+        }
+
         //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
         overridePendingTransition(0,0);
     }
@@ -543,10 +553,14 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
     }
 
     private void hideSoftKeyBoard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-        assert imm != null;
-        if (imm != null && imm.isAcceptingText()) { // verify if the soft keyboard is open
-            imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        try{
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            assert imm != null;
+            if (imm != null && imm.isAcceptingText()) { // verify if the soft keyboard is open
+                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+            }
+        }catch(Exception ex){
+
         }
     }
 

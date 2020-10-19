@@ -135,7 +135,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
 
     private void loadCategoryList() {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable cateogoryDisposable = usersService.GetTheme(HappiApplication.getAppToken(),
+        Disposable cateogoryDisposable = usersService.GetTheme(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -159,7 +159,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
     private void loadCategories() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.GetTheme(HappiApplication.getAppToken(),
+        Disposable videoDisposable = usersService.GetTheme(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

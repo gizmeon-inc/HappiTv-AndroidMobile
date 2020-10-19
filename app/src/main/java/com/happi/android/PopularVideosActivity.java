@@ -171,7 +171,8 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
     private void getFreeVideos() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
+        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(),
+                SharedPreferenceUtility.getCountryCode(),SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showModelResponse -> {
@@ -190,7 +191,7 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
 
     private void getNewReleases() {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),
+        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -214,7 +215,7 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken()
-                , SharedPreferenceUtility.getPublisher_id())
+                , SharedPreferenceUtility.getCountryCode(),SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(videoResponse -> {

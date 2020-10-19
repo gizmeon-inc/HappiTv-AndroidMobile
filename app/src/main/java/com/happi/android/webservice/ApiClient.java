@@ -168,6 +168,7 @@ public class ApiClient {
 
         @GET("api/liveSchedule")
         Observable<LiveScheduleResponse> getLiveSchedule(@Header("access-token") String header,
+                                                         @Query("country_code") String country_code,
                                                          @Query("channelid") int channel_id);
         @GET("api/PopularChannels")
         Observable<ChannelListResponse> PopularChannels(@Header("access-token") String header,
@@ -184,12 +185,14 @@ public class ApiClient {
 
         @GET("api/partnerList")
         Observable<PartnerResponseModel> getPartnerList(@Header("access-token") String header,
+                                                        @Query("country_code") String country_code,
                                                         @Query("pubid") String pubid);
         //@GET("api/partnerVideos")
         @GET("api/partnerVideosByShows")
         Observable<PartnerVideoListResponseModel> getPartnerVideos(@Header("access-token") String header,
                                                                    @Query("pubid") String pubid,
                                                                    @Query("partner_id") String partner_id,
+                                                                   @Query("country_code") String country_code,
                                                                    @Query("uid") int userId);
 
 
@@ -230,9 +233,11 @@ public class ApiClient {
         @GET("api/NewArrivalsUpdated2")
        // Observable<VideoResponse> NewReleases(@Header("access-token") String header,
         Observable<ShowListResponseModel> NewReleases(@Header("access-token") String header,
-                                                @Query("pubid") String publisher_id);
+                                                      @Query("country_code") String country_code,
+                                                      @Query("pubid") String publisher_id);
         @GET("api/getfreevideos2")
         Observable<ShowListResponseModel> getFreeShowList(@Header("access-token") String header,
+                                                          @Query("country_code") String country_code,
                                                           @Query("pubid") String publisher_id);
 
         @GET("GetHomeVideoUpdated2")
@@ -259,6 +264,7 @@ public class ApiClient {
         //Observable<VideoResponse> GetFeaturedvideo(@Header("access-token") String header,
         Observable<FeaturedShowsResponseModel> GetFeaturedvideo(@Header("access-token") String header,
                                                                 @Query("uid") Integer uid,
+                                                                @Query("country_code") String country_code,
                                                                 @Query("pubid") String publisher_id);
 
         @GET("api/GetAllLiveVideos")
@@ -281,28 +287,34 @@ public class ApiClient {
         Observable<ShowVideoUpdatedResponseModel> getVideoDetailsByShow (@Header("access-token") String header,
                                                                          @Query("pubid") String publisher_id,
                                                                          @Query("show_id") String show_id,
+                                                                         @Query("country_code") String country_code,
                                                                          @Query("user_id") int user_id );
         @GET("api/GetshowsByCategoryUpdated2")
         Observable<ShowListResponseModel> getShowByCategory (@Header("access-token") String header,
                                                              @Query("pubid") String publisher_id,
+                                                             @Query("country_code") String country_code,
                                                              @Query("genre_id") String genre_id);
         @GET("api/ProducershowsUpdated")
         Observable<ShowListResponseModel> getShowByProducer (@Header("access-token") String header,
                                                              @Query("pubid") String publisher_id,
                                                              @Query("device_type") String device_type,
+                                                             @Query("country_code") String country_code,
                                                              @Query("producer") String producer);
         @GET("api/SimilarshowsUpdated")
         Observable<ShowListResponseModel> getSimilarShows (@Header("access-token") String header,
                                                            @Query("uid") String userId,
                                                            @Query("pubid") String publisher_id,
+                                                           @Query("country_code") String country_code,
                                                            @Query("vid") String videoId);
         @GET("api/GetWatchlistUpdated")
         Observable<GetWatchListResponseModel> getWatchlist (@Header("access-token") String header,
                                                             @Query("pubid") String pubid,
+                                                            @Query("country_code") String country_code,
                                                             @Query("uid") int uid);
         @GET("api/GetLikedShowsUpdated")
         Observable<GetWatchListResponseModel> getFavouritesList(@Header("access-token") String header,
                                                                 @Query("pubid") String pubid,
+                                                                @Query("country_code") String country_code,
                                                                 @Query("uid") int uid);
 
         @GET("api/GetSchedule")
@@ -317,6 +329,7 @@ public class ApiClient {
 
         @GET("api/GetVodtoLivevideos")
         Observable<VodToLiveResponseModel> getSimilarListForLive (@Header("access-token") String header,
+                                                                  @Query("country_code") String country_code,
                                                                   @Query("pubid") String publisher_id);
 
 
@@ -458,6 +471,7 @@ public class ApiClient {
 
         @GET("api/GetThemes")
         Observable<CategoryModel> GetTheme(@Header("access-token") String header,
+                                           @Query("country_code") String country_code,
                                            @Query("pubid") String publisher_id);
 
         @GET("api/GetvideoByCategory")
@@ -479,10 +493,12 @@ public class ApiClient {
         Observable<ShowListResponseModel> searchByshows (@Header("access-token") String header,
                                                          @Query("pubid") String publisher_id,
                                                          @Query("key") String key,
+                                                         @Query("country_code") String country_code,
                                                          @Query("uid") Integer uid);
 
         @GET("GetHomeVideoUpdated2")
         Observable<CategorisHomeListResponseModel> GetHomeVideo (@Header("access-token") String header,
+                                                                 @Query("country_code") String country_code,
                                                                  @Query("pubid") String publisher_id);
 
         //===========================================================
@@ -492,6 +508,7 @@ public class ApiClient {
         Observable<BasicResponse> updateWatchlist(@Header("access-token") String header,
                                                   @Query("vid") Integer vid,
                                                   @Query("uid") Integer uid,
+                                                  @Query("country_code") String country_code,
                                                   @Query("pubid") String publisher_id);
 
         @GET("api/LikeVideo")
@@ -511,6 +528,7 @@ public class ApiClient {
         Observable<SelectedVideoResponseModel> getSelectedVideo (@Header("access-token") String header,
                                                                  @Query("pubid") String publisher_id,
                                                                  @Query("device_type") String device_type,
+                                                                 @Query("country_code") String country_code,
                                                                  @Query("vid") Integer vid);
         //add to watchlist
         @GET("api/WatchlistShows")

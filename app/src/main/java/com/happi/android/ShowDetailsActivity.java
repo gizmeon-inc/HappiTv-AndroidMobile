@@ -742,7 +742,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
     private void getShowDetails(String id) {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable disposable = usersService.getVideoDetailsByShow(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id(), id, SharedPreferenceUtility.getUserId())
+        Disposable disposable = usersService.getVideoDetailsByShow(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id(), id,
+                SharedPreferenceUtility.getCountryCode(),
+                SharedPreferenceUtility.getUserId())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showVideoUpdatedResponseModel -> {

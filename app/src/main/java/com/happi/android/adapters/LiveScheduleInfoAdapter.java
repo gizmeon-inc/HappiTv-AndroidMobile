@@ -119,8 +119,9 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
             if ((currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)) ||
                     (currentDate.equals(finalStartDateTime))) {
                 //status = "Now Playing";
+                //liveScheduleList.get(position).setLive(true);
                 status = "";
-                liveScheduleList.get(position).setLive(true);
+
             } else {
                 status = getDayForScheduleItem(liveScheduleList.get(position));
 
@@ -135,6 +136,7 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
                     status = "";
                 }else{
                     SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                   // SimpleDateFormat sdfDate = new SimpleDateFormat("dd MMM, yyyy",Locale.getDefault());
                     status = sdfDate.format(finalStartDateTime);
                 }
 

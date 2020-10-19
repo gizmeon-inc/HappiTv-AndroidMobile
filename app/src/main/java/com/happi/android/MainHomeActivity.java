@@ -665,7 +665,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void watchForFreeShowList() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
+        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
+                SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showModelResponse -> {
@@ -691,7 +692,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void newReleases() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),
+        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -790,7 +791,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void loadLiveSchedule(int channelId) {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable tokenDisposable = usersService.getLiveSchedule(HappiApplication.getAppToken(), channelId)
+        Disposable tokenDisposable = usersService.getLiveSchedule(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(), channelId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(liveScheduleResponse -> {
@@ -810,7 +811,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
     private void loadPartners() {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable tokenDisposable = usersService.getPartnerList(HappiApplication.getAppToken(),
+        Disposable tokenDisposable = usersService.getPartnerList(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1089,7 +1090,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void categoryApiCall() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable loginDisposable = usersService.GetTheme(HappiApplication.getAppToken(),
+        Disposable loginDisposable = usersService.GetTheme(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1126,7 +1127,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void loadCategoriesHomeList() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable homeVideoDisposable = usersService.GetHomeVideo(HappiApplication.getAppToken(),
+        Disposable homeVideoDisposable = usersService.GetHomeVideo(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

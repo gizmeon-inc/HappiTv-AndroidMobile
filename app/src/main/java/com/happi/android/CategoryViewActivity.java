@@ -155,7 +155,7 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable showsDisposable = usersService.getShowByProducer(HappiApplication.getAppToken(),
                 SharedPreferenceUtility.getPublisher_id(),
-                "android-phone",prodName)
+                "android-phone",SharedPreferenceUtility.getCountryCode(),prodName)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showByProdResponse -> {
@@ -181,7 +181,7 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable showDisposable = usersService.getShowByCategory(HappiApplication.getAppToken(),
-                SharedPreferenceUtility.getPublisher_id(),
+                SharedPreferenceUtility.getPublisher_id(),SharedPreferenceUtility.getCountryCode(),
                 id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

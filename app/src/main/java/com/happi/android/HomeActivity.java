@@ -604,7 +604,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
 
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable videoDisposable = usersService.GetFeaturedvideo(HappiApplication.getAppToken(),
-                userId, SharedPreferenceUtility.getPublisher_id())
+                userId,SharedPreferenceUtility.getCountryCode(), SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showResponse -> {
@@ -629,7 +629,8 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     private void watchForFreeShowList() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
+        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
+                SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showModelResponse -> {
@@ -655,7 +656,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     private void newReleases() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),
+        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -716,7 +717,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     private void categoryApiCall() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable loginDisposable = usersService.GetTheme(HappiApplication.getAppToken(),
+        Disposable loginDisposable = usersService.GetTheme(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -762,7 +763,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     private void loadCategoriesHomeList() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable homeVideoDisposable = usersService.GetHomeVideo(HappiApplication.getAppToken(),
+        Disposable homeVideoDisposable = usersService.GetHomeVideo(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

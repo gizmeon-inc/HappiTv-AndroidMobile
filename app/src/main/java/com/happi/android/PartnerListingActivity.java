@@ -162,7 +162,7 @@ public class PartnerListingActivity extends BaseActivity implements PartnersList
 
     private void loadPartnersList() {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable tokenDisposable = usersService.getPartnerList(HappiApplication.getAppToken(),
+        Disposable tokenDisposable = usersService.getPartnerList(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
