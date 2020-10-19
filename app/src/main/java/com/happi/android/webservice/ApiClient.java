@@ -280,7 +280,7 @@ public class ApiClient {
         @GET("api/getShowVideos")
         Observable<VideoResponse> getShowVideos(@Header("access-token") String header,
                                                      @Query("show_id") Integer showId,
-                                                @Query("coGetThemesuntry_code") String country_code,
+                                                @Query("country_code") String country_code,
                                                 @Query("pubid") String publisher_id);
 
         @GET("api/getShowVideosUpdated")
