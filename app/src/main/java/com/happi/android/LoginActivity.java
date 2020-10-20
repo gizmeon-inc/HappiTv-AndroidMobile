@@ -580,7 +580,7 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
             dialog.dismiss();
         }
         LogoutAlertDialog alertDialog =
-                new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+                new LogoutAlertDialog(this, this);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();

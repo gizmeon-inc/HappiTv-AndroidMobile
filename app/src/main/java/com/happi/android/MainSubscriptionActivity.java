@@ -177,7 +177,7 @@ public class MainSubscriptionActivity extends BaseActivity implements LogoutDial
     }
     private void signOut() {
         LogoutDialogClass logoutDialogClass =
-                new LogoutDialogClass(HappiApplication.getCurrentActivity(), this::onLogoutClicked);
+                new LogoutDialogClass(this, this::onLogoutClicked);
         Objects.requireNonNull(logoutDialogClass.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         logoutDialogClass.show();
     }
@@ -249,7 +249,7 @@ public class MainSubscriptionActivity extends BaseActivity implements LogoutDial
     }
     private void showAlertDialog(String message) {
         CustomAlertDialog alertDialog =
-                new CustomAlertDialog(HappiApplication.getCurrentActivity(), "ok", message, "Ok", "", null, null, this::onOkClickNeutral, null);
+                new CustomAlertDialog(this, "ok", message, "Ok", "", null, null, this::onOkClickNeutral, null);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();

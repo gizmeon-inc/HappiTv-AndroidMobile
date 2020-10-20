@@ -201,6 +201,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private NestedScrollView sv_scrollview;
     private ProgressDialog dialog;
     private static Context context;
+
+    private boolean shouldAutoPlay = true;
+
     @Override
 
     public void onClick(View view) {
@@ -443,6 +446,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             new AdvertisingIdAsyncTask().execute();
         }
 
+        shouldAutoPlay = true;
         resumePlayer();
         if(liveChannelId != 0){
             Log.e("HOME","ONRESUME");
@@ -875,7 +879,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             boolean needNewPlayer = exoPlayer == null;
 
             if (needNewPlayer) {
-                boolean shouldAutoPlay = true;
+                //boolean shouldAutoPlay = true;
                 TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
                 DefaultTrackSelector trackSelector1 = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
                 TrackSelectionHelper trackSelectionHelper = new TrackSelectionHelper(trackSelector1, adaptiveTrackSelectionFactory);
@@ -1334,6 +1338,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     protected void onPause() {
+        shouldAutoPlay = false;
         releasePlayer();
         super.onPause();
     }
@@ -1898,5 +1903,12 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    protected void onStop() {
+        shouldAutoPlay = false;
+        super.onStop();
+
     }
 }

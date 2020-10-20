@@ -594,7 +594,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
     }
 
     private void loginExceededAlertSubscription() {
-        LogoutAlertDialog alertDialog = new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+        LogoutAlertDialog alertDialog = new LogoutAlertDialog(this, this);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();

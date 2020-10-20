@@ -609,18 +609,22 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         //do nothing
                     } else {
                         if (watchlistFlag == 0) {
+                            isAddToWatchLaterClicked = true;
                             iv_watch_list.setImageResource(R.drawable.ic_checkmark);
 
                         } else if (watchlistFlag == 1) {
+                            isAddToWatchLaterClicked = false;
                             iv_watch_list.setImageResource(R.drawable.ic_add_to_watch_list);
                         }
                         Toast.makeText(this, "Can't connect to server. Please try again later.", Toast.LENGTH_SHORT).show();
                     }
                 }, throwable -> {
                     if (watchlistFlag == 0) {
+                        isAddToWatchLaterClicked = true;
                         iv_watch_list.setImageResource(R.drawable.ic_checkmark);
 
                     } else if (watchlistFlag == 1) {
+                        isAddToWatchLaterClicked = false;
                         iv_watch_list.setImageResource(R.drawable.ic_add_to_watch_list);
                     }
                 });
@@ -639,12 +643,14 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         //do nothing
                     } else {
                         if (likedFlag == 0) {
+                            isLikeClicked = true;
                             iv_like.setImageResource(R.drawable.ic_like_fill_full);
 
                             ll_dislike.setEnabled(false);
                             iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
                             tv_dislike.setTextColor(getResources().getColor(R.color.coolGrey));
                         } else if (likedFlag == 1) {
+                            isLikeClicked = false;
                             iv_like.setImageResource(R.drawable.ic_like_empty);
 
                             ll_dislike.setEnabled(true);
@@ -657,12 +663,14 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
                 }, throwable -> {
                     if (likedFlag == 0) {
+                        isLikeClicked = true;
                         iv_like.setImageResource(R.drawable.ic_like_fill_full);
 
                         ll_dislike.setEnabled(false);
                         iv_dislike.setColorFilter(iv_dislike.getContext().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
                         tv_dislike.setTextColor(getResources().getColor(R.color.coolGrey));
                     } else if (likedFlag == 1) {
+                        isLikeClicked = false;
                         iv_like.setImageResource(R.drawable.ic_like_empty);
 
                         ll_dislike.setEnabled(true);
@@ -684,12 +692,14 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                         //do nothing
                     } else {
                         if (dislikeFlag == 0) {
+                            isDisLikeClicked = true;
                             iv_dislike.setImageResource(R.drawable.ic_thumbsdown_fill_full);
 
                             ll_like.setEnabled(false);
                             iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
                             tv_like.setTextColor(getResources().getColor(R.color.coolGrey));
                         } else if (dislikeFlag == 1) {
+                            isDisLikeClicked = false;
                             iv_dislike.setImageResource(R.drawable.ic_thumbsdown_empty);
 
                             ll_like.setEnabled(true);
@@ -702,12 +712,14 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
                 }, throwable -> {
                     if (dislikeFlag == 0) {
+                        isDisLikeClicked = true;
                         iv_dislike.setImageResource(R.drawable.ic_thumbsdown_fill_full);
 
                         ll_like.setEnabled(false);
                         iv_like.setColorFilter(iv_like.getContext().getResources().getColor(R.color.black), PorterDuff.Mode.SRC_ATOP);
                         tv_like.setTextColor(getResources().getColor(R.color.coolGrey));
                     } else if (dislikeFlag == 1) {
+                        isDisLikeClicked = false;
                         iv_dislike.setImageResource(R.drawable.ic_thumbsdown_empty);
 
                         ll_like.setEnabled(true);

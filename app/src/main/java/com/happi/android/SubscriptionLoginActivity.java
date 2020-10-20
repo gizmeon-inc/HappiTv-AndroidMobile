@@ -633,7 +633,7 @@ public class SubscriptionLoginActivity extends BaseActivity implements LogoutAle
             dialog.dismiss();
         }
         LogoutAlertDialog alertDialog =
-                new LogoutAlertDialog(HappiApplication.getCurrentActivity(), this);
+                new LogoutAlertDialog(this, this);
         Objects.requireNonNull(alertDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alertDialog.setCancelable(false);
         alertDialog.show();
