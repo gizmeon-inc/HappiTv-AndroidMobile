@@ -39,7 +39,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CategoriesListActivity extends BaseActivity implements CategoryCircleViewAdapter.itemClickListenerForCategory {
     TypefacedTextViewRegular tv_title;
-    ImageView iv_menu, iv_back, iv_logo_text, iv_search;
+    ImageView  iv_back;
     TypefacedTextViewRegular tv_errormsg;
     ImageView iv_errorimg;
     GridRecyclerView rv_category_list;
@@ -72,17 +72,11 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
         mSelectedItem = mAnimationItems[0];
 
         tv_title = findViewById(R.id.tv_title);
-        iv_menu = findViewById(R.id.iv_menu);
         iv_back = findViewById(R.id.iv_back);
-        iv_logo_text = findViewById(R.id.iv_logo_text);
-        iv_search = findViewById(R.id.iv_search);
 
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText(R.string.categories);
         iv_back.setVisibility(View.VISIBLE);
-        iv_menu.setVisibility(View.GONE);
-        iv_logo_text.setVisibility(View.GONE);
-        iv_search.setVisibility(View.GONE);
 
         rv_category_list = findViewById(R.id.rv_category_list);
         iv_errorimg = findViewById(R.id.iv_errorimg);

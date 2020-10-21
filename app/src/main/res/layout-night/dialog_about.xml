@@ -25,7 +25,8 @@
             android:layout_centerHorizontal="true"
             android:layout_width="@dimen/dimen_165dp"
             android:layout_height="@dimen/dimen_65dp"
-            android:src="@drawable/ic_transparent_logo" />
+            android:src="@drawable/ic_toolbar_logo"
+            android:padding="@dimen/dimen_10dp"/>
 
         <com.happi.android.customviews.TypefacedTextViewRegular
             android:id="@+id/tv_version"

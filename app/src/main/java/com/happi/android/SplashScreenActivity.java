@@ -164,6 +164,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
     private void goToHomePage() {
         //Intent intent = new Intent(SplashScreenActivity.this, HomeActivity.class);
+        Log.v("okhttp","Splash to home");
         Intent intent = new Intent(SplashScreenActivity.this, MainHomeActivity.class);
         if(!showId.equalsIgnoreCase("empty")){
             intent.putExtra("show",showId);

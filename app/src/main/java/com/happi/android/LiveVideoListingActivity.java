@@ -37,7 +37,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LiveVideoListingActivity extends BaseActivity implements ChannelListAdapter.itemClickListener {
 
-    ImageView iv_menu, iv_back, iv_search, iv_logo_text;
+    ImageView  iv_back;
     TypefacedTextViewRegular tv_title;
     private AnimationItem mSelectedItem;
     GridRecyclerView rv_live_list;
@@ -69,22 +69,16 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
         AnimationItem[] mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
 
-        iv_menu = findViewById(R.id.iv_menu);
         iv_back = findViewById(R.id.iv_back);
-        iv_logo_text = findViewById(R.id.iv_logo_text);
         tv_title = findViewById(R.id.tv_title);
-        iv_search = findViewById(R.id.iv_search);
         rv_live_list = findViewById(R.id.rv_live_list);
         tv_errormsg = findViewById(R.id.tv_errormsg);
         iv_errorimg = findViewById(R.id.iv_errorimg);
         rl_errorlayout = findViewById(R.id.rl_errorlayout);
 
-        iv_menu.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
-        iv_logo_text.setVisibility(View.GONE);
         tv_title.setVisibility(View.VISIBLE);
         tv_title.setText(R.string.live_channel);
-        iv_search.setVisibility(View.GONE);
         rl_errorlayout.setVisibility(View.GONE);
 
         compositeDisposable = new CompositeDisposable();

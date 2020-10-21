@@ -52,9 +52,7 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
-import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
-import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -74,9 +72,9 @@ import com.happi.android.adapters.CategoryCircleViewAdapter;
 import com.happi.android.adapters.CategoryListAdapter;
 import com.happi.android.adapters.ChannelListAdapter;
 import com.happi.android.adapters.ChannelSuggestionAdapter;
-import com.happi.android.adapters.PartnersListingAdapter;
 import com.happi.android.adapters.LiveScheduleHomeListAdapter;
 import com.happi.android.adapters.LiveScheduleInfoAdapter;
+import com.happi.android.adapters.PartnersListingAdapter;
 import com.happi.android.adapters.ShowList_adapter;
 import com.happi.android.adapters.ShowsAdapter;
 import com.happi.android.adapters.VideoList_adapter;
@@ -86,6 +84,7 @@ import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.CustomAlertDialog;
+import com.happi.android.customviews.ScrollingLinearLayoutManager;
 import com.happi.android.customviews.SpacesItemDecoration;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.exoplayercontroller.EventLogger;
@@ -113,6 +112,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -203,6 +204,13 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private static Context context;
 
     private boolean shouldAutoPlay = true;
+    private boolean isMuted = false;
+    private float volume = 0;
+    //partner autoscroll
+    private LinearLayoutManager layoutManager;
+    private SwipeTask swipeTask;
+    private Timer swipeTimer;
+    private boolean isPartnerScroll = false;
 
     @Override
 
@@ -215,8 +223,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
 
@@ -238,7 +246,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             } else {
                 showId = "empty";
             }
-        }else{
+        } else {
             showId = "empty";
         }
         if (getIntent() != null) {
@@ -269,6 +277,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         RelativeLayout rl_exoplayer_parent = findViewById(R.id.rl_exoplayer_parent);
         RelativeLayout rl_toolbar = findViewById(R.id.rl_toolbar);
+
 
         //error layout
         ll_error_home = findViewById(R.id.ll_error_home);
@@ -324,6 +333,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         rv_partner = findViewById(R.id.rv_live_schedule_partner);
         int spacingPixelsPartner = getResources().getDimensionPixelSize(R.dimen.default_spacing_2dp);
         rv_partner.addItemDecoration(new SpacesItemDecoration(spacingPixelsPartner));
+        layoutManager = new ScrollingLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false, 100);
 
 
         //scroll view
@@ -332,7 +342,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
-        Log.v("okhttp", "total width >>"+width);
+        Log.v("okhttp", "total width >>" + width);
         apiErrorCount = 0;
         homeLoaded = false;
         setupRecyclerView();
@@ -407,9 +417,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         });
 
 
-
-
-
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
         mRewardedVideoAd.setRewardedVideoAdListener(this);
 
@@ -421,14 +428,14 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         HappiApplication.setCurrentContext(this);
         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
-        if(getMenuItem() != R.id.item_home){
+        if (getMenuItem() != R.id.item_home) {
             updateMenuItem(0);
         }
         setUserName();
         setLogoutAllVisibility();
 
         if (apiErrorCount == 4) {
-       // if (!homeLoaded) {
+            // if (!homeLoaded) {
             setupRecyclerView();
             recallHomeApis();
         }
@@ -448,9 +455,14 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         shouldAutoPlay = true;
         resumePlayer();
-        if(liveChannelId != 0){
-            Log.e("HOME","ONRESUME");
+        if (liveChannelId != 0) {
+            Log.e("HOME", "ONRESUME");
             loadLiveSchedule(liveChannelId);
+        }
+        Log.e("CARS", "onresume");
+        if (rv_partner != null && partnersListingAdapter != null && !partnersListingAdapter.isEmpty() && !isPartnerScroll) {
+            Log.e("CARS", "onresume:play cars");
+            playCarousel();
         }
         super.onResume();
     }
@@ -473,7 +485,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //----------------------------------------live schedule-------------------------------------------//
         ViewCompat.setNestedScrollingEnabled(rv_live_schedule_list, false);
         rv_live_schedule_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        liveScheduleInfoAdapter = new LiveScheduleInfoAdapter(this,width);
+        liveScheduleInfoAdapter = new LiveScheduleInfoAdapter(this, width);
         //liveScheduleHomeListAdapter = new LiveScheduleHomeListAdapter(this);
         //rv_live_schedule_list.setAdapter(liveScheduleHomeListAdapter);
         rv_live_schedule_list.setAdapter(liveScheduleInfoAdapter);
@@ -491,8 +503,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .show();
         //-------------------------------------------------partner info-------------------------------------------------------------------//
         ViewCompat.setNestedScrollingEnabled(rv_partner, false);
-        rv_partner.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        partnersListingAdapter = new PartnersListingAdapter(this,true, this::onPartnerItemClicked);
+        //layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        rv_partner.setLayoutManager(layoutManager);
+        partnersListingAdapter = new PartnersListingAdapter(this, true, this::onPartnerItemClicked);
         rv_partner.setAdapter(partnersListingAdapter);
         loadingPartnerInfo = Skeleton.bind(rv_partner)
                 .adapter(partnersListingAdapter)
@@ -505,13 +518,45 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .duration(1000)
                 .frozen(false)
                 .show();
+            /*int duration = 10;
+            int pixelsToMove = 40;
+            Handler mHandler = new Handler(Looper.getMainLooper());
+            Runnable SCROLLING_RUNNABLE = new Runnable() {
+
+                @Override
+                public void run() {
+                    rv_partner.smoothScrollBy(pixelsToMove, 0);
+                    mHandler.postDelayed(this, duration);
+                }
+            };
+            rv_partner.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                    super.onScrolled(recyclerView, dx, dy);
+                    int lastItem = layoutManager.findLastCompletelyVisibleItemPosition();
+                    if(lastItem == layoutManager.getItemCount()-1){
+                        mHandler.removeCallbacks(SCROLLING_RUNNABLE);
+                        Handler postHandler = new Handler();
+                        postHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                rv_partner.setAdapter(null);
+                                rv_partner.setAdapter(partnersListingAdapter);
+                                mHandler.postDelayed(SCROLLING_RUNNABLE, 2000);
+                            }
+                        }, 2000);
+                    }
+                }
+            });
+            mHandler.postDelayed(SCROLLING_RUNNABLE, 2000);*/
+
         //---------------------------------------------------category-----------------------------------------------------------------//
         ViewCompat.setNestedScrollingEnabled(rv_category_list, false);
         rv_category_list.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         categoryList_adapter = new CategoryListAdapter(this,
                 this::onCategoryItemClicked, false);
 
-        circleViewAdapter = new CategoryCircleViewAdapter(this, this::onCategoryItemClickedForCircleView,false);
+        circleViewAdapter = new CategoryCircleViewAdapter(this, this::onCategoryItemClickedForCircleView, false);
         rv_category_list.setAdapter(circleViewAdapter);
 
         loadingCategories = Skeleton.bind(rv_category_list)
@@ -546,7 +591,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //-------------------------------------------New Release-----------------------------------------------------//
         ViewCompat.setNestedScrollingEnabled(rv_video_grid, false);
         rv_video_grid.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        videoList_adapter = new VideoList_adapter(this, this::onItemClicked, false,true, width);
+        videoList_adapter = new VideoList_adapter(this, this::onItemClicked, false, true, width);
         rv_video_grid.setAdapter(videoList_adapter);
 
         loadingVideos = Skeleton.bind(rv_video_grid)
@@ -669,7 +714,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void watchForFreeShowList() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
+        Disposable showDisposable = usersService.getFreeShowList(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -696,7 +741,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void newReleases() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
+        Disposable videoDisposable = usersService.NewReleases(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -744,7 +789,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                     //load all live - player and channels list
                     if (!channelModelList.isEmpty()) {
                         liveChannelId = channelModelList.get(0).getChannelId();
-                        Log.e("HOME","GETALLCHANNEL");
+                        Log.e("HOME", "GETALLCHANNEL");
                         loadLiveSchedule(liveChannelId);
                         generateToken(channelModelList.get(0));
 
@@ -795,7 +840,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void loadLiveSchedule(int channelId) {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable tokenDisposable = usersService.getLiveSchedule(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(), channelId)
+        Disposable tokenDisposable = usersService.getLiveSchedule(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(), channelId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(liveScheduleResponse -> {
@@ -813,9 +858,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 });
         compositeDisposable.add(tokenDisposable);
     }
+
     private void loadPartners() {
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable tokenDisposable = usersService.getPartnerList(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
+        Disposable tokenDisposable = usersService.getPartnerList(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -848,8 +894,14 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
             ll_partner.setVisibility(View.GONE);
             rv_partner.setVisibility(View.GONE);
+        } else {
+            isPartnerScroll = true;
+            Log.e("CARS", "partnload: play cars");
+            Log.e("CARS", "count " + partnersListingAdapter.getItemCount());
+            playCarousel();
         }
     }
+
     private void updateLiveScheduleList(List<LiveScheduleResponse.LiveScheduleModel> liveScheduleModelList) {
 
         liveScheduleInfoAdapter.clearAll();
@@ -873,8 +925,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         pb_live.setVisibility(View.GONE);
         try {
             Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
-           // Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
-           // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
+            // Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
+            // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
 
             boolean needNewPlayer = exoPlayer == null;
 
@@ -905,6 +957,34 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                         overridePendingTransition(0, 0);
                     }
                 });
+                volume = exoPlayer.getVolume();
+
+
+                FrameLayout fl_volume = exo_player_view_home.findViewById(R.id.fl_volume);
+                ImageView iv_volume = exo_player_view_home.findViewById(R.id.iv_volume);
+
+                isMuted = false;
+                iv_volume.setImageResource(R.drawable.ic_volume);
+
+                fl_volume.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (isMuted) {
+                            Log.e("VOL", "muted");
+                            isMuted = false;
+                            exoPlayer.setVolume(volume);
+                            iv_volume.setImageResource(R.drawable.ic_volume);
+                        } else {
+                            Log.e("VOL", "not muted");
+                            isMuted = true;
+                            volume = exoPlayer.getVolume();
+                            exoPlayer.setVolume(0);
+                            iv_volume.setImageResource(R.drawable.ic_mute);
+                        }
+                    }
+                });
+
+
                 // volume = exoPlayer.getVolume();
             }
             DefaultBandwidthMeter bandwidthMeterA = new DefaultBandwidthMeter();
@@ -912,7 +992,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             DefaultHttpDataSourceFactory factory = new DefaultHttpDataSourceFactory(userAgent, bandwidthMeterA);
             factory.getDefaultRequestProperties().set("token", playerToken);
 
-             videoSource = new HlsMediaSource.Factory(factory).createMediaSource(videoURI);
+            videoSource = new HlsMediaSource.Factory(factory).createMediaSource(videoURI);
             //videoSource = new HlsMediaSource(videoURI, factory,1, null,null);
 
             /*try {
@@ -931,8 +1011,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             } catch (Exception e) {
                 Log.d("MANIFEST##", "error: " + e.getMessage());
             }*/
-            try{
-
+            try {
 
 
                 exoPlayer.addListener(new Player.EventListener() {
@@ -983,7 +1062,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
                     @Override
                     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                        if(playbackState == Player.STATE_ENDED){
+                        if (playbackState == Player.STATE_ENDED) {
                             /*try{
                                 isLivePlaying = false;
                                 isLivePaused = false;
@@ -995,7 +1074,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                                 Log.e("QWERTY5","EXCEPTION : END : "+ex.toString());
                             }*/
 
-                        }else if(playWhenReady && playbackState == Player.STATE_READY){
+                        } else if (playWhenReady && playbackState == Player.STATE_READY) {
                             /*try{
                                 isLivePlaying = true;
                                 isLivePaused = false;
@@ -1013,9 +1092,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                                 Log.e("QWERTY5","EXCEPTION : PLAYING : "+ex.toString());
                             }*/
 
-                        }else if (playWhenReady){
+                        } else if (playWhenReady) {
 
-                        }else{
+                        } else {
                             /*try{
                                 isLivePlaying = false;
                                 isLivePaused = true;
@@ -1079,7 +1158,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
                     }
                 });
-            }catch(Exception e){
+            } catch (Exception e) {
                 Log.e("MainAcvtivity error", " exoplayer error " + e.getMessage());
             }
         } catch (Exception e) {
@@ -1094,7 +1173,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void categoryApiCall() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable loginDisposable = usersService.GetTheme(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
+        Disposable loginDisposable = usersService.GetTheme(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1131,7 +1210,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private void loadCategoriesHomeList() {
 
         ApiClient.UsersService usersService = ApiClient.create();
-        Disposable homeVideoDisposable = usersService.GetHomeVideo(HappiApplication.getAppToken(),SharedPreferenceUtility.getCountryCode(),
+        Disposable homeVideoDisposable = usersService.GetHomeVideo(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(),
                 SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1340,6 +1419,16 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     protected void onPause() {
         shouldAutoPlay = false;
         releasePlayer();
+        if (swipeTimer != null) {
+            Log.e("CARS", "onpause:timer cancel");
+            isPartnerScroll = false;
+            swipeTimer.cancel();
+        }
+        if (null != swipeTask) {
+            isPartnerScroll = false;
+            Log.e("CARS", "onpause: swipeTask canc");
+            swipeTask.cancel();
+        }
         super.onPause();
     }
 
@@ -1360,7 +1449,16 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         if (exoPlayer != null) {
             exoPlayer.release();
         }
-
+        if (swipeTimer != null) {
+            isPartnerScroll = false;
+            Log.e("CARS", "onDestroy: tmr canc");
+            swipeTimer.cancel();
+        }
+        if (null != swipeTask) {
+            isPartnerScroll = false;
+            Log.e("CARS", "onDestroy: swipeTask canc");
+            swipeTask.cancel();
+        }
         super.onDestroy();
         safelyDispose(compositeDisposable);
     }
@@ -1425,7 +1523,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         ActivityChooser.goToHome(ConstantUtils.CHANNEL_HOME_ACTIVITY, liveChannelsAdapter.getItem(adapterPosition)
                 .getChannelId());
 
-        overridePendingTransition(0,0);
+        overridePendingTransition(0, 0);
 
         //  Toast.makeText(this, "Coming Soon", Toast.LENGTH_SHORT).show();
 
@@ -1487,62 +1585,61 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         //Uncomment to enable analytics api call
         try {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
+            String manufacturer = Build.MANUFACTURER;
+            String model = Build.MODEL;
 
-        boolean isExist = sharedPreferences.contains("isFirstTimeInstall");
-        if (!isExist) {
-            SharedPreferenceUtility.setIsFirstTimeInstall(true);
-            isExist = true;
-        }
-        boolean isFirstTimeInstall = SharedPreferenceUtility.getIsFirstTimeInstall();
-        if (isFirstTimeInstall) {
-
-            SharedPreferenceUtility.setIsFirstTimeInstall(false);
-            //get time stamp
-            Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-            long epoch = currentCalendar.getTimeInMillis() / 1000L;
-            String ipAddress = HappiApplication.getIpAddress();
-            if (ipAddress == null || ipAddress.isEmpty()) {
-                ipAddress = getNetworkIP();
+            boolean isExist = sharedPreferences.contains("isFirstTimeInstall");
+            if (!isExist) {
+                SharedPreferenceUtility.setIsFirstTimeInstall(true);
+                isExist = true;
             }
-            //String userAgent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+            boolean isFirstTimeInstall = SharedPreferenceUtility.getIsFirstTimeInstall();
+            if (isFirstTimeInstall) {
 
-            String userAgent = "";
-            try {
-                userAgent = new WebView(context).getSettings().getUserAgentString();
-            } catch (Exception ex) {
-                userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
-            }
+                SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                //get time stamp
+                Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                long epoch = currentCalendar.getTimeInMillis() / 1000L;
+                String ipAddress = HappiApplication.getIpAddress();
+                if (ipAddress == null || ipAddress.isEmpty()) {
+                    ipAddress = getNetworkIP();
+                }
+                //String userAgent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
 
-            if(userAgent == null || userAgent.isEmpty()){
-                userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
-            }
-            String deviceId = SharedPreferenceUtility.getAdvertisingId();
+                String userAgent = "";
+                try {
+                    userAgent = new WebView(context).getSettings().getUserAgentString();
+                } catch (Exception ex) {
+                    userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+                }
 
-            JsonObject details = new JsonObject();
-            details.addProperty("timestamp", String.valueOf(epoch));
-            details.addProperty("user_id", String.valueOf(SharedPreferenceUtility.getUserId()));
-            details.addProperty("device_id", deviceId);
-            details.addProperty("device_type", "Android");
-            details.addProperty("latitude", String.valueOf(HappiApplication.getLatitude()));
-            details.addProperty("longitude", String.valueOf(HappiApplication.getLongitude()));
-            details.addProperty("country", HappiApplication.getCountry());
-            details.addProperty("city", HappiApplication.getCity());
-            details.addProperty("ua", userAgent);
-            details.addProperty("ip_address", ipAddress);
-            details.addProperty("advertiser_id", SharedPreferenceUtility.getAdvertisingId());
-            details.addProperty("app_id", SharedPreferenceUtility.getApp_Id());
-            details.addProperty("session_id", SharedPreferenceUtility.getSession_Id());
-            details.addProperty("width", String.valueOf(width));
-            details.addProperty("height", String.valueOf(height));
-            details.addProperty("device_make", manufacturer);
-            details.addProperty("device_model", model);
-            details.addProperty("user_name", SharedPreferenceUtility.getUserName());
-            details.addProperty("user_email", SharedPreferenceUtility.getUserEmail());
-            details.addProperty("user_contact_number", SharedPreferenceUtility.getUserContact());
-            details.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
+                if (userAgent == null || userAgent.isEmpty()) {
+                    userAgent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+                }
+                String deviceId = SharedPreferenceUtility.getAdvertisingId();
 
+                JsonObject details = new JsonObject();
+                details.addProperty("timestamp", String.valueOf(epoch));
+                details.addProperty("user_id", String.valueOf(SharedPreferenceUtility.getUserId()));
+                details.addProperty("device_id", deviceId);
+                details.addProperty("device_type", "Android");
+                details.addProperty("latitude", String.valueOf(HappiApplication.getLatitude()));
+                details.addProperty("longitude", String.valueOf(HappiApplication.getLongitude()));
+                details.addProperty("country", HappiApplication.getCountry());
+                details.addProperty("city", HappiApplication.getCity());
+                details.addProperty("ua", userAgent);
+                details.addProperty("ip_address", ipAddress);
+                details.addProperty("advertiser_id", SharedPreferenceUtility.getAdvertisingId());
+                details.addProperty("app_id", SharedPreferenceUtility.getApp_Id());
+                details.addProperty("session_id", SharedPreferenceUtility.getSession_Id());
+                details.addProperty("width", String.valueOf(width));
+                details.addProperty("height", String.valueOf(height));
+                details.addProperty("device_make", manufacturer);
+                details.addProperty("device_model", model);
+                details.addProperty("user_name", SharedPreferenceUtility.getUserName());
+                details.addProperty("user_email", SharedPreferenceUtility.getUserEmail());
+                details.addProperty("user_contact_number", SharedPreferenceUtility.getUserContact());
+                details.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
 
 
                 Log.e("000##", " FRST: " + "api about to call");
@@ -1561,7 +1658,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 });
 
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e("000##", "exception: " + "FRST" + " - " + e.toString());
         }
     }
@@ -1635,22 +1732,21 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         //Uncomment to enable analytics api call
         try {
-        if (HappiApplication.isApplaunch()) {
-            HappiApplication.setApplaunch(false);
-            String deviceId = SharedPreferenceUtility.getAdvertisingId();
-            Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-            long epoch = currentCalendar.getTimeInMillis() / 1000L;
+            if (HappiApplication.isApplaunch()) {
+                HappiApplication.setApplaunch(false);
+                String deviceId = SharedPreferenceUtility.getAdvertisingId();
+                Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                long epoch = currentCalendar.getTimeInMillis() / 1000L;
 
 
-            JsonObject eventDetails = new JsonObject();
-            eventDetails.addProperty("device_id", deviceId);
-            eventDetails.addProperty("user_id", String.valueOf(SharedPreferenceUtility.getUserId()));
-            eventDetails.addProperty("event_type", "POP01");
-            eventDetails.addProperty("timestamp", String.valueOf(epoch));
-            eventDetails.addProperty("app_id", SharedPreferenceUtility.getApp_Id());
-            eventDetails.addProperty("session_id", SharedPreferenceUtility.getSession_Id());
-            eventDetails.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
-
+                JsonObject eventDetails = new JsonObject();
+                eventDetails.addProperty("device_id", deviceId);
+                eventDetails.addProperty("user_id", String.valueOf(SharedPreferenceUtility.getUserId()));
+                eventDetails.addProperty("event_type", "POP01");
+                eventDetails.addProperty("timestamp", String.valueOf(epoch));
+                eventDetails.addProperty("app_id", SharedPreferenceUtility.getApp_Id());
+                eventDetails.addProperty("session_id", SharedPreferenceUtility.getSession_Id());
+                eventDetails.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
 
 
                 Log.e("000##", " POP01: " + "api about to call");
@@ -1669,7 +1765,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 });
 
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             Log.e("000##", "exception: " + "POP01" + " - " + e.toString());
         }
     }
@@ -1910,5 +2006,94 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         shouldAutoPlay = false;
         super.onStop();
 
+    }
+
+    private void stopScrollTimer() {
+        Log.e("HOME", "stopScrollTimer");
+        if (null != swipeTimer) {
+            swipeTimer.cancel();
+        }
+        if (null != swipeTask) {
+            swipeTask.cancel();
+        }
+    }
+
+    private void resetScrollTimer() {
+        Log.e("HOME", "resetScrollTimer");
+        stopScrollTimer();
+        swipeTask = new SwipeTask();
+        swipeTimer = new Timer();
+    }
+
+    private void playCarousel() {
+        Log.e("CARS", "playCarousel func");
+        resetScrollTimer();
+        swipeTimer.schedule(swipeTask, 0, 5000);
+    }
+
+
+    private class SwipeTask extends TimerTask {
+        public void run() {
+            rv_partner.post(() -> {
+
+
+                /*if(nextPage == partnersListingAdapter.getItemCount() - 2){
+                     nextPage = 0;
+                }else{
+                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
+                }*/
+
+                    /*if(nextPage == partnersListingAdapter.getItemCount()){
+                        nextPage = 0;
+                    }
+                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
+
+                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
+                    Log.e("CARS","nextPage "+nextPage);
+                    rv_partner.smoothScrollToPosition(nextPage);*/
+               /* if(layoutManager.findFirstVisibleItemPosition() == partnersListingAdapter.getItemCount() - 2 ){
+                    nextPage = 0;
+                    rv_partner.smoothScrollToPosition(nextPage);
+                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
+                    Log.e("CARS","nextPage "+nextPage);
+                }else if (layoutManager.findFirstVisibleItemPosition() == 0){
+                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
+                    rv_partner.smoothScrollToPosition(nextPage);
+
+                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
+                    Log.e("CARS","nextPage "+nextPage);
+                }else{
+                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
+                    rv_partner.smoothScrollToPosition(nextPage);
+                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
+                    Log.e("CARS","nextPage "+nextPage);
+                }*/
+
+
+                /*if((nextPage > partnersListingAdapter.getItemCount()) || (nextPage == partnersListingAdapter.getItemCount() - 2) ){
+                    nextPage = 0;
+                    rv_partner.smoothScrollToPosition(nextPage);
+                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
+                    Log.e("CARS","nextPage "+nextPage);
+                }else{
+                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
+                    rv_partner.smoothScrollToPosition(nextPage);
+
+                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
+                    Log.e("CARS","nextPage "+nextPage);
+                }*/
+                int nextPage;
+
+                if (layoutManager.findFirstVisibleItemPosition() == partnersListingAdapter.getItemCount() - 2) {
+                    nextPage = 0;
+                }else{
+                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
+                }
+                rv_partner.smoothScrollToPosition(nextPage);
+                Log.e("CARS", "first visible " + layoutManager.findFirstVisibleItemPosition());
+                Log.e("CARS", "nextPage " + nextPage);
+
+            });
+        }
     }
 }

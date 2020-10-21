@@ -40,7 +40,7 @@ import io.reactivex.schedulers.Schedulers;
 public class PopularVideosActivity extends BaseActivity implements VideoList_adapter.itemClickListener, ShowList_adapter.itemClickListener {
 
     TypefacedTextViewRegular tv_title;
-    ImageView iv_menu, iv_back, iv_logo_text, iv_search;
+    ImageView  iv_back;
     TypefacedTextViewRegular tv_errormsg;
     ImageView iv_errorimg;
     GridRecyclerView rv_video_list;
@@ -77,16 +77,10 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
         mSelectedItem = mAnimationItems[0];
 
         tv_title = findViewById(R.id.tv_title);
-        iv_menu = findViewById(R.id.iv_menu);
         iv_back = findViewById(R.id.iv_back);
-        iv_logo_text = findViewById(R.id.iv_logo_text);
-        iv_search = findViewById(R.id.iv_search);
 
         tv_title.setVisibility(View.VISIBLE);
         iv_back.setVisibility(View.VISIBLE);
-        iv_menu.setVisibility(View.GONE);
-        iv_logo_text.setVisibility(View.GONE);
-        iv_search.setVisibility(View.GONE);
 
         rv_video_list = findViewById(R.id.rv_video_list);
         iv_errorimg = findViewById(R.id.iv_errorimg);

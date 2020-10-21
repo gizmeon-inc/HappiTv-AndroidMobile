@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
 import com.happi.android.common.HappiApplication;
+import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.models.ShowModel;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
@@ -151,7 +152,7 @@ public class CategoriesHomeListAdapter extends RecyclerView.Adapter<CategoriesHo
        ActivityChooser.goToActivity(ConstantUtils.SHOW_DETAILS_ACTIVITY,
                 categoriesHomeListVideoModelList.get(parentPosition).getVideoModelList().get
                         (nestedPosition).getShow_id());
-       // SharedPreferenceUtility.setShowId( categoriesHomeListVideoModelList.get(parentPosition).getVideoModelList().get(nestedPosition).getShow_id());
+        SharedPreferenceUtility.setShowId( categoriesHomeListVideoModelList.get(parentPosition).getVideoModelList().get(nestedPosition).getShow_id());
 
 
 

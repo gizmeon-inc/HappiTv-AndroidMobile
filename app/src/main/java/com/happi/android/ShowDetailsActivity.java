@@ -197,11 +197,13 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
     //bottom navigation view
     private RelativeLayout rl_btm_navigation_show;
+
+    private TextView tv_description;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE);
+//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+//                WindowManager.LayoutParams.FLAG_SECURE);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
@@ -277,6 +279,12 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         ex_synopsis = findViewById(R.id.ex_synopsis);
         ll_synopsis_text = findViewById(R.id.ll_synopsis_text);
 
+        tv_description = findViewById(R.id.tv_description);
+
+        //ExpandableText
+        tv_more_click.setVisibility(View.GONE);
+        ex_synopsis.setVisibility(View.GONE);
+
         ll_producer = findViewById(R.id.ll_producer);
         ll_year = findViewById(R.id.ll_year);
         ll_audio = findViewById(R.id.ll_audio);
@@ -284,6 +292,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         ll_director = findViewById(R.id.ll_director);
         ll_cast = findViewById(R.id.ll_cast);
 
+        ll_producer.setVisibility(View.GONE);
         ll_audio.setVisibility(View.GONE);
         ll_year.setVisibility(View.GONE);
 
@@ -298,6 +307,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         //iv_menu.setVisibility(View.GONE);
         //iv_logo_text.setVisibility(View.GONE);
         //rl_end_icons.setVisibility(View.GONE);
+        tv_theme_label.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
         tv_title.setVisibility(View.VISIBLE);
 
@@ -307,7 +317,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         exo_player_view = findViewById(R.id.exo_player_view);
         pb_trailer = findViewById(R.id.pb_trailer);
         ll_watch_trailer = findViewById(R.id.ll_watch_trailer);
-        ll_play_now = findViewById(R.id.ll_play_now);
+       // ll_play_now = findViewById(R.id.ll_play_now);
         ll_play_overlap = findViewById(R.id.ll_play_overlap);
 
         pb_trailer.setVisibility(View.GONE);
@@ -879,7 +889,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 tv_resolution.setVisibility(View.GONE);
             }
 
-            //show producer
+           /* //show producer
             if (showDetails.getProducer() != null && !showDetails.getProducer().isEmpty()) {
                 ll_producer.setVisibility(View.VISIBLE);
                 tv_producer.setVisibility(View.VISIBLE);
@@ -897,7 +907,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 ll_producer.setVisibility(View.GONE);
                 tv_producer.setVisibility(View.GONE);
                 tv_producer_label.setVisibility(View.GONE);
-            }
+            }*/
 
             //show year
             if (showDetails.getYear() != null && !showDetails.getYear().isEmpty()) {
@@ -969,7 +979,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                     theme.add(category.getCategory_name());
                 }
                 ll_theme.setVisibility(View.VISIBLE);
-                tv_theme_label.setVisibility(View.VISIBLE);
+                tv_theme_label.setVisibility(View.GONE);
                 tag_theme.setVisibility(View.VISIBLE);
                 tag_theme.setTags(theme);
                 tag_theme.setOnTagClickListener(new TagGroup.OnTagClickListener() {
@@ -1045,7 +1055,8 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                             //teaserUrl = showDetails.getTeaser();
                             //isYtPlayer = false;
                             ll_watch_trailer.setVisibility(View.VISIBLE);
-                            ll_play_now.setVisibility(View.VISIBLE);
+                            ll_play_overlap.setVisibility(View.VISIBLE);
+                        //    ll_play_now.setVisibility(View.VISIBLE);
 
                         } else if (teaserFlag.equals("3")) {
                             isTrailerPlayable = false;
@@ -1081,7 +1092,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
                 }
             });
-            ll_play_now.setOnClickListener(new View.OnClickListener() {
+           /* ll_play_now.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (isPlayNow) {
@@ -1089,7 +1100,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
                     }
                 }
-            });
+            });*/
 
             ll_play_overlap.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1107,14 +1118,34 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             if (showDetails.getSynopsis() != null && !showDetails.getSynopsis().isEmpty()) {
                 tv_synopsis_label.setVisibility(View.VISIBLE);
                 ll_synopsis_text.setVisibility(View.VISIBLE);
+                /*//Expandable text
                 tv_more_click.setVisibility(View.VISIBLE);
+                ex_synopsis.setVisibility(View.VISIBLE);*/
+
 
                 String description = showDetails.getSynopsis();
                 if(description.contains("\r\n")){
                     description = description.replace("\r\n"," ");
                 }
+
                 //for truncating description
-                ex_synopsis.setText(showDetails.getSynopsis());
+                ex_synopsis.setText(description);
+                //ex_synopsis.setText(showDetails.getSynopsis());
+
+
+                //------------------------------testing--------------//
+                tv_more_click.setVisibility(View.GONE);
+                ex_synopsis.setVisibility(View.GONE);
+                ll_synopsis_text.setVisibility(View.VISIBLE);
+                tv_synopsis_label.setVisibility(View.VISIBLE);
+                tv_description.setVisibility(View.VISIBLE);
+                tv_description.setText(description);
+                truncateDescription(description);
+
+                //-------------------------------------------------------//
+
+
+
                 progressDialogDismiss();
                 // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
                 ex_synopsis.setAnimationDuration(750L);
@@ -1131,13 +1162,17 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                     }
                 });
 
-                // truncateDescription(showDetails.getSynopsis());
+
 
             } else {
 
                 tv_synopsis_label.setVisibility(View.GONE);
                 ll_synopsis_text.setVisibility(View.GONE);
                 tv_more_click.setVisibility(View.GONE);
+
+
+                tv_description.setVisibility(View.GONE);
+
                 progressDialogDismiss();
             }
 
@@ -1150,7 +1185,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     }
 
 
-    /*private void truncateDescription(String fullDescription){
+    private void truncateDescription(String fullDescription){
         if (tv_description.getTag() == null) {
             tv_description.setTag(tv_description.getText());
         }
@@ -1166,11 +1201,11 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
                 int lineCount = tv_description.getLayout().getLineCount();
                 String more = "...More";
-                if (lineCount > 7) {
-                    int index = tv_description.getLayout().getLineEnd(6);
+                if (lineCount > 5) {
+                    int index = tv_description.getLayout().getLineEnd(4);
                    // String atIndex = tv_description.getText().
                     String truncated = tv_description.getText().subSequence(0, index - more.length() + 1) + " ";
-                    tv_description.setText(Html.fromHtml(truncated + "<font color='#F2743C'>...More</font>"));
+                    tv_description.setText(Html.fromHtml(truncated + "<font color='#34A7CD'>...More</font>"));
                     tv_description.setVisibility(View.VISIBLE);
                     progressDialogDismiss();
                     tv_description.setOnClickListener(new View.OnClickListener() {
@@ -1187,7 +1222,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             }
         });
 
-    }*/
+    }
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, String fullText) {
 
         if (tv.getTag() == null) {

@@ -49,11 +49,8 @@ public class SettingsActivity extends BaseActivity {
         onCreateBottomNavigationView();
         //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
-        ImageView iv_menu = findViewById(R.id.iv_menu);
         ImageView iv_back = findViewById(R.id.iv_back);
-        ImageView iv_logo_text = findViewById(R.id.iv_logo_text);
         TypefacedTextViewRegular tv_title = findViewById(R.id.tv_title);
-        ImageView iv_search = findViewById(R.id.iv_search);
        // Switch sw_night_toggle = findViewById(R.id.sw_night_toggle);
 
         TypefacedTextViewSemiBold tv_clear_search_history = findViewById(R.id
@@ -63,11 +60,8 @@ public class SettingsActivity extends BaseActivity {
         tv_preferred_languages.setVisibility(View.GONE);
       //  LinearLayout ll_toggle_theme = findViewById(R.id.ll_toggle_theme);
 
-        iv_menu.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
-        iv_logo_text.setVisibility(View.GONE);
         tv_title.setVisibility(View.VISIBLE);
-        iv_search.setVisibility(View.GONE);
         tv_title.setText(getString(R.string.settings));
 
         String accessToken = HappiApplication

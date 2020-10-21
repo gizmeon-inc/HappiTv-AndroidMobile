@@ -106,8 +106,8 @@
 
                 <com.happi.android.customviews.TypefacedTextViewBold
                     android:id="@+id/tv_live_tag"
-                    android:layout_marginLeft="@dimen/dimen_5dp"
-                    android:layout_width="@dimen/dimen_50dp"
+                    android:layout_marginStart="@dimen/dimen_5dp"
+                    android:layout_width="@dimen/dimen_65dp"
                     android:layout_height="wrap_content"
                     android:background="@drawable/live_tag_bg"
                     android:gravity="center"
@@ -178,7 +178,22 @@
                         android:src="@drawable/ic_fullscreen_white" />
 
                 </FrameLayout>
-
+                <FrameLayout
+                    android:id="@+id/fl_volume"
+                    android:layout_width="@dimen/dimen_35dp"
+                    android:layout_height="@dimen/dimen_35dp"
+                    android:layout_gravity="right|center_vertical"
+                    android:layout_marginRight="@dimen/dimen_5dp"
+                    android:background="@drawable/player_translucent_bg">
+                    <ImageView
+                        android:id="@+id/iv_volume"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitCenter"
+                        android:src="@drawable/ic_volume"/>
+                </FrameLayout>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout

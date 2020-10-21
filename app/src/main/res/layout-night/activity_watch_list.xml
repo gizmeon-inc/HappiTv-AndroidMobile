@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
 
-        <include layout="@layout/content_toolbar" />
+        <include layout="@layout/content_title_toolbar" />
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"

@@ -43,18 +43,12 @@ public class WebViewActivity extends BaseActivity {
         //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
         WebView wv_layout = findViewById(R.id.wv_layout);
-        ImageView iv_menu = findViewById(R.id.iv_menu);
         ImageView iv_back = findViewById(R.id.iv_back);
-        ImageView iv_logo_text = findViewById(R.id.iv_logo_text);
         TypefacedTextViewRegular tv_title = findViewById(R.id.tv_title);
-        ImageView iv_search = findViewById(R.id.iv_search);
         ProgressBar pb_progressbar = findViewById(R.id.pb_progressbar);
 
-        iv_menu.setVisibility(View.GONE);
         iv_back.setVisibility(View.VISIBLE);
-        iv_logo_text.setVisibility(View.GONE);
         tv_title.setVisibility(View.VISIBLE);
-        iv_search.setVisibility(View.GONE);
 
         //webview
         WebSettings settings = wv_layout.getSettings();

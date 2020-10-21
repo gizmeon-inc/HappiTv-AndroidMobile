@@ -103,7 +103,7 @@
                 android:layout_width="@dimen/dimen_150dp"
                 android:layout_height="match_parent"
                 android:padding="@dimen/dimen_5dp"
-                android:src="@drawable/ic_title_side"
+                android:src="@drawable/ic_toolbar_logo"
                 android:visibility="visible"
                 android:contentDescription="@string/image_label"
                 android:layout_gravity="center"/>

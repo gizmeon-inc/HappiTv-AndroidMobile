@@ -32,7 +32,9 @@ public class LiveScheduleResponse implements Serializable {
         @SerializedName("thumbnail")
         @Expose
         private String thumbnail;
-
+        @SerializedName("partner_name")
+        @Expose
+        private String partner_name;
 ////////////////////////////////////////////////////////////////////////////
         private Date startDateTime = null;
         private Date endDateTime = null;
@@ -82,6 +84,18 @@ public class LiveScheduleResponse implements Serializable {
 
         public String getThumbnail() {
             return thumbnail;
+        }
+
+        public String getPartner_name() {
+            return partner_name;
+        }
+
+        public void setVideo_title(String video_title) {
+            this.video_title = video_title;
+        }
+
+        public void setPartner_name(String partner_name) {
+            this.partner_name = partner_name;
         }
     }
 

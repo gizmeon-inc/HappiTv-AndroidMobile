@@ -1,13 +1,16 @@
 package com.happi.android.adapters;
 
+import android.app.ActionBar;
 import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -56,7 +59,7 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
     public void onBindViewHolder(@NonNull LiveHomeInfoViewHolder holder, int position) {
 
         if (liveScheduleList.size() != 0) {
-            holder.tv_schedule_title.setText(liveScheduleList.get(position).getVideo_title());
+            //holder.tv_schedule_title.setText(liveScheduleList.get(position).getVideo_title());
 
             String time = getScheduleItemTime(liveScheduleList.get(position), position);
             holder.tv_schedule_time.setText(time);
@@ -78,6 +81,24 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
                     .apply(placeholderOf(R.drawable.ic_placeholder))
                     .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
                     .into(holder.iv_schedule_image);
+
+
+            if(liveScheduleList.get(position).getVideo_title() == null || liveScheduleList.get(position).getVideo_title().isEmpty()){
+                holder.tv_video_title.setText("");
+                holder.tv_video_title.setVisibility(View.INVISIBLE);
+            }else{
+                holder.tv_video_title.setText(liveScheduleList.get(position).getVideo_title().trim());
+                holder.tv_video_title.setVisibility(View.VISIBLE);
+            }
+
+            if(liveScheduleList.get(position).getPartner_name() == null || liveScheduleList.get(position).getPartner_name().isEmpty()){
+                holder.tv_partner_title.setText("");
+                holder.tv_partner_title.setVisibility(View.INVISIBLE);
+            }else{
+                holder.tv_partner_title.setText(liveScheduleList.get(position).getPartner_name().trim());
+                holder.tv_partner_title.setVisibility(View.VISIBLE);
+            }
+
         }
     }
 
@@ -135,7 +156,7 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
                     }*/
                     status = "";
                 }else{
-                    SimpleDateFormat sdfDate = new SimpleDateFormat("yyyy-MM-dd",Locale.getDefault());
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("MM-dd-yy",Locale.getDefault());
                    // SimpleDateFormat sdfDate = new SimpleDateFormat("dd MMM, yyyy",Locale.getDefault());
                     status = sdfDate.format(finalStartDateTime);
                 }
@@ -248,13 +269,21 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
     }
 
     public class LiveHomeInfoViewHolder extends RecyclerView.ViewHolder {
-        LinearLayout ll_schedule_info_parent;
+        RelativeLayout ll_schedule_info_parent;
         FrameLayout fl_schedule_image;
         ImageView iv_schedule_image;
         TypefacedTextViewRegular tv_schedule_time;
         TypefacedTextViewBold tv_schedule_status;
         TypefacedTextViewRegular tv_schedule_title;
         CardView cv_live_schedule;
+
+        LinearLayout ll_schedule_image_parent;
+        LinearLayout ll_title_info;
+        TypefacedTextViewRegular tv_partner_title;
+        TypefacedTextViewRegular tv_video_title;
+
+
+
 
 
         public LiveHomeInfoViewHolder(@NonNull View itemView) {
@@ -266,18 +295,46 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
             this.fl_schedule_image = itemView.findViewById(R.id.fl_schedule_image);
             this.cv_live_schedule = itemView.findViewById(R.id.cv_live_schedule);
             this.tv_schedule_status = itemView.findViewById(R.id.tv_schedule_status);
-            //this.tv_schedule_day = itemView.findViewById(R.id.tv_schedule_day);
+
+            this.ll_schedule_image_parent = itemView.findViewById(R.id.ll_schedule_image_parent);
+            this.ll_title_info = itemView.findViewById(R.id.ll_title_info);
+            this.tv_partner_title = itemView.findViewById(R.id.tv_partner_title);
+            this.tv_video_title = itemView.findViewById(R.id.tv_video_title);
+
+            this.tv_schedule_title.setVisibility(View.GONE);
 
             int new_width = (width - (width / 6)) / 3;
             int new_height = (3 * (new_width - 15)) / 2;
 
-            int widthAdd = (int) context.getResources().getDimension(R.dimen.dimen_5dp);
+            //int heightAdd = (int) ((new_height)/3);
+            //int heightAdd = (int) ((2 * new_height)/3);
+            int heightAdd = (int) context.getResources().getDimension(R.dimen.dimen_55dp);
+            Log.e("LIVESCHEDULE",": w:"+new_width);
+            Log.e("LIVESCHEDULE",": h:"+new_height);
+            Log.e("LIVESCHEDULE",": ha:"+heightAdd);
 
-            FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(new_width, new_height);
-            CardView.LayoutParams cl = new CardView.LayoutParams(new_width, new_height);
-            cl.rightMargin = 15;
+            /*FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(new_width, new_height+heightAdd);
             this.ll_schedule_info_parent.setLayoutParams(fl);
+
+            CardView.LayoutParams cl = new CardView.LayoutParams(new_width, new_height+heightAdd);
+            cl.rightMargin = 15;
             this.cv_live_schedule.setLayoutParams(cl);
+
+            RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(new_width, new_height);
+            this.ll_schedule_image_parent.setLayoutParams(rl);*/
+
+
+
+            RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(new_width, new_height);
+            this.ll_schedule_image_parent.setLayoutParams(rl);
+
+            FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(new_width, FrameLayout.LayoutParams.WRAP_CONTENT);
+            this.ll_schedule_info_parent.setLayoutParams(fl);
+
+            CardView.LayoutParams cl = new CardView.LayoutParams(new_width, CardView.LayoutParams.WRAP_CONTENT);
+            cl.rightMargin = 15;
+            this.cv_live_schedule.setLayoutParams(cl);
+
 
         }
     }

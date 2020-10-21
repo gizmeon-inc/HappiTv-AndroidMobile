@@ -57,11 +57,8 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     private List<GetWatchListModel> watchListModelsList;
     private WatchListAdapter watchListAdapter;
     private GridRecyclerView rv_watchList;
-    ImageView iv_menu;
     ImageView iv_back;
-    ImageView iv_logo_text;
     TypefacedTextViewRegular tv_title;
-    LinearLayout rl_end_icons;
     public static String pageContext = "";
     ProgressDialog progressDialog;
     SkeletonScreen loadingVideos;
@@ -143,11 +140,8 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
 
        // getSessionToken();
 
-        iv_menu = findViewById(R.id.iv_menu);
         iv_back = findViewById(R.id.iv_back);
-        iv_logo_text = findViewById(R.id.iv_logo_text);
         tv_title = findViewById(R.id.tv_title);
-        rl_end_icons = findViewById(R.id.rl_end_icons);
         iv_errorimg = findViewById(R.id.iv_errorimg);
         tv_errormsg = findViewById(R.id.tv_errormsg);
         ll_error = findViewById(R.id.ll_error);
@@ -157,9 +151,6 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         sw_list.setDistanceToTriggerSync(250);
 
 
-        iv_menu.setVisibility(View.GONE);
-        iv_logo_text.setVisibility(View.GONE);
-        rl_end_icons.setVisibility(View.GONE);
         iv_errorimg.setVisibility(View.GONE);
         tv_errormsg.setVisibility(View.GONE);
         ll_error.setVisibility(View.GONE);

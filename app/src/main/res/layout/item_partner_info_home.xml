@@ -76,3 +76,81 @@
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
+<!--
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_partner_parent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/dimen_1dp"
+    app:cardCornerRadius="@dimen/dimen_5dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false">
+
+
+    <RelativeLayout
+        android:id="@+id/rl_partner_info"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dimen_82dp"
+        android:gravity="start|center_vertical"
+        android:background="@color/btm_nav"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:id="@+id/ll_partner_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:layout_marginEnd="@dimen/dimen_2dp"
+            android:layout_gravity="center"
+            android:paddingTop="@dimen/dimen_2dp"
+            android:paddingBottom="@dimen/dimen_2dp"
+            android:paddingEnd="@dimen/dimen_2dp">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardCornerRadius="@dimen/dimen_5dp"
+                app:cardElevation="@dimen/dimen_0dp"
+                app:cardMaxElevation="@dimen/dimen_0dp"
+                app:cardUseCompatPadding="true"
+                app:cardPreventCornerOverlap="false"
+                app:cardBackgroundColor="@color/btm_nav">
+                <ImageView
+                    android:id="@+id/iv_partner_image"
+                    android:layout_width = "match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitXY"/>
+
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_partner_details"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_toEndOf="@+id/ll_partner_image">
+
+            <com.happi.android.customviews.TypefacedTextViewBold
+                android:id="@+id/tv_partner_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/orange"
+                android:gravity="top"
+                android:textSize="@dimen/text_small_medium"/>
+            <com.happi.android.customviews.TypefacedTextViewRegular
+                android:id="@+id/tv_partner_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small_medium"
+                android:gravity="top"
+                android:maxLines="4"
+                android:ellipsize="end"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</androidx.cardview.widget.CardView>-->
