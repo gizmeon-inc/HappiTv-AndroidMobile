@@ -9,6 +9,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,6 +33,8 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
@@ -68,7 +72,9 @@ public class RegisterActivity extends BaseActivity {
 
     private EditText et_name;
     private EditText et_email;
-    private EditText et_password;
+    //private EditText et_password;
+    private TextInputEditText et_password;
+    private TextInputLayout tl_password;
     private EditText et_phone_number;
     private Button bt_signup;
     private TextView tv_login;
@@ -120,7 +126,7 @@ public class RegisterActivity extends BaseActivity {
                 WindowManager.LayoutParams.FLAG_SECURE);
         if (SharedPreferenceUtility.isNightMode()) {
 
-            this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_black));
+            this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.btm_nav));
         } else {
 
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
@@ -144,6 +150,7 @@ public class RegisterActivity extends BaseActivity {
         et_email = findViewById(R.id.et_email);
         et_name = findViewById(R.id.et_name);
         et_password = findViewById(R.id.et_password);
+        tl_password = findViewById(R.id.tl_password);
         et_phone_number = findViewById(R.id.et_phone_number);
         ccp_picker = findViewById(R.id.ccp_picker);
 
@@ -172,6 +179,7 @@ public class RegisterActivity extends BaseActivity {
         et_name.setError(null);
         et_email.setError(null);
         et_password.setError(null);
+        tl_password.setError(null);
 
 
         tv_login.setOnClickListener(new View.OnClickListener() {
@@ -203,13 +211,21 @@ public class RegisterActivity extends BaseActivity {
                     et_email.setFocusable(true);
                     et_email.requestFocus();
                 } else if (et_password.getText().toString().trim().isEmpty()) {
-                    et_password.setError("Please enter your password");
-                    et_password.setFocusable(true);
-                    et_password.requestFocus();
+                    //et_password.setError("Please enter your password");
+                    //et_password.setFocusable(true);
+                    //et_password.requestFocus();
+                    tl_password.setErrorEnabled(true);
+                    tl_password.setError("Please enter your password");
+                    tl_password.setFocusable(true);
+                    tl_password.requestFocus();
                 } else if (et_password.getText().toString().trim().length() < 6) {
-                    et_password.setError("Minimum 6 letters required.");
-                    et_password.setFocusable(true);
-                    et_password.requestFocus();
+                    //et_password.setError("Minimum 6 letters required.");
+                    //et_password.setFocusable(true);
+                    //et_password.requestFocus();
+                    tl_password.setErrorEnabled(true);
+                    tl_password.setError("Minimum 6 letters required.");
+                    tl_password.setFocusable(true);
+                    tl_password.requestFocus();
                 }
                 /*else if (et_phone_number.getText().toString().trim().isEmpty()) {
                     et_phone_number.setError("Please enter phone number");
@@ -239,6 +255,27 @@ public class RegisterActivity extends BaseActivity {
                             "gmail-login", "0", verified, c_code);
 
 
+                }
+            }
+        });
+
+        et_password.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(s.length() > 6 || s.length() == 6){
+                    et_password.setError(null);
+                    tl_password.setError(null);
+                    tl_password.setErrorEnabled(false);
                 }
             }
         });

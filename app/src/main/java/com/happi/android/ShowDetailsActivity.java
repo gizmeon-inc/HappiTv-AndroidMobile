@@ -177,8 +177,8 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     boolean isLikeClicked = false;
     boolean isDisLikeClicked = false;
     boolean isAddToWatchLaterClicked = false;
-    String descriptiontext = "empty";
-    String showTitletext = "empty";
+    String descriptiontext = "";
+    String showTitletext = "";
     public static Activity currentActivity;
     private boolean isFromWatchList = false;
     //linear layouts
@@ -474,13 +474,12 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         ll_share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (!SharedPreferenceUtility.getGuest()) {
-                    Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
+                if (!SharedPreferenceUtility.getGuest()) {
+                    shareShow();
                 } else {
                     //showLoginAlert();
                     showLoginOrRegisterAlert();
-                }*/
-                Toast.makeText(getApplicationContext(), "Coming Soon!!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -593,13 +592,11 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     }
 
     private void shareShow() {
-        // String sharetext = "http://web.adventuresportstv.net/?rd="+showId;
-        // String sharetext = "https://adventuresportstv.net/web/?rd="+showId;
-        String sharetext = ConstantUtils.SHARE_URL + showId;
-        if (!showTitletext.equalsIgnoreCase("empty")) {
+        String sharetext = ConstantUtils.SHARE_URL.trim() + showId;
+        if (!showTitletext.isEmpty()) {
             sharetext = sharetext + "\r\n\r\n" + showTitletext;
         }
-        if (!descriptiontext.equalsIgnoreCase("empty")) {
+        if (!descriptiontext.isEmpty()) {
             sharetext = sharetext + "\r\n\r\n" + descriptiontext;
         }
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
@@ -771,8 +768,8 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(showVideoUpdatedResponseModel -> {
                     if (showVideoUpdatedResponseModel.getData().size() != 0) {
-                        descriptiontext = showVideoUpdatedResponseModel.getData().get(0).getMetaDataModelList().get(0).getSynopsis();
-                        showTitletext = showVideoUpdatedResponseModel.getData().get(0).getMetaDataModelList().get(0).getShow_name();
+                        //descriptiontext = showVideoUpdatedResponseModel.getData().get(0).getMetaDataModelList().get(0).getSynopsis();
+                        //showTitletext = showVideoUpdatedResponseModel.getData().get(0).getMetaDataModelList().get(0).getShow_name();
                         setShowDetails(showVideoUpdatedResponseModel.getData().get(0).getMetaDataModelList().get(0),
                                 showVideoUpdatedResponseModel.getData().get(0).getVideoModelUpdatedList(),
                                 showVideoUpdatedResponseModel.getData().get(0).getLanguageModelUpdatedList(),
@@ -794,6 +791,30 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                                 List<DataModel.CategoryModelUpdated> categoryModelUpdatedList) {
 
         if (showDetails != null) {
+
+            //show name
+            if (showDetails.getShow_name() != null  && !showDetails.getShow_name().isEmpty()) {
+                tv_title.setText(showDetails.getShow_name().trim());
+                tv_show_name.setVisibility(View.VISIBLE);
+                tv_show_name.setText(showDetails.getShow_name());
+                showTitletext = showDetails.getShow_name().trim();
+
+            } else {
+                tv_show_name.setVisibility(View.GONE);
+                showTitletext = "";
+            }
+
+            //show description
+            if (showDetails.getSynopsis() != null && !showDetails.getSynopsis().isEmpty()) {
+                String description = showDetails.getSynopsis().trim();
+                if (description.contains("\r\n")) {
+                    description = description.replace("\r\n", " ");
+                }
+                descriptiontext = description;
+            }else{
+                descriptiontext = "";
+            }
+
 
             //make like/unlike, add to watch list, share icons visible
             if (!SharedPreferenceUtility.getGuest()) {
@@ -864,22 +885,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 iv_show_image.setVisibility(View.GONE);
             }
 
-            //show name
-            if (showDetails.getShow_name() != null  && !showDetails.getShow_name().isEmpty()) {
-/*                if (showDetails.getShow_name().length() > 26) {
-                    String title = showDetails.getShow_name().substring(0, 26) + "...";
-                    tv_title.setText(title);
-                } else {
-                    tv_title.setText(showDetails.getShow_name());
-                }*/
 
-                tv_title.setText(showDetails.getShow_name());
-                tv_show_name.setVisibility(View.VISIBLE);
-                tv_show_name.setText(showDetails.getShow_name());
-
-            } else {
-                tv_show_name.setVisibility(View.GONE);
-            }
 
             // show resolution
             if (showDetails.getResolution() != null && !showDetails.getResolution().isEmpty()) {
@@ -1115,7 +1121,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
 
             //show description
-            if (showDetails.getSynopsis() != null && !showDetails.getSynopsis().isEmpty()) {
+            if (!descriptiontext.isEmpty()) {
                 tv_synopsis_label.setVisibility(View.VISIBLE);
                 ll_synopsis_text.setVisibility(View.VISIBLE);
                 /*//Expandable text
@@ -1123,7 +1129,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 ex_synopsis.setVisibility(View.VISIBLE);*/
 
 
-                String description = showDetails.getSynopsis();
+                String description = descriptiontext;
                 if(description.contains("\r\n")){
                     description = description.replace("\r\n"," ");
                 }

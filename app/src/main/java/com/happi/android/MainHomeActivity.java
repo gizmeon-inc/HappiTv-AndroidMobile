@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -14,6 +15,7 @@ import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -211,6 +213,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private SwipeTask swipeTask;
     private Timer swipeTimer;
     private boolean isPartnerScroll = false;
+    private CountDownTimer timerOrientation;
 
     @Override
 
@@ -898,7 +901,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             isPartnerScroll = true;
             Log.e("CARS", "partnload: play cars");
             Log.e("CARS", "count " + partnersListingAdapter.getItemCount());
-            playCarousel();
+            //playCarousel();
+            startTimer();
         }
     }
 
@@ -1458,6 +1462,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             isPartnerScroll = false;
             Log.e("CARS", "onDestroy: swipeTask canc");
             swipeTask.cancel();
+        }
+        if(timerOrientation != null){
+            timerOrientation.cancel();
         }
         super.onDestroy();
         safelyDispose(compositeDisposable);
@@ -2095,5 +2102,22 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
             });
         }
+    }
+
+    private void startTimer(){
+        timerOrientation = new CountDownTimer(7000, 1000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                playCarousel();
+                if(timerOrientation != null){
+                    timerOrientation.cancel();
+                }
+
+            }
+        }.start();
+
     }
 }

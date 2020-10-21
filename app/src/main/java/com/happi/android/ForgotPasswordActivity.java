@@ -54,7 +54,7 @@ public class ForgotPasswordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         if (SharedPreferenceUtility.isNightMode()) {
 
-            this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_black));
+            this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.btm_nav));
         } else {
 
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));

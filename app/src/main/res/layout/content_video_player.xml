@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/tools"
     android:animateLayoutChanges="true"
     android:background="@color/white">
 
@@ -11,9 +12,8 @@
         android:id="@+id/exo_player_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_250dp"
-        app:resize_mode="fill">
-
-    </com.google.android.exoplayer2.ui.PlayerView>
+        app:resize_mode="fill"
+        ads:resize_mode="fill"/>
     <!-- <android.support.v4.widget.NestedScrollView
          android:id="@+id/sv_scrollview"
          android:layout_width="match_parent"
@@ -176,17 +176,18 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/dimen_24dp">
+                        android:layout_marginEnd="@dimen/dimen_24dp"
+                        android:paddingEnd="@dimen/dimen_15dp">
 
                         <com.happi.android.customviews.TypefacedTextViewSemiBold
                             android:id="@+id/tv_video_name"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
                             android:text="@string/video_title"
                             android:textColor="@color/dark_black"
-                            android:textSize="@dimen/text_regular_medium1" />
+                            android:textSize="@dimen/text_regular_medium1"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -194,14 +195,14 @@
                         android:layout_width="@dimen/dimen_24dp"
                         android:layout_height="@dimen/dimen_24dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginRight="@dimen/dimen_15dp">
+                        android:layout_marginEnd="@dimen/dimen_15dp">
 
                         <ImageView
                             android:id="@+id/iv_dropdown"
                             android:layout_width="@dimen/dimen_22dp"
                             android:layout_height="@dimen/dimen_22dp"
                             android:src="@drawable/ic_arrow_drop_down"
-                            android:tint="@color/black" />
+                            android:tint="@color/dark_black" />
                     </LinearLayout>
 
 

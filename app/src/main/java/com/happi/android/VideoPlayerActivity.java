@@ -4,20 +4,24 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.OrientationEventListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -35,6 +39,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.mediarouter.app.MediaRouteButton;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -159,7 +164,9 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         CustomAlertDialog.OnOkClick{
 
     private String token = "";
+    /////////////////////////orientation//////////////////////////
     private final String STATE_PLAYER_FULLSCREEN = "playerFullscreen";
+    ////////////////////////////////////////////////////////////////////////
     private PlayerView exo_player_view;
     private SimpleExoPlayer exoPlayer;
     private DataSource.Factory mediaDataSourceFactory;
@@ -239,6 +246,10 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private RelativeLayout rl_btm_navigation_video;
     private boolean isForceLogout = false;
     private int actionBarHeight = 0;
+
+    private CountDownTimer timerOrientation;
+    private Timer orientationTimer;
+    private boolean isOrientationChange = false;
 
     public void loadRemoteMedia() {
         Log.e("CAST", "loadRemoteMedia called");
@@ -381,7 +392,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         }
         setContentView(R.layout.activity_video_player);
 
-
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
         //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
@@ -493,19 +503,97 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 if (!isExoPlayerFullscreen) {
-                    openFullscreen();
+                   // openFullscreen();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                   // Toast.makeText(HappiApplication.getCurrentContext(),"CLICK-openfullscr",Toast.LENGTH_SHORT).show();
 
+                   // openFullscreenDialog();
 
                 } else {
 
-                    closeFullscreen();
+                   // closeFullscreen();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                  //  Toast.makeText(HappiApplication.getCurrentContext(),"CLICK-closefullscr",Toast.LENGTH_SHORT).show();
+                    //closeFullscreenDialog();
                 }
             }
         });
+        OrientationEventListener orientationEventListener =
+                new OrientationEventListener(this) {
+                    @Override
+                    public void onOrientationChanged(int orientation) {
+                        int epsilon = 10;
+                        int leftLandscape = 90;
+                        int rightLandscape = 270;
+                        int portrait = 0;
+                        int portraitUpside = 180;
+                        if(epsilonCheck(orientation, leftLandscape, epsilon) ||
+                                epsilonCheck(orientation, rightLandscape, epsilon)){
+                          //  Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND", Toast.LENGTH_SHORT).show();
+                            if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+                                isOrientationChange = true;
+                          //      Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND CHANGE", Toast.LENGTH_SHORT).show();
+                                //setTimer();
+
+                            }
+
+
+
+                        }else if(epsilonCheck(orientation, portrait, epsilon) ||
+                                epsilonCheck(orientation, portraitUpside, epsilon)){
+                         //   Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT", Toast.LENGTH_SHORT).show();
+
+                            if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+                                isOrientationChange = true;
+                            //    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT CHANGE", Toast.LENGTH_SHORT).show();
+                               // setTimer();
+
+                            }
+
+                        }else{
+                            isOrientationChange = false;
+                         //   Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER ELSE", Toast.LENGTH_SHORT).show();
+
+                        }
+                        /*if (orientation == 0 || orientation == 180) {
+                            Toast.makeText(HappiApplication.getCurrentContext(), "portrait",
+                                    Toast.LENGTH_LONG).show();
+                            if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                            }
+                        } else if (orientation == 90 || orientation == 270) {
+                            Toast.makeText(HappiApplication.getCurrentContext(), "landscape",
+                                    Toast.LENGTH_LONG).show();
+                            if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                            }
+                        }*/
+
+                        /*if(isOrientationChange){
+//                            Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
+//                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
+
+
+
+                        }*/
+                    }
+
+                    private boolean epsilonCheck(int a, int b, int epsilon) {
+                        //return a > b - epsilon && a < b + epsilon;
+                        // Math.abs(a - b) < epsilon;
+                        // return a > Math.abs(b - epsilon) && a <  Math.abs(b + epsilon);
+                        return Math.abs(a - b) < epsilon;
+                    }
+                };
+        orientationEventListener.enable();
 
         if (savedInstanceState != null) {
             isExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
+      //  Toast.makeText(this,"ONCREATE: OR: "+getRequestedOrientation(),Toast.LENGTH_SHORT).show();
+
+
 
         if(SharedPreferenceUtility.getGuest()){
             showLoginOrRegisterAlert();
@@ -884,7 +972,9 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                             if (playbackState == Player.STATE_ENDED) {
 
                                 if (isExoPlayerFullscreen) {
-                                    closeFullscreen();
+                                   // closeFullscreen();
+                                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                                    //closeFullscreenDialog();
                                 }
                                 exoPlayer.setPlayWhenReady(false);
                                 try {
@@ -1171,10 +1261,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     public void onStart() {
         super.onStart();
         Log.v("okhttp","VIDEOPLAYER>>ONSTART");
-        if (Util.SDK_INT > 23) {
 
-
-        }
     }
 
     @Override
@@ -1523,9 +1610,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onStop() {
         super.onStop();
-        //if (Util.SDK_INT > 23) {
         releasePlayer();
-        // }
         Log.v("okhttp","VIDEOPLAYER>>ONSTOP");
     }
 
@@ -1570,9 +1655,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
         outState.putBoolean(STATE_PLAYER_FULLSCREEN, isExoPlayerFullscreen);
-
         super.onSaveInstanceState(outState);
     }
 
@@ -1648,6 +1731,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         popular_channel_videos.setVisibility(View.VISIBLE);
 
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         //  adContainer.setVisibility(View.VISIBLE);
         //  moPubBannerView.setVisibility(View.VISIBLE);
 
@@ -1658,9 +1742,11 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         if (timerSChedule != null) {
             timerSChedule.cancel();
         }
-        if (isExoPlayerFullscreen)
-            closeFullscreen();
-        else {
+        if (isExoPlayerFullscreen){
+           // closeFullscreen();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
+            //closeFullscreenDialog();
+        }else {
 
             releasePlayer();
             if (exoPlayer != null) {
@@ -1691,6 +1777,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     protected void onDestroy() {
         if (timerSChedule != null) {
             timerSChedule.cancel();
+        }
+        if(timerOrientation != null){
+            timerOrientation.cancel();
+        }
+        if (orientationTimer != null) {
+            orientationTimer.cancel();
         }
         isVideoPlaying = false;
         isVideoEnd = false;
@@ -2123,4 +2215,291 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         VideoPlayerActivity.this.finish();
         overridePendingTransition(0,0);
     }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
+
+          //  Toast.makeText(this, "LANDSCAPE - fullscreen- "+isExoPlayerFullscreen, Toast.LENGTH_SHORT).show();
+            /*if(orientationTimer == null){
+                setTimer();
+            }*/
+            openFullscreenDialog();
+        }else if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
+
+        //    Toast.makeText(this, "PORTRAIT - fullscreen-  "+isExoPlayerFullscreen, Toast.LENGTH_SHORT).show();
+            /*if(orientationTimer == null){
+                setTimer();
+            }*/
+            closeFullscreenDialog();
+        }else{
+        //    Toast.makeText(this, "ORIENTATION -"+newConfig.orientation, Toast.LENGTH_SHORT).show();
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        }
+    }
+
+    private void openFullscreenDialog() {
+
+        isExoPlayerFullscreen = true;
+        actionBarHeight = rl_toolbar.getHeight();
+        exo_fullscreen_icon.setImageDrawable(ContextCompat.getDrawable(VideoPlayerActivity.this, R.drawable.ic_fullscreen_skrink));
+
+
+        /*getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN
+                |View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                |View.SYSTEM_UI_FLAG_HIDE_NAVIGATION);*/
+       /* if(getSupportActionBar() != null){
+            getSupportActionBar().hide();
+        }*/
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) exo_player_view.getLayoutParams();
+        params.width = params.MATCH_PARENT;
+        params.height = params.MATCH_PARENT;
+
+        /*int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+
+            exo_player_view.setLayoutParams(new RelativeLayout.LayoutParams(width, height));
+            Toast.makeText(this, "OPEN: "+width+","+height, Toast.LENGTH_SHORT).show();
+        } else {
+
+            exo_player_view.setLayoutParams(new RelativeLayout.LayoutParams(height, width));
+            Toast.makeText(this, "OPEN: "+width+","+height, Toast.LENGTH_SHORT).show();
+
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );}*/
+
+        params.setMargins(0, 0, 0, 0);
+        rl_exoplayer_parent.setPadding(0, 0, 0, 0);
+        rl_exoplayer_parent.setLayoutParams(params);
+
+        exo_player_view.setLayoutParams(params);
+
+
+        rl_btm_navigation_video.setVisibility(View.GONE);
+        rl_toolbar.setVisibility(View.GONE);
+        ll_video_actions.setVisibility(View.GONE);
+        rl_video_grid.setVisibility(View.GONE);
+        rl_channel_title.setVisibility(View.GONE);
+        popular_channel_videos.setVisibility(View.GONE);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        startTimer();
+
+    }
+
+
+    private void closeFullscreenDialog() {
+
+        isExoPlayerFullscreen = false;
+        exo_fullscreen_icon.setImageDrawable(ContextCompat.getDrawable(VideoPlayerActivity.this, R.drawable.ic_fullscreen_white));
+
+
+       /* getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);*/
+        /*if(getSupportActionBar() != null){
+            getSupportActionBar().show();
+        }*/
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) exo_player_view.getLayoutParams();
+        params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+        params.height = (int) getResources().getDimension(R.dimen.dimen_250dp);
+     //   Toast.makeText(this, "CLOSE: "+params.width+","+ params.height, Toast.LENGTH_SHORT).show();
+
+        exo_player_view.setLayoutParams(params);
+
+
+        RelativeLayout.LayoutParams paramsParent = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+        );
+        paramsParent.setMargins(0, actionBarHeight, 0, actionBarHeight);
+        rl_exoplayer_parent.setPadding(0, 0, 0, 0);
+
+        rl_exoplayer_parent.setLayoutParams(paramsParent);
+
+        rl_btm_navigation_video.setVisibility(View.VISIBLE);
+        rl_toolbar.setVisibility(View.VISIBLE);
+        ll_video_actions.setVisibility(View.GONE);
+        rl_video_grid.setVisibility(View.VISIBLE);
+        rl_channel_title.setVisibility(View.GONE);
+        popular_channel_videos.setVisibility(View.VISIBLE);
+
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        startTimer();
+
+    }
+    private void startTimer(){
+        /*Handler handler = new Handler();
+        Runnable update = new Runnable() {
+            public void run() {
+                if(isOrientationChange){
+                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                    isOrientationChange = false;
+                    if (orientationTimer != null) {
+                        orientationTimer.cancel();
+                    }
+                }
+
+            }
+        };
+
+        if (orientationTimer != null) {
+            orientationTimer.cancel();
+        }
+        orientationTimer = new Timer();
+        orientationTimer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                handler.post(update);
+            }
+        }, 100, 4000);*/
+
+
+
+
+        if(timerOrientation != null){
+            timerOrientation.cancel();
+        }
+
+        timerOrientation = new CountDownTimer(5000, 1000) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                if(isOrientationChange){
+                    //    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                    isOrientationChange = false;
+                }
+                if(timerOrientation != null){
+                    timerOrientation.cancel();
+                }
+
+            }
+        }.start();
+
+    }
+
+    private void setTimer(){
+
+        /*Handler handler = new Handler();
+        Runnable update = new Runnable() {
+            public void run() {
+                if(isOrientationChange){
+                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                    isOrientationChange = false;
+                    if (orientationTimer != null) {
+                        orientationTimer.cancel();
+                    }
+                }
+
+            }
+        };
+
+        if (orientationTimer != null) {
+            orientationTimer.cancel();
+        }
+        orientationTimer = new Timer();
+        orientationTimer.schedule(new TimerTask() {
+
+            @Override
+            public void run() {
+                handler.post(update);
+            }
+        }, 100, 5000);*/
+
+
+
+        if(timerOrientation != null){
+            timerOrientation.cancel();
+        }
+
+        timerOrientation = new CountDownTimer(5000, 1000) {
+            public void onTick(long millisUntilFinished) {
+               /* OrientationEventListener orientationEventListener =
+                        new OrientationEventListener(HappiApplication.getCurrentContext()) {
+                            @Override
+                            public void onOrientationChanged(int orientation) {
+                                int epsilon = 10;
+                                int leftLandscape = 90;
+                                int rightLandscape = 270;
+                                int portrait = 0;
+                                int portraitUpside = 180;
+                                if(epsilonCheck(orientation, leftLandscape, epsilon) ||
+                                        epsilonCheck(orientation, rightLandscape, epsilon)){
+                                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND", Toast.LENGTH_SHORT).show();
+                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+                                        isOrientationChange = true;
+                                        Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND CHANGE", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+
+
+                                }else if(epsilonCheck(orientation, portrait, epsilon) ||
+                                        epsilonCheck(orientation, portraitUpside, epsilon)){
+                                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT", Toast.LENGTH_SHORT).show();
+
+                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+                                        isOrientationChange = true;
+                                        Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT CHANGE", Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                }else{
+                                    isOrientationChange = false;
+                                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER ELSE", Toast.LENGTH_SHORT).show();
+
+                                }
+                                if (orientation == 0 || orientation == 180) {
+                                    Toast.makeText(HappiApplication.getCurrentContext(), "portrait",
+                                            Toast.LENGTH_LONG).show();
+                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
+                                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                                    }
+                                } else if (orientation == 90 || orientation == 270) {
+                                    Toast.makeText(HappiApplication.getCurrentContext(), "landscape",
+                                            Toast.LENGTH_LONG).show();
+                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
+                                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                                    }
+                                }
+
+
+                            }
+
+                            private boolean epsilonCheck(int a, int b, int epsilon) {
+                                //return a > b - epsilon && a < b + epsilon;
+                                // Math.abs(a - b) < epsilon;
+                                // return a > Math.abs(b - epsilon) && a <  Math.abs(b + epsilon);
+                                return Math.abs(a - b) < epsilon;
+                            }
+                        };
+                orientationEventListener.enable();*/
+            }
+
+            public void onFinish() {
+                if(isOrientationChange){
+                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                    isOrientationChange = false;
+                }
+                if(timerOrientation != null){
+                    timerOrientation.cancel();
+                }
+
+            }
+        }.start();
+    }
+
 }

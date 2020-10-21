@@ -71,7 +71,7 @@ public class ConstantUtils {
     //Analytics api
     public static final String ANALYTICS_BASE_URL = "https://analytics.poppo.tv/";
     //share url
-    public static final String SHARE_URL = "";
+    public static final String SHARE_URL = "https://gethappi.tv/home/movies?show_id=";
 
     //Subscription webview url
     //test

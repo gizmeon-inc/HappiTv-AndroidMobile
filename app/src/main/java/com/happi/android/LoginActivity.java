@@ -13,6 +13,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
 import android.os.CountDownTimer;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -31,6 +33,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.AlertDialogRegisterScreen;
 import com.happi.android.common.BaseActivity;
@@ -60,7 +64,9 @@ import io.reactivex.schedulers.Schedulers;
 
 public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener {
 
-    private EditText et_email, et_password;
+    private EditText et_email;
+    private TextInputEditText et_password;
+    private TextInputLayout tl_password;
     private ProgressDialog dialog;
     private CompositeDisposable compositeDisposable;
 
@@ -100,7 +106,7 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
                 WindowManager.LayoutParams.FLAG_SECURE);
         if (SharedPreferenceUtility.isNightMode()) {
 
-            this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.dark_black));
+            this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.btm_nav));
         } else {
 
             this.getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.white));
@@ -130,7 +136,8 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
         if (SharedPreferenceUtility.isRegistration_mandatory_flag()) {
             tv_skip.setVisibility(View.GONE);
         } else {
-            tv_skip.setVisibility(View.VISIBLE);
+            //tv_skip.setVisibility(View.VISIBLE);
+            tv_skip.setVisibility(View.GONE);
         }
         if (SharedPreferenceUtility.isSubscription_mandatory_flag()) {
             ll_signup.setVisibility(View.GONE);
@@ -139,14 +146,17 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
             ll_signup.setVisibility(View.VISIBLE);
         }
 
+        tv_skip.setVisibility(View.GONE);
 
         btLogin = findViewById(R.id.bt_login);
         et_email = findViewById(R.id.et_email);
         et_password = findViewById(R.id.et_password);
+        tl_password = findViewById(R.id.tl_password);
 
         TypefacedTextViewRegular tv_forgot_password = findViewById(R.id.tv_forgot_password);
 
         et_email.setError(null);
+        tl_password.setError(null);
         et_password.setError(null);
 
 
@@ -220,8 +230,12 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
                 et_email.requestFocus();
             } else if (et_password.getText().toString().trim().isEmpty()) {
 
-                et_password.setError("Please enter your password");
-                et_password.requestFocus();
+//                et_password.setError("Please enter your password");
+//                et_password.requestFocus();
+                tl_password.setErrorEnabled(true);
+                tl_password.setError("Please enter your password");
+                tl_password.requestFocus();
+
             } else {
 
                 hideSoftKeyBoard();
@@ -232,6 +246,26 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
             }
         });
 
+        et_password.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                if(s.length() > 6 || s.length() == 6){
+                    et_password.setError(null);
+                    tl_password.setError(null);
+                    tl_password.setErrorEnabled(false);
+                }
+            }
+        });
         tv_signup.setOnClickListener(view -> {
 
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:ad="http://schemas.android.com/tools"
     android:background="@color/dark_black"
     android:focusableInTouchMode="true">
 
@@ -12,8 +13,8 @@
         android:layout_height="@dimen/dimen_250dp"
         android:visibility="visible"
         app:controller_layout_id="@layout/live_play_back_control"
-        app:surface_type="texture_view"
-        app:resize_mode="fill"/>
+        app:resize_mode="fill"
+        ad:resize_mode="fill"/>
 
 
     <androidx.core.widget.NestedScrollView

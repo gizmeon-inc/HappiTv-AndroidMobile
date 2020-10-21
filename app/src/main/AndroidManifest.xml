@@ -39,7 +39,7 @@
         <activity
             android:name=".ChannelLivePlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:screenOrientation="portrait"
+
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden" />
         <activity
@@ -152,7 +152,7 @@
             android:name=".VideoPlayerActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
+
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ChannelHomeActivity"

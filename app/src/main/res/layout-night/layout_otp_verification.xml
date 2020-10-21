@@ -4,7 +4,7 @@
     android:id="@+id/rl_otp_verification_screen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dark_black"
+    android:background="@color/btm_nav"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:visibility="gone">
@@ -42,7 +42,7 @@
                     android:id="@+id/iv_logo_text"
                     android:layout_width="@dimen/dimen_150dp"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_title_side"
+                    android:src="@drawable/ic_toolbar_logo"
                     android:layout_gravity="center"
                     android:contentDescription="@string/image_label"/>
 
@@ -100,7 +100,7 @@
                 android:layout_marginTop="@dimen/dimen_60dp"
                 android:inputType="number"
                 app:cursorColor="@color/white"
-                android:background="@color/dark_black"
+                android:background="@color/btm_nav"
                 android:itemBackground="@drawable/bg_otp_item"
                 app:hideLineWhenFilled="true"
                 app:itemCount="6"

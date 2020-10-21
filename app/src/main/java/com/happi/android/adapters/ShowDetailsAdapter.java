@@ -37,12 +37,14 @@ public class ShowDetailsAdapter extends RecyclerView.Adapter<ShowDetailsAdapter.
         LinearLayout ll_play;
         LinearLayout ll_container;
         TextView tv_show_name;
+        TextView tv_position;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             this.ll_item_show = itemView.findViewById(R.id.ll_item_show);
             this.ll_play = itemView.findViewById(R.id.ll_play);
             this.tv_show_name = itemView.findViewById(R.id.tv_show_name);
+            this.tv_position = itemView.findViewById(R.id.tv_position);
             this.ll_container = itemView.findViewById(R.id.ll_container);
 
             this.ll_item_show.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +79,9 @@ public class ShowDetailsAdapter extends RecyclerView.Adapter<ShowDetailsAdapter.
 
         if(videoModelUpdatedList.size() != 0){
             String position = String.valueOf(i+1);
-            viewHolder.tv_show_name.setText(position+". "+videoModelUpdatedList.get(i).getVideo_title());
+            //viewHolder.tv_show_name.setText(position+". "+videoModelUpdatedList.get(i).getVideo_title());
+            viewHolder.tv_position.setText(position+". ");
+            viewHolder.tv_show_name.setText(videoModelUpdatedList.get(i).getVideo_title());
 
             if(videoModelUpdatedList.size() > 1){
                 if (row_index == i) {
