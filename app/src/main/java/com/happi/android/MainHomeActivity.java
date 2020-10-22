@@ -2105,7 +2105,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void startTimer(){
-        timerOrientation = new CountDownTimer(7000, 1000) {
+        timerOrientation = new CountDownTimer(5000, 1000) {
             public void onTick(long millisUntilFinished) {
 
             }

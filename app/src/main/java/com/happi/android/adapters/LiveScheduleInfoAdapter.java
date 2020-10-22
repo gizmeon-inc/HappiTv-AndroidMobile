@@ -141,13 +141,13 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
                     (currentDate.equals(finalStartDateTime))) {
                 //status = "Now Playing";
                 //liveScheduleList.get(position).setLive(true);
-               // status = "";
-                status = sdfDate.format(finalStartDateTime);
+                status = "";
 
             } else {
                 status = getDayForScheduleItem(liveScheduleList.get(position));
 
-                if (status.equalsIgnoreCase("Today")) {
+                if(!status.isEmpty()){
+                    if (status.equalsIgnoreCase("Today")) {
                     /*//uncomment for up next
                     if (position > 0) {
                         int previous = position - 1;
@@ -155,11 +155,11 @@ public class LiveScheduleInfoAdapter extends RecyclerView.Adapter<LiveScheduleIn
                             status = "Up Next";
                         }
                     }*/
-                   // status = "";
-                    status = sdfDate.format(finalStartDateTime);
-                }else{
-                   // SimpleDateFormat sdfDate = new SimpleDateFormat("dd MMM, yyyy",Locale.getDefault());
-                    status = sdfDate.format(finalStartDateTime);
+                        status = "";
+                    }else{
+                        // SimpleDateFormat sdfDate = new SimpleDateFormat("dd MMM, yyyy",Locale.getDefault());
+                        status = sdfDate.format(finalStartDateTime);
+                    }
                 }
 
             }
