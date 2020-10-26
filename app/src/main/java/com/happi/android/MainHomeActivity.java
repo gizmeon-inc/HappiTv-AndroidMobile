@@ -54,7 +54,9 @@ import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.Timeline;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.TrackGroupArray;
+import com.google.android.exoplayer2.source.hls.HlsManifest;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
+import com.google.android.exoplayer2.source.hls.playlist.HlsMediaPlaylist;
 import com.google.android.exoplayer2.trackselection.AdaptiveTrackSelection;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
@@ -88,6 +90,7 @@ import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.CustomAlertDialog;
 import com.happi.android.customviews.ScrollingLinearLayoutManager;
 import com.happi.android.customviews.SpacesItemDecoration;
+import com.happi.android.customviews.TypefacedTextViewBold;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.exoplayercontroller.EventLogger;
 import com.happi.android.exoplayercontroller.TrackSelectionHelper;
@@ -184,6 +187,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private static SharedPreferences sharedPreferences;
 
     //live player
+    private TypefacedTextViewBold tv_channel_title_live;
     private List<ChannelModel> channelModelList;
     private RelativeLayout rl_player_live;
     private PlayerView exo_player_view_home;
@@ -214,6 +218,16 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private Timer swipeTimer;
     private boolean isPartnerScroll = false;
     private CountDownTimer timerOrientation;
+
+    //live analytics
+    //analytics
+    boolean  isLivePlaying = false;
+    boolean isLivePaused = false;
+    boolean isTimerActive = false;
+    boolean durationSet = false;
+    private Timer timerSChedule = null;
+    private String channel_Id = "";
+    private String channelTitle = "";
 
     @Override
 
@@ -328,6 +342,11 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         exo_player_view_home = findViewById(R.id.exo_player_view_home);
         ll_live_guide = findViewById(R.id.ll_live_guide);
         rv_live_schedule_list = findViewById(R.id.rv_live_schedule_list);
+
+        tv_channel_title_live = exo_player_view_home.findViewById(R.id.tv_channel_title_live);
+        tv_channel_title_live.setVisibility(View.VISIBLE);
+        tv_channel_title_live.setSelected(true);
+
         int spacingPixels = getResources().getDimensionPixelSize(R.dimen.default_spacing_small);
         //rv_live_schedule_list.addItemDecoration(new SpacesItemDecoration(spacingPixels));
 
@@ -999,30 +1018,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             videoSource = new HlsMediaSource.Factory(factory).createMediaSource(videoURI);
             //videoSource = new HlsMediaSource(videoURI, factory,1, null,null);
 
-            /*try {
-                exoPlayer.addListener(new Player.DefaultEventListener() {
-                    @Override
-                    public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                        // super.onPlayerStateChanged(playWhenReady, playbackState);
-                        if (playbackState == Player.STATE_ENDED) {
-                           *//* if (isExoPlayerFullscreen) {
-                                closeFullscreen();
-                            }*//*
-                           // exoPlayer.setPlayWhenReady(false);
-                        }
-                    }
-                });
-            } catch (Exception e) {
-                Log.d("MANIFEST##", "error: " + e.getMessage());
-            }*/
-            try {
+            try{
+
 
 
                 exoPlayer.addListener(new Player.EventListener() {
 
                     @Override
                     public void onTimelineChanged(Timeline timeline, Object manifest, int reason) {
-                        /*try{
+                        try{
                             if (manifest instanceof HlsManifest) {
                                 HlsManifest hlsManifest = (HlsManifest) manifest;
                                 HlsMediaPlaylist hlsMediaPlaylist = hlsManifest.mediaPlaylist;
@@ -1051,7 +1055,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                             }
                         }catch(Exception e){
                             Log.e("LIVE##", "exception in LIVE : " + e.toString());
-                        }*/
+                        }
                     }
 
                     @Override
@@ -1066,8 +1070,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
                     @Override
                     public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
-                        if (playbackState == Player.STATE_ENDED) {
-                            /*try{
+                        if(playbackState == Player.STATE_ENDED){
+                            try{
                                 isLivePlaying = false;
                                 isLivePaused = false;
                                 if(timerSChedule != null){
@@ -1076,10 +1080,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                                 }
                             }catch(Exception ex){
                                 Log.e("QWERTY5","EXCEPTION : END : "+ex.toString());
-                            }*/
+                            }
 
-                        } else if (playWhenReady && playbackState == Player.STATE_READY) {
-                            /*try{
+                        }else if(playWhenReady && playbackState == Player.STATE_READY){
+                            try{
                                 isLivePlaying = true;
                                 isLivePaused = false;
                                 if(!durationSet) {
@@ -1094,12 +1098,12 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                                 }
                             }catch(Exception ex){
                                 Log.e("QWERTY5","EXCEPTION : PLAYING : "+ex.toString());
-                            }*/
+                            }
 
-                        } else if (playWhenReady) {
+                        }else if (playWhenReady){
 
-                        } else {
-                            /*try{
+                        }else{
+                            try{
                                 isLivePlaying = false;
                                 isLivePaused = true;
 
@@ -1113,20 +1117,20 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                                     //liveEventAnalyticsApiCall("POP04");
                                 }
 
-//                                //live pause analytics api call
-//                                if (isLivePaused) {
-//                                    isLivePaused = false;
-//                                    if (timerSChedule != null) {
-//                                        isTimerActive = false;
-//                                        timerSChedule.cancel();
-//                                    }
-////                                    if (!isVideoEndT) {
-//                                    liveEventAnalyticsApiCall("POP04");
-//                                   // }
-//                                }
+                                /*//live pause analytics api call
+                                if (isLivePaused) {
+                                    isLivePaused = false;
+                                    if (timerSChedule != null) {
+                                        isTimerActive = false;
+                                        timerSChedule.cancel();
+                                    }
+//                                    if (!isVideoEndT) {
+                                    liveEventAnalyticsApiCall("POP04");
+                                   // }
+                                }*/
                             }catch(Exception ex){
                                 Log.e("QWERTY5","EXCEPTION : PAUSE : "+ex.toString());
-                            }*/
+                            }
 
                         }
 
@@ -1162,8 +1166,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
                     }
                 });
-            } catch (Exception e) {
-                Log.e("MainAcvtivity error", " exoplayer error " + e.getMessage());
+            }catch(Exception e){
+                Log.d("MANIFEST##","error: "+e.getMessage());
             }
         } catch (Exception e) {
             liveError();
@@ -1172,6 +1176,11 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
 
         exoPlayer.prepare(videoSource);
+
+        durationSet = false;
+        isTimerActive = false;
+        channel_Id = String.valueOf(liveModel.getChannelId());
+        channelTitle = liveModel.getChannelName();
     }
 
     private void categoryApiCall() {
@@ -1450,6 +1459,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     protected void onDestroy() {
         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+        if(timerSChedule != null) {
+            timerSChedule.cancel();
+        }
         if (exoPlayer != null) {
             exoPlayer.release();
         }
@@ -2119,5 +2131,60 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             }
         }.start();
 
+    }
+    private void initializeTimerScheduler(String event){//edit timer
+        timerSChedule = new Timer();
+        timerSChedule.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if(isLivePlaying){
+                    //  Log.e("########","TRUE  ");
+                    isTimerActive = true;
+                    liveEventAnalyticsApiCall(event);
+                }
+            }
+        },0,60000);
+    }
+
+    private void liveEventAnalyticsApiCall(String eventType){
+
+        /*Uncomment to enable analytics api call for CHANNEL*/
+
+        Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        long epoch = currentCalendar.getTimeInMillis() / 1000L;
+
+        String device_id = SharedPreferenceUtility.getAdvertisingId();
+
+        JsonObject videoDetails = new JsonObject();
+        videoDetails.addProperty("device_id",device_id);
+        videoDetails.addProperty("user_id", String.valueOf(SharedPreferenceUtility.getUserId()));
+        videoDetails.addProperty("event_type",eventType);
+        videoDetails.addProperty("video_id","0");
+        videoDetails.addProperty("channel_id",channel_Id);
+        videoDetails.addProperty("video_title",channelTitle);
+        videoDetails.addProperty("timestamp",String.valueOf( epoch));
+        videoDetails.addProperty("app_id", SharedPreferenceUtility.getApp_Id());
+        videoDetails.addProperty("session_id", SharedPreferenceUtility.getSession_Id());
+        videoDetails.addProperty("publisherid", SharedPreferenceUtility.getPublisher_id());
+
+        try {
+            Log.e("000##",": api call is about to be made:  "+eventType+" - ");
+            AnalyticsApi.AnalyticsServiceScalar analyticsService = AnalyticsApi.createScalar();
+            Call<String> callS = analyticsService.eventCall2(videoDetails);
+            callS.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Log.e("000##","success: "+eventType+" - "+response.code());
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("000##","failure: "+eventType+" - "+t.toString());
+                }
+            });
+
+        }catch(Exception ex){
+            Log.e("000##","exception: "+eventType+" - "+ex);
+        }
     }
 }
