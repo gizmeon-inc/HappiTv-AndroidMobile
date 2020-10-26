@@ -63,20 +63,18 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"
-            android:layout_below="@+id/ll_image"
-            android:layout_marginTop="@dimen/dimen_10dp">
+            android:layout_below="@+id/ll_image">
             <RelativeLayout
                 android:id="@+id/rl_partner_data"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_10dp">
 
                 <LinearLayout
                     android:id="@+id/ll_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingStart="@dimen/dimen_10dp"
-                    android:paddingEnd="@dimen/dimen_10dp">
+                    android:orientation="vertical">
 
                     <at.blogc.android.views.ExpandableTextView
                         android:id="@+id/ex_description"
@@ -112,9 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/dimen_7dp"
-                            android:nestedScrollingEnabled="false"
-                            android:paddingStart="@dimen/dimen_10dp"
-                            android:paddingEnd="@dimen/dimen_10dp"/>
+                            android:nestedScrollingEnabled="false"/>
                         <com.happi.android.customviews.TypefacedTextViewRegular
                             android:id="@+id/tv_error_video_list"
                             android:layout_width="wrap_content"

@@ -117,6 +117,18 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+           <!-- <intent-filter>
+                <data
+                    android:host="gethappi.tv"
+
+                    android:scheme="https" />
+                &lt;!&ndash; <data android:scheme="https"  android:host="adventuresportstv.net"  android:path="/web/andr-app"/> &ndash;&gt;
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>-->
         </activity> <!-- Admob Live    ca-app-pub-1674238972502360~6501892347 -->
         <!-- Admob Test -->
         <!--

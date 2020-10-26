@@ -95,7 +95,7 @@ public class PartnerListingActivity extends BaseActivity implements PartnersList
         //int spacingPixels = getResources().getDimensionPixelSize(R.dimen.default_spacing_small);
        // rv_partnerList.addItemDecoration(new SpacesItemDecoration(spacingPixels));
         rv_partnerList.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        partnersListingAdapter = new PartnersListingAdapter(this, false, this);
+        partnersListingAdapter = new PartnersListingAdapter(this, false, this,0);
         rv_partnerList.setAdapter(partnersListingAdapter);
 
         progressDialog = new ProgressDialog(this, R.style.MyTheme);

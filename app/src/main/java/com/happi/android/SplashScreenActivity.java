@@ -87,8 +87,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
         Uri data = newIntent.getData();
         String action = newIntent.getAction();
 
-        if ( data != null && data.getQueryParameter("show") != null) {
-            showId = data.getQueryParameter("show");
+        if ( data != null && data.getQueryParameter("show_id") != null) {
+            showId = data.getQueryParameter("show_id");
         }
 
         compositeDisposable = new CompositeDisposable();

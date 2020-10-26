@@ -200,9 +200,7 @@
                        android:layout_width="wrap_content"
                        android:layout_height="wrap_content"
                        android:layout_below="@id/ll_live_partner"
-                       android:visibility="visible"
-                       android:paddingStart="@dimen/dimen_10dp"
-                       android:paddingEnd="@dimen/dimen_7dp"/>
+                       android:visibility="visible"/>
 
                    <!--CATEGORIES-->
                    <LinearLayout
@@ -327,8 +325,7 @@
                        android:layout_height="wrap_content"
                        android:layout_below="@id/ll_popular_videos"
                        android:visibility="visible"
-                       android:paddingLeft="@dimen/dimen_10dp"
-                       android:paddingRight="@dimen/dimen_10dp"/>
+                       android:paddingLeft="@dimen/dimen_10dp"/>
 
                    <!--LIVE-->
                    <LinearLayout
@@ -385,8 +382,7 @@
                        android:layout_marginBottom="@dimen/dimen_7dp"
                        android:nestedScrollingEnabled="false"
                        android:visibility="visible"
-                       android:paddingLeft="@dimen/dimen_10dp"
-                       android:paddingRight="@dimen/dimen_10dp"/>
+                       android:paddingLeft="@dimen/dimen_10dp"/>
 
                </RelativeLayout>
            </androidx.core.widget.NestedScrollView>

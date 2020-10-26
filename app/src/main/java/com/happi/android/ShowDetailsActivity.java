@@ -328,6 +328,10 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
         rl_toolbar = findViewById(R.id.rl_toolbar);
         rl_details = findViewById(R.id.rl_details);
         rl_player = findViewById(R.id.rl_player);
+
+        rl_player.setVisibility(View.INVISIBLE);
+        rl_image.setVisibility(View.VISIBLE);
+
         sc_meta = findViewById(R.id.sc_meta);
         FrameLayout yt_fragment = findViewById(R.id.yt_fragment);
 
@@ -1086,6 +1090,9 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 @Override
                 public void onClick(View v) {
                     if (isTrailerPlayable) {
+                        rl_player.setVisibility(View.VISIBLE);
+                        rl_image.setVisibility(View.GONE);
+
                         pb_trailer.setVisibility(View.VISIBLE);
                         String teaser = showDetails.getTeaser();
                         if (teaser == null || teaser.isEmpty()) {
@@ -1369,7 +1376,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             exoPlayer = null;
             exo_player_view.setPlayer(null);
         }
-        rl_player.setVisibility(View.GONE);
+        rl_player.setVisibility(View.INVISIBLE);
         rl_image.setVisibility(View.VISIBLE);
     }
     private void trailerError() {
@@ -1388,7 +1395,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
             exo_player_view.setPlayer(null);
         }
 
-        rl_player.setVisibility(View.GONE);
+        rl_player.setVisibility(View.INVISIBLE);
         rl_image.setVisibility(View.VISIBLE);
     }
 

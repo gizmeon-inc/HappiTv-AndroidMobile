@@ -218,6 +218,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private Timer swipeTimer;
     private boolean isPartnerScroll = false;
     private CountDownTimer timerOrientation;
+    private int currentItem = 0;
 
     //live analytics
     //analytics
@@ -228,6 +229,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private Timer timerSChedule = null;
     private String channel_Id = "";
     private String channelTitle = "";
+
 
     @Override
 
@@ -353,10 +355,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         //partner info
         ll_partner = findViewById(R.id.ll_live_partner);
         rv_partner = findViewById(R.id.rv_live_schedule_partner);
-        int spacingPixelsPartner = getResources().getDimensionPixelSize(R.dimen.default_spacing_2dp);
+        int spacingPixelsPartner = getResources().getDimensionPixelSize(R.dimen.default_spacing_1dp);
         rv_partner.addItemDecoration(new SpacesItemDecoration(spacingPixelsPartner));
-        layoutManager = new ScrollingLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false, 100);
-
+        //layoutManager = new ScrollingLinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false, 100);
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
 
         //scroll view
         sv_scrollview = findViewById(R.id.sv_scrollview);
@@ -484,7 +486,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         Log.e("CARS", "onresume");
         if (rv_partner != null && partnersListingAdapter != null && !partnersListingAdapter.isEmpty() && !isPartnerScroll) {
             Log.e("CARS", "onresume:play cars");
-            playCarousel();
+            currentItem = 0;
+            rv_partner.scrollToPosition(currentItem);
+            startTimer();
         }
         super.onResume();
     }
@@ -527,7 +531,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         ViewCompat.setNestedScrollingEnabled(rv_partner, false);
         //layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         rv_partner.setLayoutManager(layoutManager);
-        partnersListingAdapter = new PartnersListingAdapter(this, true, this::onPartnerItemClicked);
+        partnersListingAdapter = new PartnersListingAdapter(this, true, this::onPartnerItemClicked, width);
         rv_partner.setAdapter(partnersListingAdapter);
         loadingPartnerInfo = Skeleton.bind(rv_partner)
                 .adapter(partnersListingAdapter)
@@ -921,6 +925,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Log.e("CARS", "partnload: play cars");
             Log.e("CARS", "count " + partnersListingAdapter.getItemCount());
             //playCarousel();
+            currentItem = 0;
+            rv_partner.scrollToPosition(currentItem);
+            //playCarousel();
             startTimer();
         }
     }
@@ -1255,6 +1262,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         compositeDisposable.add(homeVideoDisposable);
 
         if (!showId.equalsIgnoreCase("empty") && HappiApplication.isIsFromLink()) {
+            shouldAutoPlay = false;
+            releasePlayer();
+
             HappiApplication.setIsFromLink(false);
             Intent show = new Intent(MainHomeActivity.this, ShowDetailsActivity.class);
             show.putExtra(ConstantUtils.SHOW_ID, showId);
@@ -1442,6 +1452,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Log.e("CARS", "onpause: swipeTask canc");
             swipeTask.cancel();
         }
+        if(timerOrientation != null){
+            timerOrientation.cancel();
+        }
+        currentItem = 0;
         super.onPause();
     }
 
@@ -1478,6 +1492,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         if(timerOrientation != null){
             timerOrientation.cancel();
         }
+        currentItem = 0;
         super.onDestroy();
         safelyDispose(compositeDisposable);
     }
@@ -2023,6 +2038,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     protected void onStop() {
         shouldAutoPlay = false;
+        if(timerOrientation != null){
+            timerOrientation.cancel();
+        }
+        currentItem = 0;
         super.onStop();
 
     }
@@ -2055,62 +2074,31 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         public void run() {
             rv_partner.post(() -> {
 
-
-                /*if(nextPage == partnersListingAdapter.getItemCount() - 2){
-                     nextPage = 0;
+                //if(currentItem == partnersListingAdapter.getItemCount() || currentItem > partnersListingAdapter.getItemCount()){
+                if(layoutManager.findFirstVisibleItemPosition() == partnersListingAdapter.getItemCount() - 2){
+                    currentItem = 0;
                 }else{
-                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
-                }*/
-
-                    /*if(nextPage == partnersListingAdapter.getItemCount()){
-                        nextPage = 0;
-                    }
-                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
-
-                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
-                    Log.e("CARS","nextPage "+nextPage);
-                    rv_partner.smoothScrollToPosition(nextPage);*/
-               /* if(layoutManager.findFirstVisibleItemPosition() == partnersListingAdapter.getItemCount() - 2 ){
-                    nextPage = 0;
-                    rv_partner.smoothScrollToPosition(nextPage);
-                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
-                    Log.e("CARS","nextPage "+nextPage);
-                }else if (layoutManager.findFirstVisibleItemPosition() == 0){
-                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
-                    rv_partner.smoothScrollToPosition(nextPage);
-
-                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
-                    Log.e("CARS","nextPage "+nextPage);
-                }else{
-                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
-                    rv_partner.smoothScrollToPosition(nextPage);
-                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
-                    Log.e("CARS","nextPage "+nextPage);
-                }*/
+                    currentItem = layoutManager.findFirstVisibleItemPosition() + 2;
+                }
+                rv_partner.scrollToPosition(currentItem);
+                Log.e("CARS", "first visible " + layoutManager.findFirstVisibleItemPosition());
+                Log.e("CARS", "currentItem " + currentItem);
 
 
-                /*if((nextPage > partnersListingAdapter.getItemCount()) || (nextPage == partnersListingAdapter.getItemCount() - 2) ){
-                    nextPage = 0;
-                    rv_partner.smoothScrollToPosition(nextPage);
-                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
-                    Log.e("CARS","nextPage "+nextPage);
-                }else{
-                    nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
-                    rv_partner.smoothScrollToPosition(nextPage);
 
-                    Log.e("CARS","first visible "+layoutManager.findFirstVisibleItemPosition());
-                    Log.e("CARS","nextPage "+nextPage);
-                }*/
-                int nextPage;
+               /* int nextPage;
 
                 if (layoutManager.findFirstVisibleItemPosition() == partnersListingAdapter.getItemCount() - 2) {
+                //if (layoutManager.findFirstVisibleItemPosition() == partnersListingAdapter.getItemCount() - 1) {
                     nextPage = 0;
                 }else{
                     nextPage = layoutManager.findFirstVisibleItemPosition() + 2;
+                    //nextPage = layoutManager.findFirstVisibleItemPosition() + 1;
                 }
-                rv_partner.smoothScrollToPosition(nextPage);
+                //rv_partner.smoothScrollToPosition(nextPage);
+                rv_partner.scrollToPosition(nextPage);
                 Log.e("CARS", "first visible " + layoutManager.findFirstVisibleItemPosition());
-                Log.e("CARS", "nextPage " + nextPage);
+                Log.e("CARS", "nextPage " + nextPage);*/
 
             });
         }
