@@ -21,7 +21,7 @@
             android:layout_centerHorizontal="true"
             android:layout_width="@dimen/dimen_100dp"
             android:layout_height="@dimen/dimen_128dp"
-            android:src="@drawable/icon_logo_main" />
+            android:src="@drawable/ic_launcher" />
         <com.happi.android.customviews.TypefacedTextViewRegular
             android:id="@+id/tv_item_title"
             android:layout_width="wrap_content"

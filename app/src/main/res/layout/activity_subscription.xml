@@ -50,7 +50,7 @@
             android:layout_width="@dimen/dimen_300dp"
             android:layout_height="@dimen/dimen_200dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_transparent_logo" />
+            android:src="@drawable/ic_launcher" />
 
         <View
             android:layout_width="match_parent"

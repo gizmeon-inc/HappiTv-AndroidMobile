@@ -2,6 +2,7 @@ package com.happi.android.customviews;
 
 import android.content.Context;
 import android.graphics.PointF;
+import android.util.Log;
 import android.view.View;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,14 +21,20 @@ public class ScrollingLinearLayoutManager extends LinearLayoutManager {
     public void smoothScrollToPosition(RecyclerView recyclerView, RecyclerView.State state,
                                        int position) {
         View firstVisibleChild = recyclerView.getChildAt(0);
+        //View firstVisibleChild = recyclerView.getChildAt(position);
         int itemHeight = firstVisibleChild.getHeight();
+        Log.e("SCROLL", "itemHeight>>"+itemHeight);
         int currentPosition = recyclerView.getChildLayoutPosition(firstVisibleChild);
+        Log.e("SCROLL", "currentPosition>>"+currentPosition);
         int distanceInPixels = Math.abs((currentPosition - position) * itemHeight);
+        Log.e("SCROLL", "distanceInPixels 1 >>"+distanceInPixels);
         if (distanceInPixels == 0) {
             distanceInPixels = (int) Math.abs(firstVisibleChild.getY());
+            Log.e("SCROLL", "distanceInPixels 2 >>"+distanceInPixels);
         }
         SmoothScroller smoothScroller = new SmoothScroller(recyclerView.getContext(), distanceInPixels, duration);
         smoothScroller.setTargetPosition(position);
+        Log.e("SCROLL", "setTargetPosition >>"+position);
         startSmoothScroll(smoothScroller);
     }
 
@@ -50,6 +57,9 @@ public class ScrollingLinearLayoutManager extends LinearLayoutManager {
         @Override
         protected int calculateTimeForScrolling(int dx) {
             float proportion = (float) dx / distanceInPixels;
+            int d = (int) (duration * proportion);
+
+            Log.e("SCROLL", ""+duration+" * "+ proportion+">>"+d);
             return (int) (duration * proportion);
         }
     }

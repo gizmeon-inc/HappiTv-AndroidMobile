@@ -94,7 +94,7 @@ public class HappiMessagingService extends FirebaseMessagingService {
             // Apply the layouts to the notification
             Notification customNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                   //  .setSmallIcon(R.drawable.small_icon)
-                    .setSmallIcon(R.drawable.icon_logo_main)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                     .setCustomContentView(notificationLayout)
                     .setCustomBigContentView(notificationLayoutExpanded)
@@ -142,7 +142,7 @@ public class HappiMessagingService extends FirebaseMessagingService {
             // Apply the layouts to the notification
             Notification customNotification = new NotificationCompat.Builder(this, CHANNEL_ID)
                   //  .setSmallIcon(R.drawable.small_icon)
-                    .setSmallIcon(R.drawable.icon_logo_main)
+                    .setSmallIcon(R.drawable.ic_launcher)
                     .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                     .setCustomContentView(notificationLayout)
                     .setCustomBigContentView(notificationLayoutExpanded)

@@ -111,7 +111,7 @@
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_transparent_logo"/>
+                    android:src="@drawable/ic_launcher"/>
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

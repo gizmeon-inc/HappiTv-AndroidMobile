@@ -76,14 +76,13 @@
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
-<!--
-<androidx.cardview.widget.CardView
+<!--<androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cv_partner_parent"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/dimen_1dp"
+    android:layout_marginEnd="@dimen/dimen_7dp"
+    android:paddingEnd="@dimen/dimen_7dp"
     app:cardCornerRadius="@dimen/dimen_5dp"
     app:cardElevation="@dimen/dimen_0dp"
     app:cardMaxElevation="@dimen/dimen_0dp"
@@ -91,7 +90,7 @@
 
 
     <RelativeLayout
-        android:id="@+id/rl_partner_info"
+        android:id="@+id/rl_partner_parent"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_82dp"
         android:gravity="start|center_vertical"
@@ -99,7 +98,7 @@
         android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/ll_partner_image"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/dimen_50dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:gravity="center_vertical"
@@ -128,10 +127,12 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/ll_partner_details"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_toEndOf="@+id/ll_partner_image">
+            android:layout_toEndOf="@+id/ll_partner_image"
+            android:paddingEnd="@dimen/dimen_12dp"
+            android:paddingStart="@dimen/dimen_5dp">
 
             <com.happi.android.customviews.TypefacedTextViewBold
                 android:id="@+id/tv_partner_name"
@@ -147,10 +148,11 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_small_medium"
                 android:gravity="top"
-                android:maxLines="4"
+                android:maxLines="6"
                 android:ellipsize="end"/>
 
         </LinearLayout>
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>-->
+

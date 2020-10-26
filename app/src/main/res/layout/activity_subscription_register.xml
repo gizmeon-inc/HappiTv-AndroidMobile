@@ -51,7 +51,7 @@
                     android:layout_height="90dp"
                     android:padding="@dimen/dimen_10dp"
                     android:layout_gravity="center_horizontal"
-                    android:src="@drawable/ic_toolbar_logo" />
+                    android:src="@drawable/ic_title_side" />
             </LinearLayout>
 
             <LinearLayout

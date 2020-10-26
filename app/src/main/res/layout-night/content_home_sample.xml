@@ -201,7 +201,8 @@
                        android:layout_height="wrap_content"
                        android:layout_below="@id/ll_live_partner"
                        android:visibility="visible"
-                       android:paddingLeft="@dimen/dimen_10dp" />
+                       android:paddingStart="@dimen/dimen_10dp"
+                       android:paddingEnd="@dimen/dimen_7dp"/>
 
                    <!--CATEGORIES-->
                    <LinearLayout

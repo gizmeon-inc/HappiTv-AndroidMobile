@@ -424,6 +424,7 @@ public class RegisterActivity extends BaseActivity {
         jsonObject.addProperty("latitude", HappiApplication.getLatitude());
         jsonObject.addProperty("longitude", HappiApplication.getLongitude());
         jsonObject.addProperty("pubid", SharedPreferenceUtility.getPublisher_id());
+        jsonObject.addProperty("ipaddress", HappiApplication.getIpAddress());
 
 
         ApiClient.UsersService usersService = ApiClient.create();

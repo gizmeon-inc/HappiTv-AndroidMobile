@@ -97,7 +97,7 @@ public class NotifyService extends IntentService {
                 mNotification = new Notification.Builder(this, CHANNEL_ID)
                         // Set the intent that will fire when the user taps the notification
                         .setContentIntent(pendingIntent)
-                        .setSmallIcon(R.drawable.icon_logo_main)
+                        .setSmallIcon(R.drawable.ic_launcher)
                         .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
                         .setContentTitle(title)
                         .setStyle(new Notification.BigTextStyle()
@@ -110,7 +110,7 @@ public class NotifyService extends IntentService {
                 mNotification = new Notification.Builder(this)
                         // Set the intent that will fire when the user taps the notification
                         .setContentIntent(pendingIntent)
-                        .setSmallIcon(R.drawable.icon_logo_main)
+                        .setSmallIcon(R.drawable.ic_launcher)
                         .setLargeIcon(BitmapFactory.decodeResource(res, R.mipmap.ic_launcher))
                         .setPriority(Notification.PRIORITY_MAX)
                         .setContentTitle(title)
