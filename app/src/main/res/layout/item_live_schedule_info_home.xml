@@ -192,7 +192,7 @@
                 android:id="@+id/tv_partner_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="@color/orange"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_small_medium"
                 android:maxLines="1"
                 android:ellipsize="end"
