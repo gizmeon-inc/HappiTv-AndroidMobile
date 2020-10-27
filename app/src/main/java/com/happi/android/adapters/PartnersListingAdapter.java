@@ -1,10 +1,12 @@
 package com.happi.android.adapters;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -18,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.happi.android.R;
+import com.happi.android.customviews.AdaptingTextView;
 import com.happi.android.customviews.TypefacedTextViewBold;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.CategoryModel;
@@ -173,7 +176,10 @@ public class PartnersListingAdapter extends RecyclerView.Adapter<PartnersListing
                 if(description.contains("\r\n")){
                     description = description.replace("\r\n"," ");
                 }
+
+
                 holder.tv_partner_description.setText(description);
+
             }else{
                 holder.tv_partner_description.setText("");
             }
@@ -191,7 +197,8 @@ public class PartnersListingAdapter extends RecyclerView.Adapter<PartnersListing
         return partnerModelList.size();
     }
     public class LivePartnerViewHolder extends RecyclerView.ViewHolder {
-        TypefacedTextViewRegular tv_partner_description;
+        //TypefacedTextViewRegular tv_partner_description;
+        AdaptingTextView tv_partner_description;
         TypefacedTextViewBold tv_partner_name;
         ImageView iv_partner_image;
         RelativeLayout rl_partner_parent;
@@ -204,12 +211,18 @@ public class PartnersListingAdapter extends RecyclerView.Adapter<PartnersListing
             this.rl_partner_parent = itemView.findViewById(R.id.rl_partner_parent);
             this.ll_partner_image = itemView.findViewById(R.id.ll_partner_image);
 
+
             int widthModified = (width/2) - ((int) context.getResources().getDimensionPixelSize(R.dimen.default_spacing_2dp));
             //int wd = (width - ((int)(width * 1.38)/100));
             //int image_width = (int) ((0.7 * width)/4);
             int image_width = (int) ((widthModified)/4);
             int new_height = (3 * (image_width)) / 2;
             int margin = (int) context.getResources().getDimension(R.dimen.dimen_2dp);
+
+            //int viewHeight = ((int) context.getResources().getDimensionPixelSize(R.dimen.dimen_82dp));
+            int viewHeight = ((int) context.getResources().getDimensionPixelSize(R.dimen.dimen_100dp));
+            Log.e("PARTNER","viewHeight"+viewHeight);
+
             //int widthModified = (int) width-15;
             //int widthModified = (int) (width - ((width * 2.083)/100));
             //int widthModified = (int) (width - ((width * 2.77)/100));
@@ -217,24 +230,37 @@ public class PartnersListingAdapter extends RecyclerView.Adapter<PartnersListing
             //int widthModified = (int) (width - ((width * 3.88)/100));
             //int widthModified = (int) (width /2);
             //int widthModified = wd ;
+
+
             Log.e("PARTNER","width"+width);
             Log.e("PARTNER","widthModified"+widthModified);
             //Log.e("PARTNER","modification="+(width * 3.88)/100);
            // Log.e("PARTNER","modification="+(width * 1.38)/100);
             Log.e("PARTNER","image_width"+image_width);
             Log.e("PARTNER","new_height"+new_height);
+
             CardView.LayoutParams cl = new CardView.LayoutParams(widthModified, new_height);
+            //CardView.LayoutParams cl = new CardView.LayoutParams(widthModified, viewHeight);
             this.rl_partner_parent.setLayoutParams(cl);
+
             RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(image_width, RelativeLayout.LayoutParams.MATCH_PARENT);
+            //RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(image_width, new_height);
             rl.setMargins(0,0,margin,0);
             this.ll_partner_image.setLayoutParams(rl);
             this.ll_partner_image.setPadding(0,margin,margin,margin);
+
+//            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//            this.tv_partner_description.setLayoutParams(lp);
+
+
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     partnerItemClickListener.onPartnerItemClicked(getAdapterPosition());
                 }
             });
+
+
         }
     }
     public void clearAll() {

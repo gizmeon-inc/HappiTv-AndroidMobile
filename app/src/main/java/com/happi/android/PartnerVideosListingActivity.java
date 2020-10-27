@@ -6,9 +6,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
@@ -59,6 +61,7 @@ public class PartnerVideosListingActivity extends BaseActivity {
     private LinearLayout ll_description;
     private ExpandableTextView ex_description;
     private TextView tv_more;
+    private TextView tv_description;
     private NestedScrollView sv_scrollview_partner;
     private GridRecyclerView rv_partner_video_list;
 
@@ -134,8 +137,10 @@ public class PartnerVideosListingActivity extends BaseActivity {
 
         ll_description = findViewById(R.id.ll_description);
         ex_description = findViewById(R.id.ex_description);
+        tv_description = findViewById(R.id.tv_description);
         tv_more = findViewById(R.id.tv_more);
         tv_more.setVisibility(View.GONE);
+        ex_description.setVisibility(View.GONE);
         sv_scrollview_partner = findViewById(R.id.sv_scrollview_partner);
         rv_partner_video_list = findViewById(R.id.rv_partner_video_list);
 
@@ -257,29 +262,37 @@ public class PartnerVideosListingActivity extends BaseActivity {
                 if (description.contains("\r\n")) {
                     description = description.replace("\r\n", " ");
                 }
-                tv_more.setVisibility(View.VISIBLE);
+
+
                 ll_description.setVisibility(View.VISIBLE);
-                ex_description.setVisibility(View.VISIBLE);
+                tv_description.setVisibility(View.VISIBLE);
+
+//                ex_description.setVisibility(View.VISIBLE);
+//                tv_more.setVisibility(View.VISIBLE);
+
+                ex_description.setVisibility(View.GONE);
+                tv_more.setVisibility(View.GONE);
 
                 //for truncating description
-                ex_description.setText(description);
+                //ex_description.setText(description);
                 // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
-                ex_description.setAnimationDuration(750L);
+                //ex_description.setAnimationDuration(750L);
 
                 // set interpolators for both expanding and collapsing animations
-                ex_description.setInterpolator(new OvershootInterpolator());
+               // ex_description.setInterpolator(new OvershootInterpolator());
 
                // toggle the ExpandableTextView
-                tv_more.setOnClickListener(new View.OnClickListener() {
+               /* tv_more.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
                         // buttonToggle.setText(expandableTextView.isExpanded() ? R.string.expand : R.string.collapse);
                         ex_description.toggle();
                         tv_more.setVisibility(View.GONE);
                     }
-                });
+                });*/
 
-                // truncateDescription(showDetails.getSynopsis());
+                tv_description.setText(description);
+                 truncateDescription(description);
 
             } else {
 
@@ -300,7 +313,42 @@ public class PartnerVideosListingActivity extends BaseActivity {
         hideProgressDialog();
 
     }
+    private void truncateDescription(String fullDescription){
+        if (tv_description.getTag() == null) {
+            tv_description.setTag(tv_description.getText());
+        }
+        ViewTreeObserver vto = tv_description.getViewTreeObserver();
+        vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
 
+            @SuppressWarnings("deprecation")
+            @Override
+            public void onGlobalLayout() {
+
+                ViewTreeObserver obs = tv_description.getViewTreeObserver();
+                obs.removeGlobalOnLayoutListener(this);
+
+                int lineCount = tv_description.getLayout().getLineCount();
+                String more = "...More";
+                if (lineCount > 5) {
+                    int index = tv_description.getLayout().getLineEnd(4);
+                    // String atIndex = tv_description.getText().
+                    String truncated = tv_description.getText().subSequence(0, index - more.length() + 1) + " ";
+                    tv_description.setText(Html.fromHtml(truncated + "<font color='#34A7CD'>...More</font>"));
+                    tv_description.setVisibility(View.VISIBLE);
+                    tv_description.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tv_description.setText(fullDescription);
+                            tv_description.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+
+                }
+            }
+        });
+
+    }
     private void loadPartnerVideoList(List<PartnerShowsModel> partnerShowsModels) {
         tv_error_video_list.setVisibility(View.GONE);
         rv_partner_video_list.setVisibility(View.VISIBLE);

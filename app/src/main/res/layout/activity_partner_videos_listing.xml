@@ -75,7 +75,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
-
+                    <TextView
+                        android:id="@+id/tv_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/dimen_5dp"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"/>
                     <at.blogc.android.views.ExpandableTextView
                         android:id="@+id/ex_description"
                         android:layout_width="wrap_content"

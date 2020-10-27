@@ -488,7 +488,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Log.e("CARS", "onresume:play cars");
             currentItem = 0;
             rv_partner.scrollToPosition(currentItem);
-            startTimer();
+            startTimer(3500);
         }
         super.onResume();
     }
@@ -928,7 +928,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             currentItem = 0;
             rv_partner.scrollToPosition(currentItem);
             //playCarousel();
-            startTimer();
+            startTimer(5000);
         }
     }
 
@@ -2104,8 +2104,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
     }
 
-    private void startTimer(){
-        timerOrientation = new CountDownTimer(5000, 1000) {
+    private void startTimer(long time){
+        timerOrientation = new CountDownTimer(time, 1000) {
             public void onTick(long millisUntilFinished) {
 
             }
