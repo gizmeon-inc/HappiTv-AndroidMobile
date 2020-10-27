@@ -97,6 +97,14 @@ public class LiveScheduleResponse implements Serializable {
         public void setPartner_name(String partner_name) {
             this.partner_name = partner_name;
         }
+
+        public void setEndtime(String endtime) {
+            this.endtime = endtime;
+        }
+
+        public void setStarttime(String starttime) {
+            this.starttime = starttime;
+        }
     }
 
 }

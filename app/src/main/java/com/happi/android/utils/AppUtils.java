@@ -5,12 +5,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.happi.android.common.HappiApplication;
+import com.happi.android.models.LiveScheduleResponse;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import static com.happi.android.common.HappiApplication.getCurrentActivity;
@@ -306,5 +309,85 @@ public class AppUtils {
      */
     public static float convertPxToDp(Context context, float px) {
         return px / context.getResources().getDisplayMetrics().density;
+    }
+
+    public static long getTimeDiff(Date date1, Date date2, TimeUnit timeUnit) {
+
+        long diffInMillies = date2.getTime() - date1.getTime();
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
+    }
+    public static LiveScheduleResponse.LiveScheduleModel getScheduleItemTime(LiveScheduleResponse.LiveScheduleModel itemSchedule) {
+        String startDateTime = itemSchedule.getStarttime();
+        String endDateTime = itemSchedule.getEndtime();
+
+        String startDateString = "";
+        String endDateString = "";
+
+        String startTimeString = "";
+        String endTimeString = "";
+
+
+        Date finalStartDateTime = null;
+        Date finalEndDateTime = null;
+
+        if (startDateTime.contains("T")) {
+            String[] start = startDateTime.split("T");
+            if (start.length == 2) {
+                startDateString = start[0];
+                startTimeString = start[1];
+            }
+        }
+        if (endDateTime.contains("T")) {
+            String[] end = endDateTime.split("T");
+            if (end.length == 2) {
+                endDateString = end[0];
+                endTimeString = end[1];
+            }
+        }
+
+
+        SimpleDateFormat sdfYearTimeLocal = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        SimpleDateFormat sdfYearTimeUTC = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        sdfYearTimeUTC.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+        try {
+            //start
+            String startString = startDateString + " " + startTimeString;
+
+            Date d1 = sdfYearTimeUTC.parse(startString);
+            String s1 = sdfYearTimeLocal.format(d1);
+            finalStartDateTime = sdfYearTimeLocal.parse(s1);
+            //end
+            String endString = endDateString + " " + endTimeString;
+
+            Date d2 = sdfYearTimeUTC.parse(endString);
+            String s2 = sdfYearTimeLocal.format(d2);
+            finalEndDateTime = sdfYearTimeLocal.parse(s2);
+        } catch (Exception ex) {
+            Log.e("exception date", "");
+        }
+        itemSchedule.setStartDateTime(finalStartDateTime);
+        itemSchedule.setEndDateTime(finalEndDateTime);
+
+        Calendar currentCalendar = Calendar.getInstance();
+        Date currentDate = currentCalendar.getTime();
+
+        if (finalStartDateTime != null && finalEndDateTime != null) {
+
+            if ((currentDate.after(finalStartDateTime) && currentDate.before(finalEndDateTime)) ||
+                    (currentDate.equals(finalStartDateTime))) {
+
+                itemSchedule.setLive(true);
+
+            } else {
+
+                itemSchedule.setLive(false);
+
+            }
+
+        }
+
+
+        return itemSchedule;
     }
 }

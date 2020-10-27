@@ -111,14 +111,17 @@ import com.happi.android.webservice.ApiClient;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -200,6 +203,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private LiveScheduleHomeListAdapter liveScheduleHomeListAdapter;
     private LiveScheduleInfoAdapter liveScheduleInfoAdapter;
     private int liveChannelId = 0;
+    //live guide auto refresh
+    //private Timer liveGuideTimer;
+    private CountDownTimer liveGuideTimer;
+
     //partner
     private LinearLayout ll_partner;
     private GridRecyclerView rv_partner;
@@ -865,6 +872,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void loadLiveSchedule(int channelId) {
+        Log.e("LIVE_TIMER","schedule api call");
+        if(liveGuideTimer != null){
+            liveGuideTimer.cancel();
+        }
         ApiClient.UsersService usersService = ApiClient.create();
         Disposable tokenDisposable = usersService.getLiveSchedule(HappiApplication.getAppToken(), SharedPreferenceUtility.getCountryCode(), channelId)
                 .subscribeOn(Schedulers.io())
@@ -872,7 +883,46 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .subscribe(liveScheduleResponse -> {
 
                     if (liveScheduleResponse.getData().size() != 0) {
-                        updateLiveScheduleList(liveScheduleResponse.getData());
+
+                        List<LiveScheduleResponse.LiveScheduleModel> list = liveScheduleResponse.getData();
+
+//                        LiveScheduleResponse.LiveScheduleModel sample1 =
+//                                AppUtils.getScheduleItemTime(liveScheduleResponse.getData().get(0));
+
+                        //Date sampledate1 = sample1.getStartDateTime();
+                        //Log.e("LIVE_TIMER","sampledate1>>"+sampledate1);
+                        Calendar cd = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+                        //cd.setTime(sampledate1);
+                        cd.add(Calendar.MINUTE, 5);
+                        Date added = cd.getTime();
+                        Log.e("LIVE_TIMER","added>>"+added);
+
+                        SimpleDateFormat sdfFormat = new SimpleDateFormat("yyyy-MM-dd");
+                        sdfFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+                        SimpleDateFormat sdfFormatTime = new SimpleDateFormat("HH:mm:ss");
+                        sdfFormatTime.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+                        String dat = "";
+                        String tim = "";
+
+                        try{
+                            dat = sdfFormat.format(added);
+                            tim = sdfFormatTime.format(added);
+                        }catch(Exception ex){
+
+                        }
+                        String totTime = dat +"T"+tim+".000Z";
+                        Log.e("LIVE_TIMER","totTime>>"+totTime);
+
+                        list.get(0).setEndtime(totTime);
+                        list.get(1).setStarttime(totTime);
+
+                        //list.get(1).setStarttime("2020-10-27T10:15:00.000Z");
+
+
+                        updateLiveScheduleList(list);
+
+                        //updateLiveScheduleList(liveScheduleResponse.getData());
                     } else {
                         ll_live_guide.setVisibility(View.GONE);
                         rv_live_schedule_list.setVisibility(View.GONE);
@@ -943,12 +993,72 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         liveScheduleInfoAdapter.notifyDataSetChanged();
         runLayoutAnimation(rv_live_schedule_list, mSelectedItem);
         if (liveScheduleInfoAdapter.isEmpty()) {
-
             ll_live_guide.setVisibility(View.GONE);
             rv_live_schedule_list.setVisibility(View.GONE);
+        }else{
+            Log.e("LIVE_TIMER","updateLiveScheduleList");
+            checkLiveNow(liveScheduleModelList);
         }
     }
 
+    private void checkLiveNow(List<LiveScheduleResponse.LiveScheduleModel> liveScheduleModelList){
+
+        Date end;
+        Date current =  Calendar.getInstance().getTime();
+
+        for(LiveScheduleResponse.LiveScheduleModel liveScheduleModel : liveScheduleModelList){
+
+            LiveScheduleResponse.LiveScheduleModel updatedLiveScheduleModel = AppUtils.getScheduleItemTime(liveScheduleModel);
+            if(updatedLiveScheduleModel.isLive()){
+                Log.e("LIVE_TIMER","islive>>"+updatedLiveScheduleModel.getVideo_title());
+                end = updatedLiveScheduleModel.getEndDateTime();
+                long difference = (long) AppUtils.getTimeDiff(current, end,TimeUnit.MILLISECONDS);
+                Log.e("LIVE_TIMER","difference>>"+difference);
+                if(difference != 0){
+                    startTimerForLiveGuide(difference);
+                }
+
+                break;
+
+            }
+
+
+        }
+    }
+    private void startTimerForLiveGuide(long difference){
+       /* if(liveGuideTimer != null){
+            liveGuideTimer.cancel();
+        }
+        liveGuideTimer = new Timer();
+        liveGuideTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Log.e("LIVE_TIMER","timer running >>"+difference);
+                if(liveChannelId != 0){
+                    Log.e("LIVE_TIMER","schedule update");
+                    loadLiveSchedule(liveChannelId);
+                }
+            }
+        },0,difference);*/
+
+        if(liveGuideTimer != null){
+            liveGuideTimer.cancel();
+        }
+        liveGuideTimer = new CountDownTimer(difference, 500) {
+            public void onTick(long millisUntilFinished) {
+
+            }
+
+            public void onFinish() {
+                Log.e("LIVE_TIMER","timer running >>"+difference);
+                if(liveChannelId != 0){
+                    Log.e("LIVE_TIMER","schedule update");
+                    loadLiveSchedule(liveChannelId);
+                }
+
+            }
+        }.start();
+    }
     private void initializePlayer(ChannelModel liveModel, String playerToken) {
         MediaSource videoSource = null;
 
@@ -1456,6 +1566,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             timerOrientation.cancel();
         }
         currentItem = 0;
+
+        if(liveGuideTimer != null){
+            liveGuideTimer.cancel();
+        }
         super.onPause();
     }
 
@@ -1493,6 +1607,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             timerOrientation.cancel();
         }
         currentItem = 0;
+        if(liveGuideTimer != null){
+            liveGuideTimer.cancel();
+        }
         super.onDestroy();
         safelyDispose(compositeDisposable);
     }
@@ -2042,6 +2159,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             timerOrientation.cancel();
         }
         currentItem = 0;
+        if(liveGuideTimer != null){
+            liveGuideTimer.cancel();
+        }
         super.onStop();
 
     }
