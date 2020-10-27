@@ -170,7 +170,17 @@ public class PartnersListingAdapter extends RecyclerView.Adapter<PartnersListing
     @Override
     public void onBindViewHolder(@NonNull LivePartnerViewHolder holder, int position) {
         if (partnerModelList.size() != 0) {
+
+            Glide.with(context)
+                    .load(ConstantUtils.THUMBNAIL_URL + partnerModelList.get(position).getImage())
+                    .error(Glide.with(context)
+                            .load(ContextCompat.getDrawable(context, R.drawable.ic_placeholder)))
+                    .apply(placeholderOf(R.drawable.ic_placeholder))
+                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
+                    .into(holder.iv_partner_image);
+
             holder.tv_partner_name.setText(partnerModelList.get(position).getName());
+
             if(partnerModelList.get(position).getDescription() != null && !partnerModelList.get(position).getDescription().isEmpty()){
                 String description = partnerModelList.get(position).getDescription();
                 if(description.contains("\r\n")){
@@ -183,13 +193,7 @@ public class PartnersListingAdapter extends RecyclerView.Adapter<PartnersListing
             }else{
                 holder.tv_partner_description.setText("");
             }
-            Glide.with(context)
-                    .load(ConstantUtils.THUMBNAIL_URL + partnerModelList.get(position).getImage())
-                    .error(Glide.with(context)
-                            .load(ContextCompat.getDrawable(context, R.drawable.ic_placeholder)))
-                    .apply(placeholderOf(R.drawable.ic_placeholder))
-                    .apply(diskCacheStrategyOf(DiskCacheStrategy.AUTOMATIC))
-                    .into(holder.iv_partner_image);
+
         }
     }
     @Override
