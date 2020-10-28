@@ -202,8 +202,8 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-//                WindowManager.LayoutParams.FLAG_SECURE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
 
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
@@ -1142,7 +1142,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 }
 
                 //for truncating description
-                ex_synopsis.setText(description);
+               // ex_synopsis.setText(description);
                 //ex_synopsis.setText(showDetails.getSynopsis());
 
 
@@ -1159,21 +1159,21 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
 
 
 
-                progressDialogDismiss();
+//                progressDialogDismiss();
                 // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
-                ex_synopsis.setAnimationDuration(750L);
+                //ex_synopsis.setAnimationDuration(750L);
 
                 // set interpolators for both expanding and collapsing animations
-                ex_synopsis.setInterpolator(new OvershootInterpolator());
+                //ex_synopsis.setInterpolator(new OvershootInterpolator());
 // toggle the ExpandableTextView
-                tv_more_click.setOnClickListener(new View.OnClickListener() {
+               /* tv_more_click.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
                         // buttonToggle.setText(expandableTextView.isExpanded() ? R.string.expand : R.string.collapse);
                         ex_synopsis.toggle();
                         tv_more_click.setVisibility(View.GONE);
                     }
-                });
+                });*/
 
 
 
@@ -1234,7 +1234,7 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 }
             }
         });
-
+        progressDialogDismiss();
     }
     public static void makeTextViewResizable(final TextView tv, final int maxLine, final String expandText, final boolean viewMore, String fullText) {
 

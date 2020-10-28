@@ -35,11 +35,12 @@ public class ConstantUtils {
     //public static final String BASE_URL = "https://staging.poppo.tv/platform/bk/";
 
 
-
-    public static final String termsDayUrl = "https://staging.gethappi.tv/termsofuse";
-    public static final String termsNightUrl = "https://staging.gethappi.tv/termsofuse";
-    public static final String policyDayUrl = "https://staging.gethappi.tv/policydarkmode";
-    public static final String policyNightUrl = "https://staging.gethappi.tv/policydarkmode";
+    //public static final String termsNightUrl = "https://staging.gethappi.tv/termsofuse";
+    //public static final String policyDayUrl = "https://staging.gethappi.tv/policydarkmode";
+    public static final String termsDayUrl = "https://gethappi.tv/termsofuse";
+    public static final String termsNightUrl = "https://gethappi.tv/termsofuse";
+    public static final String policyDayUrl = "https://gethappi.tv/policydarkmode";
+    public static final String policyNightUrl = "https://gethappi.tv/policydarkmode";
 
     //appkey, bundle id
     public static final String appKey="happifilms";

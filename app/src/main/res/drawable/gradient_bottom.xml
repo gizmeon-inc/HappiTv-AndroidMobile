@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:left="@dimen/dimen_0dp"
+        android:right="@dimen/dimen_0dp">
+
+        <shape android:shape="rectangle">
+
+            <gradient
+                android:angle="270"
+                android:startColor="@color/light_transparent"
+                android:centerColor="@color/btm_nav"
+                android:endColor="@color/btm_nav"/>
+
+        </shape>
+    </item>
+    <!--<item android:top="1sp" >
+        <shape android:shape="rectangle">
+            <solid android:color="#10ffffff"/>
+        </shape>
+    </item>-->
+
+</layer-list>

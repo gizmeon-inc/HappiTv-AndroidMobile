@@ -200,6 +200,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private LiveScheduleHomeListAdapter liveScheduleHomeListAdapter;
     private LiveScheduleInfoAdapter liveScheduleInfoAdapter;
     private int liveChannelId = 0;
+
     //partner
     private LinearLayout ll_partner;
     private GridRecyclerView rv_partner;
@@ -216,7 +217,6 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private LinearLayoutManager layoutManager;
     private SwipeTask swipeTask;
     private Timer swipeTimer;
-    private boolean isPartnerScroll = false;
     private CountDownTimer timerOrientation;
     private int currentItem = 0;
 
@@ -230,6 +230,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private String channel_Id = "";
     private String channelTitle = "";
 
+    //for resume
+    private boolean isCreate = true;
 
     @Override
 
@@ -242,8 +244,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
-//                WindowManager.LayoutParams.FLAG_SECURE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (SharedPreferenceUtility.isNightMode()) {
 
@@ -258,6 +260,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         HappiApplication.setCurrentContext(this);
         onCreateBottomNavigationView();
+
+        isCreate = true;
 
         if (getIntent() != null && HappiApplication.isIsFromLink()) {
             if (getIntent().getStringExtra("show") != null && !getIntent().getStringExtra("show").isEmpty()) {
@@ -479,16 +483,29 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         shouldAutoPlay = true;
         resumePlayer();
-        if (liveChannelId != 0) {
+       /* if (liveChannelId != 0 && ) {
             Log.e("HOME", "ONRESUME");
             loadLiveSchedule(liveChannelId);
-        }
-        Log.e("CARS", "onresume");
-        if (rv_partner != null && partnersListingAdapter != null && !partnersListingAdapter.isEmpty() && !isPartnerScroll) {
+        }*/
+        /*if (rv_partner != null && partnersListingAdapter != null && !partnersListingAdapter.isEmpty() && !isPartnerScroll) {
             Log.e("CARS", "onresume:play cars");
             currentItem = 0;
             rv_partner.scrollToPosition(currentItem);
             startTimer(3500);
+        }*/
+
+        if(!isCreate){
+            if (liveChannelId != 0) {
+                Log.e("HOME", "ONRESUME");
+                loadLiveSchedule(liveChannelId);
+            }
+
+            if (rv_partner != null && partnersListingAdapter != null && !partnersListingAdapter.isEmpty()) {
+                Log.e("CARS", "onresume:play cars");
+                currentItem = 0;
+                rv_partner.scrollToPosition(currentItem);
+                startTimer(3500);
+            }
         }
         super.onResume();
     }
@@ -921,13 +938,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             ll_partner.setVisibility(View.GONE);
             rv_partner.setVisibility(View.GONE);
         } else {
-            isPartnerScroll = true;
-            Log.e("CARS", "partnload: play cars");
-            Log.e("CARS", "count " + partnersListingAdapter.getItemCount());
-            //playCarousel();
             currentItem = 0;
             rv_partner.scrollToPosition(currentItem);
-            //playCarousel();
             startTimer(5000);
         }
     }
@@ -1444,11 +1456,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         releasePlayer();
         if (swipeTimer != null) {
             Log.e("CARS", "onpause:timer cancel");
-            isPartnerScroll = false;
             swipeTimer.cancel();
         }
         if (null != swipeTask) {
-            isPartnerScroll = false;
             Log.e("CARS", "onpause: swipeTask canc");
             swipeTask.cancel();
         }
@@ -1456,6 +1466,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             timerOrientation.cancel();
         }
         currentItem = 0;
+        isCreate = false;
         super.onPause();
     }
 
@@ -1480,12 +1491,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             exoPlayer.release();
         }
         if (swipeTimer != null) {
-            isPartnerScroll = false;
             Log.e("CARS", "onDestroy: tmr canc");
             swipeTimer.cancel();
         }
         if (null != swipeTask) {
-            isPartnerScroll = false;
             Log.e("CARS", "onDestroy: swipeTask canc");
             swipeTask.cancel();
         }
@@ -1493,6 +1502,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             timerOrientation.cancel();
         }
         currentItem = 0;
+        isCreate = false;
         super.onDestroy();
         safelyDispose(compositeDisposable);
     }
@@ -2042,6 +2052,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             timerOrientation.cancel();
         }
         currentItem = 0;
+        isCreate = false;
         super.onStop();
 
     }
