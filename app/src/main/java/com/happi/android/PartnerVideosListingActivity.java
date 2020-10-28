@@ -297,6 +297,7 @@ public class PartnerVideosListingActivity extends BaseActivity {
             } else {
 
                 ll_description.setVisibility(View.GONE);
+                hideProgressDialog();
             }
 
             if(partnerDataModel.getShows()!= null && partnerDataModel.getShows().size() > 0){
@@ -308,9 +309,11 @@ public class PartnerVideosListingActivity extends BaseActivity {
                 tv_error_video_list.setVisibility(View.VISIBLE);
             }
 
+        }else{
+            displayErrorLayout(getString(R.string.no_results_found));
         }
 
-        hideProgressDialog();
+
 
     }
     private void truncateDescription(String fullDescription){
@@ -347,7 +350,7 @@ public class PartnerVideosListingActivity extends BaseActivity {
                 }
             }
         });
-
+        hideProgressDialog();
     }
     private void loadPartnerVideoList(List<PartnerShowsModel> partnerShowsModels) {
         tv_error_video_list.setVisibility(View.GONE);
