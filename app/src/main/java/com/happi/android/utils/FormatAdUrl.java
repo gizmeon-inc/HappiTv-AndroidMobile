@@ -14,6 +14,7 @@ import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.models.IPAddressModel;
 import com.happi.android.models.ASTVHome;
+import com.happi.android.models.SelectedVideoModel;
 import com.happi.android.models.VideoModel;
 
 import java.io.UnsupportedEncodingException;
@@ -21,9 +22,10 @@ import java.net.URLEncoder;
 
 public class FormatAdUrl {
 
-    public static String formatAdUrl(VideoModel videoModel, IPAddressModel ipAddressModel) {
+    public static String formatAdUrl(SelectedVideoModel videoModel, IPAddressModel ipAddressModel) {
         String url = videoModel.getAd_link().trim();
-        int videoId = videoModel.getVideo_id();
+        //int videoId = videoModel.getVideo_id();
+        String videoId = videoModel.getVideo_id();
         int channelId = Integer.parseInt(videoModel.getChannel_id());
         String duration = videoModel.getVideo_duration();
         String versionName = BuildConfig.VERSION_NAME;
@@ -37,30 +39,31 @@ public class FormatAdUrl {
         int height = 480;
         int width = 640;
         DisplayMetrics displayMetrics = new DisplayMetrics();
-//        if (HappiApplication.getCurrentActivity() != null) {
-//            HappiApplication.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics
-//                    (displayMetrics);
-//            height = displayMetrics.heightPixels;
-//            width = displayMetrics.widthPixels;
-//        }
+        if (HappiApplication.getCurrentActivity() != null) {
+            HappiApplication.getCurrentActivity().getWindowManager().getDefaultDisplay().getMetrics
+                    (displayMetrics);
+            height = displayMetrics.heightPixels;
+            width = displayMetrics.widthPixels;
+        }
         String advertisingId_fromThread = SharedPreferenceUtility.getAdvertisingId();
 
         if (ipAddressModel != null) {
 
             url = url.replace("[IP_ADDRESS]", ipAddressModel.getQuery());
-            url = url.replace("[COUNTRY]", SharedPreferenceUtility.getCountryCode());
-            url = url.replace("[CITY]", HappiApplication.getCity());
-            url = url.replace("[LATITUDE]", "" + HappiApplication.getLatitude());
-            url = url.replace("[LONGITUDE]", "" + HappiApplication.getLongitude());
-            url = url.replace("[REGION]", "" + HappiApplication.getRegion());
 
-            if (HappiApplication.getLatitude() != 0 && HappiApplication.getLongitude() != 0) {
+        }
+        url = url.replace("[COUNTRY]", SharedPreferenceUtility.getCountry());
+        url = url.replace("[CITY]", HappiApplication.getCity());
+        url = url.replace("[LATITUDE]", "" + HappiApplication.getLatitude());
+        url = url.replace("[LONGITUDE]", "" + HappiApplication.getLongitude());
+        url = url.replace("[REGION]", "" + HappiApplication.getRegion());
 
-                url = url.replace("[LOCSOURCE]", "" + "1");
-            } else {
+        if (HappiApplication.getLatitude() != 0 && HappiApplication.getLongitude() != 0) {
 
-                url = url.replace("[LOCSOURCE]", "2");
-            }
+            url = url.replace("[LOCSOURCE]", "" + "1");
+        } else {
+
+            url = url.replace("[LOCSOURCE]", "2");
         }
         if (advertisingId_fromThread != null) {
 
@@ -94,9 +97,11 @@ public class FormatAdUrl {
         url = url.replace("[BUNDLE]", bundle_id);
         url = url.replace("[APPNAME]", encodeValue(HappiApplication.getCurrentContext().getString(R.string
                 .app_name)));
+        url = url.replace("[APP_NAME]", encodeValue(HappiApplication.getCurrentContext().getString(R.string.app_name)));
         url = url.replace("[VIDEO_ID]", "" + videoId);
         url = url.replace("[CHANNEL_ID]", "" + channelId);
         url = url.replace("[TOTAL_DURATION]", duration);
+        url = url.replace("[DURATION]", duration);
         url = url.replace("[DEVICE_ORIGIN]", "AA");
         url = url.replace("[NETWORK]", encodeValue(getNetworkCarrier(1)));
         url = url.replace("[CARRIER]", encodeValue(getNetworkCarrier(2)));
@@ -107,12 +112,23 @@ public class FormatAdUrl {
         url = url.replace("[PL]", "" + 0);
 
         if (advertisingId_fromThread != null) {
-            url = url.replace("[USER_ID]", advertisingId_fromThread);
+            url = url.replace("[USER_ID]", String.valueOf(SharedPreferenceUtility.getUserId()));
             url = url.replace("[UUID]", advertisingId_fromThread);
         } else {
-            url = url.replace("[USER_ID]", device_id);
+            url = url.replace("[USER_ID]", String.valueOf(SharedPreferenceUtility.getUserId()));
             url = url.replace("[UUID]", device_id);
         }
+
+        String category = "";
+        if (videoModel.getCategory_name().size() != 0) {
+            category = videoModel.getCategory_name().get(0);
+        }
+        if (videoModel.getCategory_name().size() > 0) {
+            for (int i = 1; i < videoModel.getCategory_name().size(); i++) {
+                category = category + "," + videoModel.getCategory_name().get(i);
+            }
+        }
+        url = url.replace("[KEYWORDS]", category);
 
         return url;
     }

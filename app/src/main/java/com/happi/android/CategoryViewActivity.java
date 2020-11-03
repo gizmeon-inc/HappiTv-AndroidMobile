@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -269,11 +270,14 @@ public class CategoryViewActivity extends BaseActivity implements SearchResultsA
     }
 
     private void setupRecyclerview() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
 
         rv_video_list.setLayoutManager(new GridLayoutManager(this, 3));
         rv_video_list.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
-        showList_adapter = new ShowList_adapter(getApplicationContext(),
-                this::onShowsItemClicked, true);
+        showList_adapter = new ShowList_adapter(this,
+                this::onShowsItemClicked, true, width);
         rv_video_list.setAdapter(showList_adapter);
 
         loadingVideos = Skeleton.bind(rv_video_list)

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -33,14 +34,17 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.View
     private OnLongItemclicked onLongItemclicked;
     private String pageContext;
     private int position = -1;
+    private int width = 0;
 
 
-    public WatchListAdapter(String pageContext, List<GetWatchListModel> watchListModelList, Context context, OnItemClicked onItemClicked, OnLongItemclicked onLongItemclicked){
+    public WatchListAdapter(String pageContext, List<GetWatchListModel> watchListModelList, Context context, OnItemClicked onItemClicked, OnLongItemclicked onLongItemclicked,
+                            int width){
         this.watchListModelList = watchListModelList;
         this.context = context;
         this.onItemClicked = onItemClicked;
         this.onLongItemclicked = onLongItemclicked;
         this.pageContext = pageContext;
+        this.width = width;
     }
 
     @NonNull
@@ -85,13 +89,22 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.View
         ImageView iv_delete_icon;
         TypefacedTextViewSemiBold tv_video_title;
         LinearLayout ll_delete;
+        FrameLayout ll_main_layout;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             iv_thumbnail = itemView.findViewById(R.id.iv_thumbnail);
             iv_delete_icon = itemView.findViewById(R.id.iv_delete_icon);
             tv_video_title = itemView.findViewById(R.id.tv_video_title);
             ll_delete = itemView.findViewById(R.id.ll_delete);
+            ll_main_layout = itemView.findViewById(R.id.ll_main_layout);
            // ll_delete.setVisibility(View.GONE);
+
+            int new_width = (width/3);
+            int new_height = (3*(new_width-15))/2;
+
+            FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, new_height);
+            this.ll_main_layout.setLayoutParams(fl);
+            this.iv_thumbnail.setLayoutParams(fl);
 
 
             itemView.setOnClickListener(new View.OnClickListener() {

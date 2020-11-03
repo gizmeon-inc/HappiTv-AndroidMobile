@@ -37,7 +37,7 @@
             android:ellipsize="end"
             android:lines="1"
             android:background="@color/whiteThree"
-            android:textSize="@dimen/dimen_18dp"
+            android:textSize="@dimen/text_regular_medium3"
             android:layout_below="@+id/tv_next_label"/>
 
         <TextView

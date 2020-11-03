@@ -9,7 +9,7 @@
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/exo_player_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_250dp"
+        android:layout_height="@dimen/dimen_player_250dp"
         android:visibility="visible"
         app:controller_layout_id="@layout/live_play_back_control"
         app:resize_mode="fill"

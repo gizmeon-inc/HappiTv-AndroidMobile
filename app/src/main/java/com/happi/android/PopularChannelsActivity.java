@@ -46,7 +46,6 @@ public class PopularChannelsActivity extends BaseActivity implements ChannelSugg
     GridRecyclerView rv_channels_list;
     ChannelSuggestionAdapter channelsListAdapter;
     private AnimationItem mSelectedItem;
-    private Disposable internetDisposable;
     private CompositeDisposable compositeDisposable;
     SkeletonScreen loadingChannels;
 
@@ -112,12 +111,8 @@ public class PopularChannelsActivity extends BaseActivity implements ChannelSugg
                 .show();
 
 
-        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnected -> {
-                    if (isConnected) loadSuggestedChannels();
-                });
+
+        loadSuggestedChannels();
     }
 
     private void loadSuggestedChannels() {
@@ -207,7 +202,7 @@ public class PopularChannelsActivity extends BaseActivity implements ChannelSugg
     protected void onDestroy() {
         super.onDestroy();
 
-        safelyDispose(internetDisposable, compositeDisposable);
+        safelyDispose(compositeDisposable);
     }
 
     private void safelyDispose(Disposable... disposables) {

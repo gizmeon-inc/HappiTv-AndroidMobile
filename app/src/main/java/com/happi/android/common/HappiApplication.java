@@ -45,7 +45,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
     public static String ipAddress = "";
     public static boolean applaunch = false;
     public AppLifecycleHandler appLifecycleHandlerthis;
-    public static String country = "";
 
     public static boolean isDatePickerClicked = false;
 
@@ -55,14 +54,6 @@ public class HappiApplication extends MultiDexApplication implements AppLifecycl
 
     public static void setIsDatePickerClicked(boolean isDatePickerClicked) {
         HappiApplication.isDatePickerClicked = isDatePickerClicked;
-    }
-
-    public static String getCountry() {
-        return country;
-    }
-
-    public static void setCountry(String country) {
-        HappiApplication.country = country;
     }
 
 

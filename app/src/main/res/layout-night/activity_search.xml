@@ -35,7 +35,7 @@
 
             <EditText
                 android:id="@+id/et_search"
-                android:layout_width="0dp"
+                android:layout_width="@dimen/dimen_0dp"
                 android:layout_height="@dimen/dimen_50dp"
                 android:layout_weight="1"
                 android:backgroundTint="@android:color/transparent"

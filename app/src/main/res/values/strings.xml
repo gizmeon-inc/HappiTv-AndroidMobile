@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">HappiTV</string>
-    <string name="app_store_url">https://play.google.com/store/apps/details?id=com.anandamediamobile.androidtest&amp;hl=en</string>
+    <string name="app_store_url">https://play.google.com/store/apps/details?id=com.happi.android</string>
     <string name="USER_PREFERENCES">user_preferences</string>
 
     <string name="facebook_app_id">1989191491402145</string>
@@ -203,6 +203,7 @@
     <string name="PayPerView_Videos_label">My Videos</string>
     <string name="share_label">Share</string>
     <string name="logoutall_dialog">You have exceeded no of active users. Please logout from existing device to access.\n\nLOGOUT ALL lets you logout from all currently active devices.</string>
+    <string name="loginlimitexceeded_dialog">You have exceeded no of active users. Please logout from existing device to access.\n</string>
     <string name="logoutall_label">LOGOUT ALL</string>
     <string name="ok_label">OK</string>
     <string name="no_label">NO</string>

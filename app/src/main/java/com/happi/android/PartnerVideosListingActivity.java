@@ -44,11 +44,6 @@ import static com.bumptech.glide.request.RequestOptions.placeholderOf;
 
 public class PartnerVideosListingActivity extends BaseActivity {
 
-    private TypefacedTextViewRegular tv_title;
-    //private ImageView iv_menu;
-    private ImageView iv_back;
-    //private ImageView iv_logo_text;
-    //private ImageView iv_search;
 
     private CompositeDisposable compositeDisposable;
 
@@ -93,24 +88,19 @@ public class PartnerVideosListingActivity extends BaseActivity {
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         width = displayMetrics.widthPixels;
 
-        int modifiedWidth = (int) ((21.46 * width)/ 100);
+        /*int modifiedWidth = (int) ((21.46 * width)/ 100);
 
         float widthImage = AppUtils.convertDpToPx(this,modifiedWidth);
-        float heightImage = (float) (widthImage * 1.34);
+        float heightImage = (float) (widthImage * 1.34);*/
 
 
-        tv_title = findViewById(R.id.tv_title);
-        //iv_menu = findViewById(R.id.iv_menu);
-        iv_back = findViewById(R.id.iv_back);
-        //iv_logo_text = findViewById(R.id.iv_logo_text);
-       // iv_search = findViewById(R.id.iv_search);
+        TypefacedTextViewRegular tv_title = findViewById(R.id.tv_title);
+        ImageView iv_back = findViewById(R.id.iv_back);
+
 
         tv_title.setVisibility(View.VISIBLE);
         iv_back.setVisibility(View.VISIBLE);
 
-       // iv_menu.setVisibility(View.GONE);
-       // iv_logo_text.setVisibility(View.GONE);
-       // iv_search.setVisibility(View.GONE);
 
 
         ll_error = findViewById(R.id.ll_error);
@@ -121,19 +111,6 @@ public class PartnerVideosListingActivity extends BaseActivity {
 
         ll_image = findViewById(R.id.ll_image);
         iv_partner_image = findViewById(R.id.iv_partner_image);
-
-       /* RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams((int)widthImage, (int)heightImage);
-        rl.setMargins(0,5,0,0);
-        rl.addRule(RelativeLayout.CENTER_HORIZONTAL, 0);
-        ll_image.setLayoutParams(rl);
-        ll_image.setGravity(Gravity.CENTER_HORIZONTAL|Gravity.TOP);
-
-        int w = ll_image.getWidth();
-        int h =  ll_image.getHeight();*/
-
-        LinearLayout.LayoutParams rl = new LinearLayout.LayoutParams((int)widthImage, (int)heightImage);
-        rl.gravity = Gravity.CENTER_HORIZONTAL;
-        iv_partner_image.setLayoutParams(rl);
 
         ll_description = findViewById(R.id.ll_description);
         ex_description = findViewById(R.id.ex_description);

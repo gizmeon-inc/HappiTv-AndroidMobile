@@ -10,8 +10,8 @@
     app:cardMaxElevation="@dimen/dimen_0dp"
     app:cardUseCompatPadding="false">
     <LinearLayout
-        android:layout_width="@dimen/dimen_200dp"
-        android:layout_height="@dimen/dimen_80dp"
+        android:layout_width="@dimen/dimen_skeleton_200dp"
+        android:layout_height="@dimen/dimen_skeleton_80dp"
         android:gravity="start|center_vertical"
         android:padding="@dimen/dimen_5dp"
         android:background="@color/white"
@@ -41,7 +41,7 @@
         <LinearLayout
             android:id="@+id/ll_schedule_details"
             android:layout_width="0dp"
-            android:layout_height="@dimen/dimen_70dp"
+            android:layout_height="@dimen/dimen_skeleton_70dp"
             android:orientation="vertical"
             android:layout_weight="2.7"
             android:layout_marginEnd="@dimen/dimen_3dp"

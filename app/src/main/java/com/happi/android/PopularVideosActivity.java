@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -47,7 +48,6 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
     VideoList_adapter videoList_adapter;
     ShowList_adapter showList_adapter;
     private AnimationItem mSelectedItem;
-    private Disposable internetDisposable;
     private CompositeDisposable compositeDisposable;
     SkeletonScreen loadingVideos;
     private String title = "empty";
@@ -115,10 +115,13 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
 
 
     private void setupRecyclerview() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
 
         rv_video_list.setLayoutManager(new GridLayoutManager(this, 3));
         rv_video_list.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
-        showList_adapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, true);
+        showList_adapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, true, width);
         //   videoList_adapter = new VideoList_adapter(getApplicationContext(),this::onItemClicked,true);
         // rv_video_list.setAdapter(videoList_adapter);
         rv_video_list.setAdapter(showList_adapter);
@@ -135,18 +138,6 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
                 .frozen(false)
                 .show();
 
-        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnected -> {
-                   // Log.d("^&^&^&", "POPVID" + isConnected);
-                    if (isConnected) {
-                      //  Log.d("^&^&^&", "POPVID" + "^&^&^&");
-                        // loadVideoList();
-                    } else {
-                        // Toast.makeText(this,"No Internet",Toast.LENGTH_SHORT).show();
-                    }
-                });
 
         if (!title.equals("empty")) {
             if (title.equals("watchFree")) {
@@ -296,7 +287,7 @@ public class PopularVideosActivity extends BaseActivity implements VideoList_ada
     protected void onDestroy() {
         super.onDestroy();
 
-        safelyDispose(internetDisposable, compositeDisposable);
+        safelyDispose(compositeDisposable);
     }
 
     @Override

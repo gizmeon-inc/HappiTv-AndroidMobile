@@ -11,9 +11,10 @@
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/exo_player_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_250dp"
+        android:layout_height="@dimen/dimen_player_250dp"
         app:resize_mode="fill"
-        ads:resize_mode="fill"/>
+        ads:resize_mode="fill"
+        app:controller_layout_id="@layout/exo_playback_control_view"/>
     <!-- <android.support.v4.widget.NestedScrollView
          android:id="@+id/sv_scrollview"
          android:layout_width="match_parent"

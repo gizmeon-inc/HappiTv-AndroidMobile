@@ -448,7 +448,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
         rv_watch_free.setVisibility(View.VISIBLE);
 
         rv_watch_free.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        freeShowList_adapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, false);
+        freeShowList_adapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, false,0);
         rv_watch_free.setAdapter(freeShowList_adapter);
         loadingFreeShows = Skeleton.bind(rv_watch_free)
                 .adapter(freeShowList_adapter)
@@ -1126,7 +1126,7 @@ public class HomeActivity extends BaseActivity implements LogoutAlertDialog.onLo
             details.addProperty("device_type", "Android");
             details.addProperty("latitude", String.valueOf(HappiApplication.getLatitude()));
             details.addProperty("longitude", String.valueOf(HappiApplication.getLongitude()));
-            details.addProperty("country", HappiApplication.getCountry());
+            details.addProperty("country", SharedPreferenceUtility.getCountry());
             details.addProperty("city", HappiApplication.getCity());
             details.addProperty("ua", userAgent);
             details.addProperty("ip_address", ipAddress);

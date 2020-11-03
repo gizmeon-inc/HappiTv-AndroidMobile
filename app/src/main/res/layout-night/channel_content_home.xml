@@ -10,7 +10,7 @@
     <com.google.android.exoplayer2.ui.PlayerView
         android:id="@+id/exo_player_view"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dimen_250dp"
+        android:layout_height="@dimen/dimen_player_250dp"
         android:visibility="visible"
         app:controller_layout_id="@layout/live_play_back_control"
         app:resize_mode="fill"
@@ -60,7 +60,7 @@
                             android:text="Addicted To Altitude"
                             android:textColor="@color/whiteThree"
                             android:textStyle="bold"
-                            android:textSize="@dimen/dimen_18dp"
+                            android:textSize="@dimen/text_regular_medium3"
                             android:lines="1"
                             android:ellipsize="end"
                             android:gravity="center_vertical"

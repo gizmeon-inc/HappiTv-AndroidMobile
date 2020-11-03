@@ -91,7 +91,7 @@
                     android:id="@+id/wv_subscription"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="@dimen/dimen_5dp"
                     android:background="@android:color/transparent"
                     android:visibility="visible"
                     android:scrollbars="none"/>

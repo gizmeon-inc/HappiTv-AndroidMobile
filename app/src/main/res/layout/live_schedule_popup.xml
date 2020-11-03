@@ -29,7 +29,7 @@
             android:layout_below="@id/iv_item_logo"
             android:layout_marginTop="@dimen/dimen_10dp"
             android:text="Cliff Hanger"
-            android:textSize="@dimen/dimen_18dp"
+            android:textSize="@dimen/text_regular_medium3"
             android:textColor="@color/colorPrimaryDark"/>
 
         <com.happi.android.customviews.TypefacedTextViewRegular
@@ -40,7 +40,7 @@
             android:gravity="center"
             android:text="3:27 PM"
             android:layout_marginTop="@dimen/dimen_5dp"
-            android:textSize="@dimen/dimen_15dp"
+            android:textSize="@dimen/text_regular_medium"
             android:textColor="@color/whiteThree"/>
 
         <RelativeLayout
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dimen_2dp"
                 android:text="Remind me"
-                android:textSize="@dimen/dimen_15dp"
+                android:textSize="@dimen/text_regular_medium"
                 android:textColor="@color/white"/>
 
             <com.suke.widget.SwitchButton

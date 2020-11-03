@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
@@ -94,11 +95,14 @@ public class LiveVideoListingActivity extends BaseActivity implements ChannelLis
     }
 
     private void setupRecyclerview() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
 
         rv_live_list.setLayoutManager(new GridLayoutManager(this, 3));
         rv_live_list.addItemDecoration(new ItemDecorationAlbumColumns(7,3));
         channelListAdapter = new ChannelListAdapter(getApplicationContext(),
-                this::onChannelItemClicked,true);
+                this::onChannelItemClicked,true, width);
         rv_live_list.setAdapter(channelListAdapter);
 
         loadingLive = Skeleton.bind(rv_live_list)

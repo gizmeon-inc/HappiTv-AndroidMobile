@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
@@ -50,7 +52,7 @@ public class ShowVideoListAdapter extends RecyclerView.Adapter<ShowVideoListAdap
 
 
             View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_video_partner, parent, false);
+                    .inflate(R.layout.item_partner_vertical, parent, false);
             return new ShowVideoListAdapter.MyViewHolder(view);
 
     }
@@ -58,7 +60,12 @@ public class ShowVideoListAdapter extends RecyclerView.Adapter<ShowVideoListAdap
     @Override
     public void onBindViewHolder(ShowVideoListAdapter.MyViewHolder holder, int position) {
 
-        holder.tv_video_title.setText(videoList.get(position).getVideo_title());
+        if(videoList.get(position).getVideo_title() != null && !videoList.get(position).getVideo_title().isEmpty()){
+            holder.tv_video_name.setText(videoList.get(position).getVideo_title());
+        }else{
+            holder.tv_video_name.setText("");
+        }
+
         Glide.with(context)
                 .load(ConstantUtils.THUMBNAIL_URL + videoList.get(position).getThumbnail())
                 .error(Glide.with(context)
@@ -125,38 +132,43 @@ public class ShowVideoListAdapter extends RecyclerView.Adapter<ShowVideoListAdap
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         ImageView iv_thumbnail;
-        ImageView iv_premium_tag;
-        TypefacedTextViewSemiBold tv_video_title;
-        FrameLayout ll_main_layout;
         CardView cv_show_parent;
+
+        TextView tv_video_name;
+        LinearLayout ll_video_name_parent;
+
+        FrameLayout fl_main_layout;
 
         public MyViewHolder(View itemView) {
             super(itemView);
 
             this.iv_thumbnail = itemView.findViewById(R.id.iv_thumbnail);
-            this.tv_video_title = itemView.findViewById(R.id.tv_video_title);
-            this.iv_premium_tag = itemView.findViewById(R.id.iv_premium_tag);
-            this.ll_main_layout = itemView.findViewById(R.id.ll_main_layout);
+            this.tv_video_name = itemView.findViewById(R.id.tv_video_name);
+            this.ll_video_name_parent = itemView.findViewById(R.id.ll_video_name_parent);
+            this.fl_main_layout = itemView.findViewById(R.id.fl_main_layout);
             this.cv_show_parent = itemView.findViewById(R.id.cv_show_parent);
 
                 if (isHome) {
 
-                    int new_width = (width - (width/6))/3;
+                    int new_width = (width - (width/7))/3;
                     int new_height = (3*(new_width-15))/2;
 
-                    FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(new_width, new_height);
-                    CardView.LayoutParams cl = new CardView.LayoutParams(new_width,new_height);
+                    LinearLayout.LayoutParams fl = new LinearLayout.LayoutParams(new_width, new_height);
+                    CardView.LayoutParams cl = new CardView.LayoutParams(new_width,CardView.LayoutParams.WRAP_CONTENT);
                     cl.rightMargin = 15;
-                    this.ll_main_layout.setLayoutParams(fl);
+                    this.fl_main_layout.setLayoutParams(fl);
                     this.cv_show_parent.setLayoutParams(cl);
+
+                    tv_video_name.setMaxLines(1);
+                    tv_video_name.setMinLines(1);
 
                 } else {
                     FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(128, 165);
-                    this.ll_main_layout.setLayoutParams(fl);
+                    this.fl_main_layout.setLayoutParams(fl);
 
                 }
 
-            tv_video_title.setSelected(true);
+            tv_video_name.setVisibility(View.VISIBLE);
 
             itemView.setOnClickListener(v -> {
 

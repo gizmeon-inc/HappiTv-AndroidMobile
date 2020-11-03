@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -70,6 +71,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
     private SwipeRefreshLayout sw_list;
     public static Activity currentActivity;
     private String title = "";
+    private int width;
 
 
     @Override
@@ -99,6 +101,9 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
             pageContext = "";
         }
         //updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        width = displayMetrics.widthPixels;
 
         mAnimationItems = getAnimationItems();
         mSelectedItem = mAnimationItems[0];
@@ -116,7 +121,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         rv_watchList.setLayoutManager(new GridLayoutManager(this, 3));
         rv_watchList.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
         rv_watchList.setLongClickable(true);
-        watchListAdapter = new WatchListAdapter(pageContext, watchListModelsList, getApplicationContext(), this::onShowItemClicked, this::onShowItemLongClick);
+        watchListAdapter = new WatchListAdapter(pageContext, watchListModelsList, getApplicationContext(), this::onShowItemClicked, this::onShowItemLongClick, width);
         rv_watchList.setAdapter(watchListAdapter);
         rv_watchList.setVisibility(View.GONE);
 
@@ -225,7 +230,7 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
         rv_watchList.setVisibility(View.VISIBLE);
       //  rv_watchList.setLayoutManager(new GridLayoutManager(this, 3));
       //  rv_watchList.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
-        watchListAdapter = new WatchListAdapter(pageContext, watchListModelsList, getApplicationContext(), this::onShowItemClicked, this::onShowItemLongClick);
+        watchListAdapter = new WatchListAdapter(pageContext, watchListModelsList, getApplicationContext(), this::onShowItemClicked, this::onShowItemLongClick,width);
         rv_watchList.setAdapter(watchListAdapter);
 
         loadingVideos = Skeleton.bind(rv_watchList)
@@ -238,18 +243,6 @@ public class WatchListActivity extends BaseActivity implements WatchListAdapter.
                 .duration(1000)
                 .frozen(false)
                 .show();
-        Disposable internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnected -> {
-                    // Log.d("^&^&^&", "POPVID" + isConnected);
-                    if (isConnected) {
-                        //  Log.d("^&^&^&", "POPVID" + "^&^&^&");
-                        // loadVideoList();
-                    } else {
-                        // Toast.makeText(this,"No Internet",Toast.LENGTH_SHORT).show();
-                    }
-                });
 
         loadData();
        // getSessionToken();

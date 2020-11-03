@@ -67,7 +67,7 @@
             android:layout_height="0dp"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="10dp"
+            android:padding="@dimen/dimen_10dp"
             android:layout_weight="2.5">
 
 
@@ -75,22 +75,22 @@
                 android:id="@+id/tv_verf_code"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/dimen_20dp"
                 android:fontFamily="sans-serif-black"
-                android:padding="16dp"
+                android:padding="@dimen/dimen_16dp"
                 android:text="@string/verf_code"
                 android:textColor="@color/white"
-                android:textSize="22sp"
+                android:textSize="@dimen/text_large1"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tv_verfication_code_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="34dp"
+                android:layout_marginTop="@dimen/dimen_34dp"
                 android:fontFamily="sans-serif-black"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_regular_medium3"
                 android:textColor="@color/whiteThree"/>
 
             <com.happi.android.otpView.OtpView
@@ -131,7 +131,7 @@
                     android:enabled="false"
                     android:text="@string/resend_otp"
                     android:textColor="@color/colorAccent"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="visible"/>
 
                 <TextView
@@ -141,7 +141,7 @@
                     android:fontFamily="sans-serif-black"
                     android:text="  00:00"
                     android:textColor="@color/colorAccent"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_regular_medium3"
                     android:visibility="visible"/>
 
             </LinearLayout>
@@ -154,7 +154,7 @@
             android:paddingTop="@dimen/dimen_10dp">
 
             <LinearLayout
-                android:layout_marginEnd="30dp"
+                android:layout_marginEnd="@dimen/dimen_30dp"
                 android:id="@+id/ll_resend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -165,7 +165,7 @@
                     android:id="@+id/tv_resend_otp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_regular_medium1"
                     android:textStyle="bold"
                     android:layout_marginLeft="@dimen/dimen_15dp"
                     android:layout_marginRight="@dimen/dimen_15dp"
@@ -183,7 +183,7 @@
                     android:id="@+id/tv_done"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_regular_medium1"
                     android:textStyle="bold"
                     android:layout_marginLeft="@dimen/dimen_15dp"
                     android:layout_marginRight="@dimen/dimen_15dp"

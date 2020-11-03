@@ -27,7 +27,7 @@
             android:gravity="start"
             android:text=""
             android:textColor="@color/white"
-            android:textSize="@dimen/dimen_15dp" />
+            android:textSize="@dimen/text_regular_medium" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:gravity="start"
                 android:text=""
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/dimen_15dp" />
+                android:textSize="@dimen/text_regular_medium" />
 
             <com.happi.android.customviews.TypefacedTextViewRegular
                 android:id="@+id/tv_positive"
@@ -55,7 +55,7 @@
                 android:gravity="start"
                 android:text=""
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="@dimen/dimen_15dp" />
+                android:textSize="@dimen/text_regular_medium" />
 
 
         </RelativeLayout>

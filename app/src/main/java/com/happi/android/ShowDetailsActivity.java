@@ -1618,11 +1618,11 @@ public class ShowDetailsActivity extends BaseActivity implements LoginRegisterAl
                 //(int) getResources().getDimension(R.dimen.dimen_250dp));
         RelativeLayout.LayoutParams params2 = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_250dp));
+                (int) getResources().getDimension(R.dimen.dimen_player_250dp));
 
         RelativeLayout.LayoutParams paramsImage = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_200dp));
+                (int) getResources().getDimension(R.dimen.dimen_imageview_200dp));
 
         params.setMargins(0, actionBarHeight, 0, 0);
         params2.setMargins(0, 0, 0, 0);

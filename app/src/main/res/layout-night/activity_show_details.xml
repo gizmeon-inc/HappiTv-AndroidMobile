@@ -55,7 +55,7 @@
         <RelativeLayout
             android:id="@+id/rl_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_200dp"
+            android:layout_height="@dimen/dimen_imageview_200dp"
             android:layout_margin="@dimen/dimen_5dp"
             android:gravity="center"
             android:padding="@dimen/dimen_5dp"
@@ -63,7 +63,7 @@
 
             <ImageView
                 android:id="@+id/iv_show_image"
-                android:layout_width="@dimen/dimen_150dp"
+                android:layout_width="@dimen/dimen_imageview_150dp"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -71,7 +71,7 @@
         <RelativeLayout
             android:id="@+id/rl_player"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_250dp"
+            android:layout_height="@dimen/dimen_player_250dp"
             android:gravity="center">
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
@@ -148,7 +148,7 @@
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:text="@string/like_label"
                         android:textColor="@color/whiteThree"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_small_medium1" />
 
                 </LinearLayout>
 
@@ -174,7 +174,7 @@
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:text="@string/dislike_label"
                         android:textColor="@color/whiteThree"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_small_medium1" />
 
                 </LinearLayout>
 
@@ -199,7 +199,7 @@
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:text="@string/watch_list_label"
                         android:textColor="@color/whiteThree"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_small_medium1" />
 
                 </LinearLayout>
 
@@ -225,7 +225,7 @@
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:text="@string/share_label"
                         android:textColor="@color/whiteThree"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_small_medium1" />
 
                 </LinearLayout>
 
@@ -238,7 +238,7 @@
                 android:layout_below="@+id/ll_icons"
                 android:layout_marginTop="@dimen/dimen_10dp"
                 android:textColor="@color/orange"
-                android:textSize="20sp"
+                android:textSize="@dimen/text_large"
                 android:visibility="gone" />
 
             <TextView
@@ -248,7 +248,7 @@
                 android:layout_below="@+id/tv_show_name"
                 android:layout_marginTop="@dimen/dimen_5dp"
                 android:textColor="@color/colorWhite"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_regular_medium3"
                 android:visibility="gone" />
 
             <LinearLayout
@@ -266,7 +266,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/producer_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
                 <TextView
@@ -274,7 +274,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/orange"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -293,7 +293,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/year_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
                 <TextView
@@ -301,7 +301,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/whiteTwo"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -321,7 +321,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/audio_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
                 <TextView
@@ -329,7 +329,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/whiteTwo"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -348,7 +348,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/director_label"
                     android:textColor="@color/colorPrimary"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    android:textSize="@dimen/text_regular_medium"/>
 
                 <TextView
                     android:id="@+id/tv_director"
@@ -356,7 +357,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/whiteTwo"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -375,7 +376,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/cast_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
                 <TextView
@@ -384,7 +385,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="@color/whiteTwo"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
             </LinearLayout>
@@ -404,7 +405,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/synopsis_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
                 <LinearLayout
@@ -419,7 +420,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:textColor="@color/white"
-                        android:textSize="13sp"/>
+                        android:textSize="@dimen/text_small_medium2"/>
                     <at.blogc.android.views.ExpandableTextView
                         android:id="@+id/ex_synopsis"
                         android:layout_width="wrap_content"
@@ -458,7 +459,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/theme_label"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="15sp"
+                    android:textSize="@dimen/text_regular_medium"
                     android:visibility="gone" />
 
                 <me.gujun.android.taggroup.TagGroup
@@ -471,7 +472,7 @@
                     android:visibility="gone"
                     app:atg_backgroundColor="@color/dark_black"
                     app:atg_borderColor="@color/error_tint"
-                    app:atg_borderStrokeWidth="1dp"
+                    app:atg_borderStrokeWidth="@dimen/dimen_1dp"
                     app:atg_checkedBorderColor="@color/error_tint"
                     app:atg_checkedTextColor="@color/error_tint"
                     app:atg_horizontalPadding="@dimen/dimen_20dp"
@@ -479,7 +480,7 @@
                     app:atg_isAppendMode="false"
                     app:atg_pressedBackgroundColor="@color/dark_black"
                     app:atg_textColor="@color/error_tint"
-                    app:atg_textSize="12sp"
+                    app:atg_textSize="@dimen/text_small_medium1"
                     app:atg_verticalPadding="@dimen/dimen_8dp"
                     app:atg_verticalSpacing="@dimen/dimen_10dp" />
 
@@ -497,7 +498,7 @@
                 <LinearLayout
                     android:id="@+id/ll_watch_trailer"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_35dp"
+                    android:layout_height="@dimen/dimen_button_35dp"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_10dp"
                     android:background="@drawable/bg_outline_blue"
@@ -513,13 +514,13 @@
                         android:layout_height="wrap_content"
                         android:text="@string/watch_trailer"
                         android:textColor="@color/colorPrimaryDark"
-                        android:textSize="15sp" />
+                        android:textSize="@dimen/text_regular_medium" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ll_play_overlap"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/dimen_35dp"
+                    android:layout_height="@dimen/dimen_button_35dp"
                     android:layout_marginStart="@dimen/dimen_10dp"
                     android:layout_marginEnd="@dimen/dimen_10dp"
                     android:background="@drawable/bg_solid_blue"
@@ -544,7 +545,7 @@
                         android:text="@string/play_now"
                         android:textAllCaps="true"
                         android:textColor="@color/whiteTwo"
-                        android:textSize="15sp" />
+                        android:textSize="@dimen/text_regular_medium" />
 
                 </LinearLayout>
                 <!-- <LinearLayout

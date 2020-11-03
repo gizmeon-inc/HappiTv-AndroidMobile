@@ -40,7 +40,32 @@ public class ShowModel implements Serializable {
     //----------------------------for search------------------------------------//
     @SerializedName("video_id")
     private Integer video_id;
+    @SerializedName("video_title")
+    private String video_title;
+    @SerializedName("video_name")
+    private String video_name;
+    @SerializedName("thumbnail")
+    private String thumbnail;
 
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public String getVideo_title() {
+        return video_title;
+    }
+
+    public void setVideo_title(String video_title) {
+        this.video_title = video_title;
+    }
+
+    public String getVideo_name() {
+        return video_name;
+    }
+
+    public void setVideo_name(String video_name) {
+        this.video_name = video_name;
+    }
     public Integer getVideo_id() {
         return video_id;
     }

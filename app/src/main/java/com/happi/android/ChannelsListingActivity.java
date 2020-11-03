@@ -6,6 +6,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
@@ -253,11 +254,14 @@ public class ChannelsListingActivity extends BaseActivity implements ChannelList
         };
     }
     private void setupRecyclerview() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
 
         rv_channel_list.setLayoutManager(new GridLayoutManager(HappiApplication.getCurrentContext(), 3));
         rv_channel_list.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
         channelListAdapter = new ChannelListAdapter(HappiApplication.getCurrentContext(),
-                this::onChannelItemClicked, true);
+                this::onChannelItemClicked, true, width);
         rv_channel_list.setAdapter(channelListAdapter);
 
         loadingChannels = Skeleton.bind(rv_channel_list)

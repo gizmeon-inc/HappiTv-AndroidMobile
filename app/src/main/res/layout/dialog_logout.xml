@@ -27,7 +27,7 @@
             android:gravity="start"
             android:text="@string/logout_prompt_msg"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_regular_medium" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                 android:gravity="start"
                 android:text="@string/no_label"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_regular_medium" />
 
             <com.happi.android.customviews.TypefacedTextViewRegular
                 android:id="@+id/tv_yes"
@@ -55,7 +55,7 @@
                 android:gravity="start"
                 android:text="@string/yes_label"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_regular_medium" />
 
 
         </RelativeLayout>

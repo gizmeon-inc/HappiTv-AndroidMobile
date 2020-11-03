@@ -70,6 +70,7 @@ import com.happi.android.recyclerview.AnimationItem;
 import com.happi.android.recyclerview.GridRecyclerView;
 import com.happi.android.utils.AppUtils;
 import com.happi.android.utils.ConstantUtils;
+import com.happi.android.utils.FormatAdUrl;
 import com.happi.android.webservice.AnalyticsApi;
 import com.happi.android.webservice.ApiClient;
 import com.google.ads.interactivemedia.v3.api.AdDisplayContainer;
@@ -248,8 +249,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     private int actionBarHeight = 0;
 
     private CountDownTimer timerOrientation;
-    private Timer orientationTimer;
     private boolean isOrientationChange = false;
+
+    //ad
+    private IPAddressModel ipAddressModelLocal;
+    private Long playerDuration  = 0L;
+    private Long playerCurrentPosition  = 0L;
 
     public void loadRemoteMedia() {
         Log.e("CAST", "loadRemoteMedia called");
@@ -642,34 +647,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
 
         mSdkFactory = ImaSdkFactory.getInstance();
-
         AdDisplayContainer adDisplayContainer = mSdkFactory.createAdDisplayContainer();
-        adDisplayContainer.setAdContainer(mAdUiContainer);
+        adDisplayContainer.setAdContainer(exo_player_view.getOverlayFrameLayout());
         ImaSdkSettings settings = mSdkFactory.createImaSdkSettings();
         mAdsLoader = mSdkFactory.createAdsLoader(
-                this, settings, adDisplayContainer);
-        // Add listeners for when ads are loaded and for errors.
-        mAdsLoader.addAdErrorListener(this);
-        mAdsLoader.addAdsLoadedListener(new com.google.ads.interactivemedia.v3.api.AdsLoader.AdsLoadedListener() {
-            @Override
-            public void onAdsManagerLoaded(AdsManagerLoadedEvent adsManagerLoadedEvent) {
-                // Ads were successfully loaded, so get the AdsManager instance. AdsManager has
-                // events for ad playback and errors.
-
-                AdsRenderingSettings adsRenderingSettings = mSdkFactory.createAdsRenderingSettings();
-                //adsRenderingSettings.setEnablePreloading(true);
-                // adsRenderingSettings.setDisableUi(true);
-                Set<UiElement> var = Collections.emptySet();
-                adsRenderingSettings.setUiElements(var);
-
-                mAdsManager = adsManagerLoadedEvent.getAdsManager();
-                // Attach event and error event listeners.
-                mAdsManager.addAdErrorListener(VideoPlayerActivity.this);
-                mAdsManager.addAdEventListener(VideoPlayerActivity.this);
-                mAdsManager.init(adsRenderingSettings);
-            }
-        });
-
+                this, settings, adDisplayContainer
+        );
     }
 
     private void showProgressDialog() {
@@ -805,7 +788,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ipAddressModel -> {
                     HappiApplication.setIpAddress(ipAddressModel.getQuery());
-                    IPAddressModel ipAddressModelLocal = ipAddressModel;
+                     ipAddressModelLocal = ipAddressModel;
                 }, throwable -> {
 
                 });
@@ -814,8 +797,11 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     private void setupRecyclerview() {
         tv_more_videos.setVisibility(View.VISIBLE);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
 
-        showsAdapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, true);
+        showsAdapter = new ShowList_adapter(getApplicationContext(), this::onShowsItemClicked, true, width);
         rv_more_videos.setNestedScrollingEnabled(false);
         rv_more_videos.setLayoutManager(new GridLayoutManager(this, 3));
         rv_more_videos.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
@@ -929,8 +915,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
                 String adTagUriString = "";
                 try {
-                    // adTagUriString = FormatAdUrl.formatAdUrl(videoModel, ipAddressModel);
+                    Log.d("ima_ads", "getAd_link>>"+videoModel.getAd_link());
+                    adTagUriString = FormatAdUrl.formatAdUrl(videoModel, ipAddressModelLocal);
                     Log.e("ADTAG", adTagUriString);
+
+                    initVastAd(adTagUriString);
+                    //initVastAd("https://search.spotxchange.com/vast/2.0/85394?VPI=MP4&app=com.gizmeon.brightcovedemo&device=&player_height=552&player_width=1024&device=user&device=LENOVO&device=Tab2A7-10F&app=BrightCoveDemo&ip_addr=202.83.55.194");
 
                 } catch (NullPointerException e) {
                     // Log.e("ADTAGCatch", "catch");
@@ -972,9 +962,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                             if (playbackState == Player.STATE_ENDED) {
 
                                 if (isExoPlayerFullscreen) {
-                                   // closeFullscreen();
                                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                                    //closeFullscreenDialog();
                                 }
                                 exoPlayer.setPlayWhenReady(false);
                                 try {
@@ -1087,6 +1075,56 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         }
         setupMedia(videoModel);
     }
+    private void initVastAd(String adRulesURL) {
+        // Add listeners for when ads are loaded and for errors.
+        mAdsLoader.addAdErrorListener(this);
+        mAdsLoader.addAdsLoadedListener(new com.google.ads.interactivemedia.v3.api.AdsLoader.AdsLoadedListener() {
+            @Override
+            public void onAdsManagerLoaded(AdsManagerLoadedEvent adsManagerLoadedEvent) {
+                // Ads were successfully loaded, so get the AdsManager instance. AdsManager has
+                // events for ad playback and errors.
+                mAdsManager = adsManagerLoadedEvent.getAdsManager();
+                // Attach event and error event listeners.
+                mAdsManager.addAdErrorListener(VideoPlayerActivity.this);
+                mAdsManager.addAdEventListener(VideoPlayerActivity.this);
+                mAdsManager.init();
+            }
+        });
+        requestAds(adRulesURL);
+    }
+    private void requestAds(String adTagUrl) { // Create the ads request.
+        if (adTagUrl.length() > 0) {
+            //  if (!isAdcalling) {
+            //      isAdcalling = true;
+            Log.d("ima_ads", "adTagUrl>>"+adTagUrl);
+            AdsRequest request = mSdkFactory.createAdsRequest();
+            request.setAdTagUrl(adTagUrl);
+            request.setContentProgressProvider(new ContentProgressProvider() {
+                @Override
+                public VideoProgressUpdate getContentProgress() {
+
+                    onPlayerSeekPosition();
+                    if (mIsAdDisplayed || playerDuration <= 0) {
+                        return VideoProgressUpdate.VIDEO_TIME_NOT_READY;
+                    } else {
+                        return new VideoProgressUpdate(
+                                playerCurrentPosition,
+                                playerDuration );
+                    }
+                }
+            });
+
+            // Request the ad. After the ad is loaded, onAdsManagerLoaded() will be called.
+            mAdsLoader.requestAds(request);
+            // }
+
+        }
+    }
+    void onPlayerSeekPosition(
+    ) {
+        playerCurrentPosition = exoPlayer.getCurrentPosition();
+        playerDuration = exoPlayer.getDuration();
+    }
 
     private void initializeTimerScheduler(String event) {//edit timer
         timerSChedule = new Timer();
@@ -1147,7 +1185,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-    private void requestAds(String adTagUrl) {
+   /* private void requestAds(String adTagUrl) {
         // Create the ads request.
 
         if (mAdsManager != null) {
@@ -1171,7 +1209,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         // Request the ad. After the ad is loaded, onAdsManagerLoaded() will be called.
         mAdsLoader.requestAds(request);
-    }
+    }*/
 
     private MediaSource buildMediaSource(Uri uri, String overrideExtension, @Nullable Handler handler, @Nullable MediaSourceEventListener listener) {
         @C.ContentType int type = TextUtils.isEmpty(overrideExtension) ? Util.inferContentType(uri) : Util.inferContentType("." + overrideExtension);
@@ -1274,7 +1312,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     protected void onResume() {
         // TODO Auto-generated method stub
-
+        shouldAutoPlay = true;
         HappiApplication.setCurrentContext(this);
         updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
 
@@ -1304,8 +1342,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             resumePlayer();
         }*/
 
-        if(!isCasting){
-            resumePlayer();
+        if (mAdsManager != null && mIsAdDisplayed) {
+            mAdsManager.resume();
+        } else{
+            if(!isCasting){
+                resumePlayer();
+            }
         }
 
         super.onResume();
@@ -1581,7 +1623,11 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
             isVideoDescAvailable = true;
             ll_drop_arrow.setVisibility(View.VISIBLE);
-            tv_video_desc.setText(videoModel.getVideo_description());
+            String description = videoModel.getVideo_description();
+            if(description.contains("\r\n")){
+                description = description.replace("\r\n"," ");
+            }
+            tv_video_desc.setText(description);
         } else {
             isVideoDescAvailable = false;
             ll_drop_arrow.setVisibility(View.INVISIBLE);
@@ -1593,6 +1639,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onPause() {
 
+        shouldAutoPlay = false;
         Log.v("okhttp","VIDEOPLAYER>>ONPAUSE");
         mCastContext.removeCastStateListener(mCastStateListener);
         mCastContext.getSessionManager().removeSessionManagerListener(mSessionManagerListener, CastSession.class);
@@ -1602,14 +1649,20 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         } else if (Util.SDK_INT <= 23) {
             releasePlayer();
         }*/
-        releasePlayer();
+        if (mAdsManager != null && mIsAdDisplayed) {
+            mAdsManager.pause();
+        }else{
+            releasePlayer();
+        }
         super.onPause();
-
+        shouldAutoPlay = false;
     }
 
     @Override
     public void onStop() {
+        shouldAutoPlay = false;
         super.onStop();
+        shouldAutoPlay = false;
         releasePlayer();
         Log.v("okhttp","VIDEOPLAYER>>ONSTOP");
     }
@@ -1624,6 +1677,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void resumePlayer() {
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(true);
         }
@@ -1709,7 +1763,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         RelativeLayout.LayoutParams exo_params = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
-                (int) getResources().getDimension(R.dimen.dimen_250dp)
+                (int) getResources().getDimension(R.dimen.dimen_player_250dp)
         );
         //exo_params.addRule(RelativeLayout.BELOW, R.id.rl_video_title);
         exo_player_view.setLayoutParams(exo_params);
@@ -1775,15 +1829,14 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     @Override
     protected void onDestroy() {
+        shouldAutoPlay = false;
         if (timerSChedule != null) {
             timerSChedule.cancel();
         }
         if(timerOrientation != null){
             timerOrientation.cancel();
         }
-        if (orientationTimer != null) {
-            orientationTimer.cancel();
-        }
+
         isVideoPlaying = false;
         isVideoEnd = false;
         isVideoPaused = false;
@@ -1804,10 +1857,16 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         mFirebaseAnalytics.logEvent("watch_video_end", params);
 
         //releaseAdsLoader();
+        mMediaRouteButton.setVisibility(View.INVISIBLE);
+        if(mAdsManager != null) {
+            mAdsManager.removeAdEventListener(this);
+            mAdsLoader.removeAdErrorListener(this);
+            mAdsManager.destroy();
+            mAdsManager = null;
+        }
         if (exoPlayer != null) {
             exoPlayer.release();
         }
-        mMediaRouteButton.setVisibility(View.INVISIBLE);
         safelyDispose(compositeDisposable);
         Log.v("okhttp","VIDEOPLAYER>>ONDESTROY");
         super.onDestroy();
@@ -1841,55 +1900,125 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
 
     @Override
-    public void onAdEvent(AdEvent adEvent) {
+    public void onAdError(AdErrorEvent adErrorEvent) {
+        try {
+            int errorCodeNumber = adErrorEvent.getError().getErrorCodeNumber();
+            int errorNumber = adErrorEvent.getError().getErrorCode().getErrorNumber();
+            String errorType = adErrorEvent.getError().getErrorType().toString();
+            String errorMessage = adErrorEvent.getError().getMessage();
+            Log.d("ima_ads", "onAdError: " + errorCodeNumber + ">" + errorNumber + ">" + errorType + ">" + errorMessage);
+
+            //call analytics
+            AdError adError = adErrorEvent.getError();
+            callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
 
 
-        // These are the suggested event types to handle. For full list of all ad event
-        // types, see the documentation for AdEvent.AdEventType.
-        switch (adEvent.getType()) {
-            case LOADED:
-                // AdEventType.LOADED will be fired when ads are ready to be played.
-                // AdsManager.start() begins ad playback. This method is ignored for VMAP or
-                // ad rules playlists, as the SDK will automatically start executing the
-                // playlist.
+            //if (isAdcalling) {
+            Log.d(
+                    "ima_ads",
+                    "adEvent errorCodeNumber: " + errorCodeNumber + " errorNumber: " + errorNumber + " errorType: " + errorType + " errorMessage: " + errorMessage
+            );
+        } catch (Exception ex) {
 
-                mAdsManager.start();
-                break;
-            case CONTENT_PAUSE_REQUESTED:
-                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video
-                // ad is played.
-                mIsAdDisplayed = true;
-                exoPlayer.setPlayWhenReady(false);
-                break;
-            case CONTENT_RESUME_REQUESTED:
-                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
-                // and you should start playing your content.
-
-
-                exoPlayer.setPlayWhenReady(true);
-                mIsAdDisplayed = false;
-
-                break;
-            case ALL_ADS_COMPLETED:
-                if (mAdsManager != null) {
-                    mAdsManager.destroy();
-                    mAdsManager = null;
-                }
-                break;
-            default:
-                break;
         }
+
+        //isAdcalling = false
+
+        playVideo();
+
+        // }
     }
 
     @Override
-    public void onAdError(AdErrorEvent adErrorEvent) {
-        Log.e("Error", adErrorEvent.toString());
-        exoPlayer.setPlayWhenReady(true);
+    public void onAdEvent(AdEvent adEvent) {
 
-        //call analytics
-        AdError adError = adErrorEvent.getError();
+        switch (adEvent.getType()) {
 
-        callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
+            case LOADED : {
+                Log.d("ima_ads", "adEvent LOADED");
+                if(shouldAutoPlay){
+                    mAdsManager.start();
+                }
+
+                break;
+            }
+            case STARTED : {
+
+                Log.d("ima_ads", "adEvent STARTED");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                }
+                break;
+            }
+            case FIRST_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent FIRST_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                }
+                break;
+            }
+            case THIRD_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent THIRD_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                }
+                break;
+            }
+            case CONTENT_PAUSE_REQUESTED : {
+
+                Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
+                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
+                mIsAdDisplayed = true;
+                //isAdcalling = true;
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                }
+                pauseVideo();
+
+                break;
+            }
+            case CONTENT_RESUME_REQUESTED : {
+                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
+                // and you should start playing your content.
+
+                Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
+                mIsAdDisplayed = false;
+                // isAdcalling = false;
+
+                playVideo();
+
+                break;
+            }
+            case COMPLETED : {
+                Log.d("ima_ads", "adEvent COMPLETED");
+
+                break;
+            }
+            case ALL_ADS_COMPLETED : {
+                Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
+                if(mAdsManager != null){
+                    mAdsManager.destroy();
+                    mAdsManager = null;
+                }
+
+                break;
+            }
+        }
+    }
+
+    private void pauseVideo() {
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.INVISIBLE);
+        if(exoPlayer != null && exoPlayer.getPlayWhenReady()){
+            exoPlayer.setPlayWhenReady(false);
+        }
+    }
+    private void playVideo() {
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
+        if(exoPlayer != null && !exoPlayer.getPlayWhenReady() && shouldAutoPlay){
+            exoPlayer.setPlayWhenReady(true);
+        }
     }
     private void showLoginOrRegisterAlert() {
         if(progressDialog.isShowing()){
@@ -2307,7 +2436,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         }*/
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) exo_player_view.getLayoutParams();
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        params.height = (int) getResources().getDimension(R.dimen.dimen_250dp);
+        params.height = (int) getResources().getDimension(R.dimen.dimen_player_250dp);
      //   Toast.makeText(this, "CLOSE: "+params.width+","+ params.height, Toast.LENGTH_SHORT).show();
 
         exo_player_view.setLayoutParams(params);
@@ -2389,117 +2518,5 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    private void setTimer(){
-
-        /*Handler handler = new Handler();
-        Runnable update = new Runnable() {
-            public void run() {
-                if(isOrientationChange){
-                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                    isOrientationChange = false;
-                    if (orientationTimer != null) {
-                        orientationTimer.cancel();
-                    }
-                }
-
-            }
-        };
-
-        if (orientationTimer != null) {
-            orientationTimer.cancel();
-        }
-        orientationTimer = new Timer();
-        orientationTimer.schedule(new TimerTask() {
-
-            @Override
-            public void run() {
-                handler.post(update);
-            }
-        }, 100, 5000);*/
-
-
-
-        if(timerOrientation != null){
-            timerOrientation.cancel();
-        }
-
-        timerOrientation = new CountDownTimer(5000, 1000) {
-            public void onTick(long millisUntilFinished) {
-               /* OrientationEventListener orientationEventListener =
-                        new OrientationEventListener(HappiApplication.getCurrentContext()) {
-                            @Override
-                            public void onOrientationChanged(int orientation) {
-                                int epsilon = 10;
-                                int leftLandscape = 90;
-                                int rightLandscape = 270;
-                                int portrait = 0;
-                                int portraitUpside = 180;
-                                if(epsilonCheck(orientation, leftLandscape, epsilon) ||
-                                        epsilonCheck(orientation, rightLandscape, epsilon)){
-                                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND", Toast.LENGTH_SHORT).show();
-                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
-                                        isOrientationChange = true;
-                                        Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND CHANGE", Toast.LENGTH_SHORT).show();
-
-                                    }
-
-
-
-                                }else if(epsilonCheck(orientation, portrait, epsilon) ||
-                                        epsilonCheck(orientation, portraitUpside, epsilon)){
-                                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT", Toast.LENGTH_SHORT).show();
-
-                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-                                        isOrientationChange = true;
-                                        Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT CHANGE", Toast.LENGTH_SHORT).show();
-
-                                    }
-
-                                }else{
-                                    isOrientationChange = false;
-                                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER ELSE", Toast.LENGTH_SHORT).show();
-
-                                }
-                                if (orientation == 0 || orientation == 180) {
-                                    Toast.makeText(HappiApplication.getCurrentContext(), "portrait",
-                                            Toast.LENGTH_LONG).show();
-                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
-                                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                                    }
-                                } else if (orientation == 90 || orientation == 270) {
-                                    Toast.makeText(HappiApplication.getCurrentContext(), "landscape",
-                                            Toast.LENGTH_LONG).show();
-                                    if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-                                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                                    }
-                                }
-
-
-                            }
-
-                            private boolean epsilonCheck(int a, int b, int epsilon) {
-                                //return a > b - epsilon && a < b + epsilon;
-                                // Math.abs(a - b) < epsilon;
-                                // return a > Math.abs(b - epsilon) && a <  Math.abs(b + epsilon);
-                                return Math.abs(a - b) < epsilon;
-                            }
-                        };
-                orientationEventListener.enable();*/
-            }
-
-            public void onFinish() {
-                if(isOrientationChange){
-                    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                    isOrientationChange = false;
-                }
-                if(timerOrientation != null){
-                    timerOrientation.cancel();
-                }
-
-            }
-        }.start();
-    }
 
 }

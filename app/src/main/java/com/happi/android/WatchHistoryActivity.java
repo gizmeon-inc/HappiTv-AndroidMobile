@@ -46,7 +46,6 @@ public class WatchHistoryActivity extends BaseActivity implements VideoList_adap
     VideoList_adapter videoList_adapter;
     VideoListAdapter_New videoList_adapterNew;
     private AnimationItem mSelectedItem;
-    private Disposable internetDisposable;
     private CompositeDisposable compositeDisposable;
     SkeletonScreen loadingVideos;
     private int userId = 0;
@@ -117,12 +116,8 @@ public class WatchHistoryActivity extends BaseActivity implements VideoList_adap
                 .frozen(false)
                 .show();
 
-        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnected -> {
-                    if (isConnected) loadVideoList();
-                });
+
+        loadVideoList();
     }
 
     private void loadVideoList() {
@@ -201,7 +196,7 @@ public class WatchHistoryActivity extends BaseActivity implements VideoList_adap
     protected void onDestroy() {
         super.onDestroy();
 
-        safelyDispose(internetDisposable, compositeDisposable);
+        safelyDispose(compositeDisposable);
     }
 
     private void safelyDispose(Disposable... disposables) {

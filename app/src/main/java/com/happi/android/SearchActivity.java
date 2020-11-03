@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +28,7 @@ import android.widget.ProgressBar;
 import com.happi.android.adapters.ChannelListAdapter;
 import com.happi.android.adapters.ChannelSearchSuggestionAdapter;
 import com.happi.android.adapters.SearchResultsAdapter;
+import com.happi.android.adapters.SearchShowVideoAdapter;
 import com.happi.android.adapters.ShowList_adapter;
 import com.happi.android.adapters.ShowSearchSuggestionAdapter;
 import com.happi.android.adapters.VideoSearchSuggestionAdapter;
@@ -65,7 +67,7 @@ import io.reactivex.schedulers.Schedulers;
 public class SearchActivity extends BaseActivity implements SearchResultsAdapter
         .itemClickListener, ChannelListAdapter.itemClickListener, VideoSearchSuggestionAdapter
         .suggestedVideoItemClickListener, ChannelSearchSuggestionAdapter.suggestedChannelItemClickListener,
-         ShowList_adapter.itemClickListener,ShowSearchSuggestionAdapter.suggestedShowItemClickListener{
+        SearchShowVideoAdapter.itemClickListener,ShowSearchSuggestionAdapter.suggestedShowItemClickListener{
 
     EditText et_search;
     ImageView iv_back;
@@ -84,7 +86,8 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
     private String search_type;
     private int userId = 0;
 
-    ShowList_adapter showList_adapter;
+    //ShowList_adapter showList_adapter;
+    SearchShowVideoAdapter showList_adapter;
 
     VideoSearchSuggestionAdapter videoSearchSuggestionAdapter;
     ChannelSearchSuggestionAdapter channelSearchSuggestionAdapter;
@@ -445,35 +448,18 @@ public class SearchActivity extends BaseActivity implements SearchResultsAdapter
             rv_search_suggestion.setAdapter(channelSearchSuggestionAdapter);
 
         }
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
         rv_search_result.setLayoutManager(new GridLayoutManager(this, 3));
         rv_search_result.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
-        showList_adapter = new ShowList_adapter(getApplicationContext(),
-                this::onShowsItemClicked,true);
+        showList_adapter = new SearchShowVideoAdapter(this,
+                this::onSearchShowVideoItemClicked, width);
         rv_search_result.setAdapter(showList_adapter);
-//        searchResultsAdapter = new SearchResultsAdapter(getApplicationContext(),
-//                this::onSearchItemClicked, true);
-//        rv_search_result.setAdapter(searchResultsAdapter);
 
-       /* rv_channel_result.setLayoutManager(new GridLayoutManager(this, 3));
-        rv_channel_result.addItemDecoration(new ItemDecorationAlbumColumns(7, 3));
-        channelListAdapter = new ChannelListAdapter(getApplicationContext(),
-                this::onChannelItemClicked, true);
-        rv_channel_result.setAdapter(channelListAdapter);*/
-
-        /*internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnected -> {
-                    if (isConnected) {
-                        if (!et_search.getText().toString().isEmpty()) {
-                            loadSearchResult(et_search.getText().toString());
-                        }
-                    } else {
-                    }
-                });*/
     }
     @Override
-    public void onShowsItemClicked(int adapterPosition) {
+    public void onSearchShowVideoItemClicked(int adapterPosition) {
         hideSoftKeyBoard();
         if(showList_adapter.getItem(adapterPosition).getVideo_id() == null){
 

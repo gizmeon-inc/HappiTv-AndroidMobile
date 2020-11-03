@@ -1400,7 +1400,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         RelativeLayout.LayoutParams exo_params = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dimen_250dp));
+                RelativeLayout.LayoutParams.MATCH_PARENT, (int) getResources().getDimension(R.dimen.dimen_player_250dp));
 
         //exo_params.addRule(RelativeLayout.BELOW, R.id.about_layout);
         exo_player_view.setLayoutParams(exo_params);
@@ -2594,7 +2594,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) exo_player_view.getLayoutParams();
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
-        params.height = (int) getResources().getDimension(R.dimen.dimen_250dp);
+        params.height = (int) getResources().getDimension(R.dimen.dimen_player_250dp);
 
         exo_player_view.setLayoutParams(params);
 

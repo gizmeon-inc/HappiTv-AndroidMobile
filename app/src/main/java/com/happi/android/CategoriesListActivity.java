@@ -45,7 +45,6 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
     GridRecyclerView rv_category_list;
     private CategoryCircleViewAdapter circleViewAdapter;
     private AnimationItem mSelectedItem;
-    private Disposable internetDisposable;
     private CompositeDisposable compositeDisposable;
     SkeletonScreen loadingCategories;
 
@@ -113,17 +112,6 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
                 .frozen(false)
                 .show();
 
-        internetDisposable = ReactiveNetwork.observeInternetConnectivity()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(isConnected -> {
-                    // Log.d("^&^&^&","CatList"+isConnected);
-                    if (isConnected) {
-                        //  Log.d("^&^&^&","CatList"+"^&^&^&");
-                        // loadCategories();
-                    }
-
-                });
         loadCategoryList();
     }
 
@@ -218,7 +206,7 @@ public class CategoriesListActivity extends BaseActivity implements CategoryCirc
     protected void onDestroy() {
         super.onDestroy();
 
-        safelyDispose(internetDisposable, compositeDisposable);
+        safelyDispose(compositeDisposable);
     }
 
     @Override

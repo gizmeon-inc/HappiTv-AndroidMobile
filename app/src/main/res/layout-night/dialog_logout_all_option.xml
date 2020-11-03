@@ -27,9 +27,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dimen_8dp"
             android:gravity="start"
-            android:text="@string/logoutall_dialog"
+            android:text="@string/loginlimitexceeded_dialog"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="@dimen/text_regular_medium" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -46,7 +46,8 @@
                 android:gravity="start"
                 android:text="@string/logoutall_label"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_regular_medium"
+                android:visibility="gone"/>
 
             <com.happi.android.customviews.TypefacedTextViewRegular
                 android:id="@+id/tv_logout"
@@ -57,7 +58,7 @@
                 android:gravity="start"
                 android:text="@string/ok_label"
                 android:textColor="@color/colorPrimaryDark"
-                android:textSize="15sp" />
+                android:textSize="@dimen/text_regular_medium" />
 
 
         </RelativeLayout>

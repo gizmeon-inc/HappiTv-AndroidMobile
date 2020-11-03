@@ -9,13 +9,14 @@
     app:cardUseCompatPadding="false">
 
     <RelativeLayout
+        android:id="@+id/rl_live_item"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dimen_165dp">
 
         <ImageView
             android:id="@+id/iv_thumbnail"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_165dp"
+            android:layout_height="match_parent"
             android:src="@drawable/ic_placeholder"
             android:scaleType="fitXY" />
 
@@ -27,7 +28,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_165dp"
+            android:layout_height="match_parent"
             android:padding="@dimen/dimen_5dp">
 
             <com.happi.android.customviews.TypefacedTextViewBold

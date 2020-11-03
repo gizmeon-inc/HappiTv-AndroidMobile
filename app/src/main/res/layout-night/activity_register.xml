@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingStart="50dp"
+                android:paddingStart="@dimen/dimen_50dp"
                 android:paddingEnd="@dimen/dimen_50dp">
 
                 <EditText
@@ -69,7 +69,7 @@
                     android:hint="@string/name"
                     android:inputType="textCapWords"
                     android:textColorHint="@color/coolGrey"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_large"
                     android:textStyle="bold"
                     android:textColor="@color/white"
                     android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
@@ -78,27 +78,27 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginTop="-14dp"
+                    android:layout_marginTop="@dimen/negative_14dp"
                     android:background="@color/whiteThree" />
 
                 <EditText
                     android:id="@+id/et_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="7dp"
+                    android:layout_marginTop="@dimen/dimen_7dp"
                     android:layout_marginBottom="@dimen/dimen_20dp"
                     android:backgroundTint="@android:color/transparent"
                     android:hint="@string/email_address"
                     android:inputType="textEmailAddress"
                     android:textColorHint="@color/coolGrey"
-                    android:textSize="20sp"
+                    android:textSize="@dimen/text_large"
                     android:textStyle="bold"
                     android:textColor="@color/white"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginTop="-14dp"
+                    android:layout_marginTop="@dimen/negative_14dp"
                     android:background="@color/whiteThree" />
 
                 <LinearLayout
@@ -124,7 +124,7 @@
                         app:ccp_hintExampleNumber="false"
                         app:ccp_showFlag="false"
                         app:ccp_showNameCode="false"
-                        app:ccp_textSize="@dimen/dimen_20dp"
+                        app:ccp_textSize="@dimen/text_large"
                         app:ccp_showArrow="true"
                         app:ccp_clickable="true"
                         />
@@ -137,7 +137,7 @@
                         android:inputType="number"
                         android:maxLength="15"
                         android:textColorHint="@color/coolGrey"
-                        android:textSize="@dimen/dimen_20dp"
+                        android:textSize="@dimen/text_large"
                         android:textStyle="bold"
                         android:textColor="@color/white"/>
 
@@ -148,7 +148,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/dimen_5dp"
                     android:background="@color/whiteThree"
                     android:visibility="gone"/>
                <!-- <EditText
@@ -180,7 +180,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:textSize="20sp"
+                        android:textSize="@dimen/text_large"
                         android:textStyle="bold"
                         android:textColor="@color/white"
                         android:background="@android:color/transparent"/>
@@ -189,7 +189,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dimen_1dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginTop="@dimen/dimen_4dp"
                     android:background="@color/whiteThree"/>
 
 
@@ -208,8 +208,8 @@
 
                 <Button
                     android:id="@+id/bt_signup"
-                    android:layout_width="270dp"
-                    android:layout_height="50dp"
+                    android:layout_width="@dimen/dimen_270dp"
+                    android:layout_height="@dimen/dimen_50dp"
                     android:layout_gravity="center_horizontal"
                     android:backgroundTint="@color/colorPrimaryDark"
                     android:text="@string/signup"
@@ -221,7 +221,7 @@
                     android:id="@+id/tv_forgot_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="end"
                     android:layout_marginTop="@dimen/dimen_5dp"
                     android:text="@string/forgot_password"
                     android:textColor="@color/coolGrey"

@@ -8,9 +8,9 @@
         android:layout_height="?attr/actionBarSize"
         android:gravity="center_vertical|start"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingTop="@dimen/dimen_menu_5dp"
         android:paddingStart="@dimen/dimen_20dp"
-        android:paddingBottom="@dimen/dimen_5dp">
+        android:paddingBottom="@dimen/dimen_menu_5dp">
        <LinearLayout
            android:id="@+id/ll_back_to_home"
            android:layout_width="wrap_content"
@@ -19,8 +19,8 @@
            android:gravity="center_vertical|end">
            <ImageView
                android:id="@+id/iv_back_to_home"
-               android:layout_width="@dimen/dimen_35dp"
-               android:layout_height="@dimen/dimen_35dp"
+               android:layout_width="@dimen/dimen_menu_35dp"
+               android:layout_height="@dimen/dimen_menu_35dp"
                android:src="@drawable/ic_back"
                android:tint="@color/colorPrimaryDark" />
 
@@ -33,9 +33,9 @@
         android:layout_height="?attr/actionBarSize"
         android:gravity="center_vertical|start"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/dimen_5dp"
+        android:paddingTop="@dimen/dimen_menu_5dp"
         android:paddingStart="@dimen/dimen_20dp"
-        android:paddingBottom="@dimen/dimen_5dp"
+        android:paddingBottom="@dimen/dimen_menu_5dp"
         android:visibility="gone">
 
         <ImageView
@@ -71,13 +71,13 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
                 android:id="@+id/iv_profile"
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_profile"
                 android:tint="@color/colorPrimaryDark" />
 
@@ -99,12 +99,12 @@
             android:layout_below="@id/ll_profile"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_channel_list"
                 android:tint="@color/colorPrimaryDark" />
 
@@ -140,12 +140,12 @@
             android:layout_below="@id/ll_channels"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_live"
                 android:tint="@color/colorPrimaryDark" />
 
@@ -190,13 +190,13 @@
             android:layout_below="@id/ll_live"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp"
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_premium"
                 android:tint="@color/colorPrimaryDark"/>
 
@@ -216,12 +216,12 @@
             android:layout_below="@id/ll_premium"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_favourite_icon"
                 android:tint="@color/colorPrimaryDark"/>
 
@@ -241,12 +241,12 @@
             android:layout_below="@id/ll_favourite"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_watch_history"
                 android:tint="@color/colorPrimaryDark"/>
 
@@ -267,13 +267,13 @@
             android:layout_below="@id/ll_watch_list"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp"
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/payperviewvideo"
                 android:tint="@color/colorPrimaryDark"/>
 
@@ -294,12 +294,12 @@
             android:layout_below="@id/ll_payperview_list"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
-                android:layout_width="34dp"
-                android:layout_height="34dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_terms"
                 android:tint="@color/colorPrimaryDark" />
 
@@ -320,12 +320,12 @@
             android:layout_below="@id/ll_terms"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_privacy"
                 android:tint="@color/colorPrimaryDark" />
 
@@ -346,12 +346,13 @@
             android:layout_below="@id/ll_privacy"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp"
+            android:visibility="gone">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:padding="@dimen/dimen_2dp"
                 android:src="@drawable/ic_settings"
                 android:tint="@color/colorPrimaryDark" />
@@ -372,12 +373,12 @@
             android:layout_below="@id/ll_settings"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingTop="@dimen/dimen_5dp"
-            android:paddingBottom="@dimen/dimen_5dp">
+            android:paddingTop="@dimen/dimen_menu_5dp"
+            android:paddingBottom="@dimen/dimen_menu_5dp">
 
             <ImageView
-                android:layout_width="@dimen/dimen_32dp"
-                android:layout_height="@dimen/dimen_32dp"
+                android:layout_width="@dimen/dimen_menu_32dp"
+                android:layout_height="@dimen/dimen_menu_32dp"
                 android:src="@drawable/ic_call"
                 android:padding="@dimen/dimen_2dp"
                 android:tint="@color/colorPrimaryDark"/>
@@ -402,13 +403,13 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/dimen_5dp"
-                android:paddingBottom="@dimen/dimen_5dp"
+                android:paddingTop="@dimen/dimen_menu_5dp"
+                android:paddingBottom="@dimen/dimen_menu_5dp"
                 android:visibility="gone">
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_32dp"
-                    android:layout_height="@dimen/dimen_32dp"
+                    android:layout_width="@dimen/dimen_menu_32dp"
+                    android:layout_height="@dimen/dimen_menu_32dp"
                     android:src="@drawable/ic_logout"
                     android:padding="@dimen/dimen_2dp"
                     android:tint="@color/colorPrimaryDark"/>
@@ -429,12 +430,12 @@
                 android:layout_below="@id/ll_logoutall"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/dimen_5dp"
-                android:paddingBottom="@dimen/dimen_5dp">
+                android:paddingTop="@dimen/dimen_menu_5dp"
+                android:paddingBottom="@dimen/dimen_menu_5dp">
 
                 <ImageView
-                    android:layout_width="@dimen/dimen_32dp"
-                    android:layout_height="@dimen/dimen_32dp"
+                    android:layout_width="@dimen/dimen_menu_32dp"
+                    android:layout_height="@dimen/dimen_menu_32dp"
                     android:src="@drawable/ic_logout"
                     android:padding="@dimen/dimen_2dp"
                     android:tint="@color/colorPrimaryDark"/>

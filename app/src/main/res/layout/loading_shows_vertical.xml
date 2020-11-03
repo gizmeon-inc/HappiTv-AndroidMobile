@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:elevation="@dimen/dimen_0dp"
     android:orientation="horizontal"
-    app:cardCornerRadius="5dp"
+    app:cardCornerRadius="@dimen/dimen_5dp"
     app:cardMaxElevation="@dimen/dimen_0dp"
     app:cardUseCompatPadding="false">
 

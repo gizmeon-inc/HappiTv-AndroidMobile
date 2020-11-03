@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dimen_165dp">195dp</dimen>
+    <dimen name="dimen_player_200dp">300dp</dimen>
+    <dimen name="dimen_player_250dp">350dp</dimen>
+    <dimen name="dimen_player_65dp">75dp</dimen>
+    <dimen name="dimen_player_15dp">25dp</dimen>
+    <dimen name="dimen_player_35dp">45dp</dimen>
+    <dimen name="dimen_player_18dp">28dp</dimen>
+    <dimen name="dimen_player_55dp">65dp</dimen>
+    <dimen name="dimen_player_50dp">60dp</dimen>
+    <dimen name="dimen_player_72dp">82dp</dimen>
+
+
+    <dimen name="dimen_skeleton_200dp">250dp</dimen>
+    <dimen name="dimen_skeleton_80dp">90dp</dimen>
+    <dimen name="dimen_skeleton_70dp">80dp</dimen>
+    <dimen name="dimen_skeleton_110dp">120dp</dimen>
+    <dimen name="dimen_skeleton_170dp">180dp</dimen>
+
+
+    <dimen name="dimen_imageview_150dp">200dp</dimen>
+    <dimen name="dimen_imageview_200dp">250dp</dimen>
+
+    <dimen name="dimen_category_circle_110dp">140dp</dimen>
+    <dimen name="dimen_category_circle_100dp">130dp</dimen>
+
+    <dimen name="dimen_button_35dp">55dp</dimen>
+
+    <dimen name="dimen_menu_5dp">10dp</dimen>
+    <dimen name="dimen_menu_32dp">38dp</dimen>
+    <dimen name="dimen_menu_35dp">40dp</dimen>
+
+    <dimen name="dimen_splash_200">300dp</dimen>
+    <dimen name="dimen_splash_300">400dp</dimen>
+
+    <dimen name="dimen_video_24">29dp</dimen>
+    <dimen name="dimen_video_22">27dp</dimen>
+</resources>

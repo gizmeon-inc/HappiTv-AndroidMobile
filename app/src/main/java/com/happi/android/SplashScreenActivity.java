@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,6 +62,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     CompositeDisposable compositeDisposable;
     String showId = "empty";
 
+    private MediaPlayer mp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +98,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
         setCredentials();
         //getSessionToken();
+
+
 
     }
 
@@ -183,6 +188,14 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
         super.onStart();
        // check();
         getPubID();
+        Handler handlerSound = new Handler();
+        handlerSound.postDelayed(() -> {
+            mp = MediaPlayer.create(getBaseContext(), R.raw.splashmp3); /*Gets your
+          soundfile from res/raw/sound.ogg */
+            mp.start(); //Starts your sound
+            //Continue with your run/thread-code here
+        }, 300);
+
     }
 
     private void check(){
@@ -209,7 +222,6 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     @Override
     protected void onResume() {
         super.onResume();
-
 
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");
@@ -507,7 +519,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                         }
                        // HappiApplication.setCity(addresses.get(0).getLocality());
                         HappiApplication.setRegion(addresses.get(0).getAdminArea());
-                        HappiApplication.setCountry(addresses.get(0).getCountryName());
+                        SharedPreferenceUtility.setCountry(addresses.get(0).getCountryName());
                     }
                     checkAndNav();
                 } catch (Exception e) {
@@ -554,7 +566,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                     HappiApplication.setLongitude(ipAddressModel.getLon());
                     HappiApplication.setRegion(ipAddressModel.getRegion());
                     HappiApplication.setIpAddress(ipAddressModel.getQuery());
-                    HappiApplication.setCountry(ipAddressModel.getCountry());
+                    SharedPreferenceUtility.setCountry(ipAddressModel.getCountry());
 
                     checkAndNav();
                 }, throwable -> {
@@ -656,4 +668,13 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
         finish();
     }
     //================================================
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(mp != null && mp.isPlaying()){ //Must check if it's playing, otherwise it may be a NPE
+            mp.pause(); //Pauses the sound
+        }
+    }
 }

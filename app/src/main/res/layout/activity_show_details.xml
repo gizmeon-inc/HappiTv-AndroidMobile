@@ -54,7 +54,7 @@
         <RelativeLayout
             android:id="@+id/rl_image"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/dimen_200dp"
+            android:layout_height="@dimen/dimen_imageview_200dp"
             android:layout_margin="@dimen/dimen_5dp"
             android:gravity="center"
             android:padding="@dimen/dimen_5dp"
@@ -62,7 +62,7 @@
 
             <ImageView
                 android:id="@+id/iv_show_image"
-                android:layout_width="@dimen/dimen_150dp"
+                android:layout_width="@dimen/dimen_imageview_150dp"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
         </RelativeLayout>
@@ -71,7 +71,7 @@
             android:id="@+id/rl_player"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:layout_height="@dimen/dimen_250dp">
+            android:layout_height="@dimen/dimen_player_250dp">
 
             <com.google.android.exoplayer2.ui.SimpleExoPlayerView
                 android:id="@+id/exo_player_view"

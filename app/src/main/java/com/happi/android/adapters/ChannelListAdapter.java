@@ -9,7 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.happi.android.HomeActivity;
 import com.happi.android.MainHomeActivity;
@@ -36,12 +38,14 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
     private boolean isVertical = false;
     private Activity activity;
     private RedirectToLive redirect;
+    private int width;
 
-    public ChannelListAdapter(Context context, itemClickListener clickObj, boolean isVertical) {
+    public ChannelListAdapter(Context context, itemClickListener clickObj, boolean isVertical, int width) {
         this.context = context;
         this.clickObj = clickObj;
         this.isVertical = isVertical;
         channelList = new ArrayList<>();
+        this.width = width;
     }
     public ChannelListAdapter(Context context, itemClickListener clickObj, boolean isVertical, Activity activity, RedirectToLive redirect) {
         this.context = context;
@@ -82,9 +86,7 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
                 .into(holder.iv_thumbnail);
         Log.d("LOGO",ConstantUtils.CHANNEL_NEW_THUMBNAIL + cModel.getLogo());
         if(activity != null) {
-            //if (((HomeActivity) activity).isRedirectToLive) {
             if (((MainHomeActivity) activity).isRedirectToLive) {
-              //  if (((HomeActivity) activity).channelId != 0 && (((HomeActivity) activity).channelId == cModel.getChannelId())) {
                 if (((MainHomeActivity) activity).channelId != 0 && (((MainHomeActivity) activity).channelId == cModel.getChannelId())) {
                     SharedPreferenceUtility.setChannelTimeZone(cModel.getTimezone());
                     redirect.onRedirectionToLive(cModel);
@@ -163,12 +165,22 @@ public class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.
         ImageView iv_premium_tag;
         TypefacedTextViewBold tv_live_tag;
         TypefacedTextViewSemiBold tv_video_title;
+        RelativeLayout rl_live_item;
         public MyViewHolder(View itemView) {
             super(itemView);
             this.iv_thumbnail = itemView.findViewById(R.id.iv_thumbnail);
             this.iv_premium_tag = itemView.findViewById(R.id.iv_premium_tag);
             this.tv_live_tag = itemView.findViewById(R.id.tv_live_tag);
             this.tv_video_title = itemView.findViewById(R.id.tv_video_title);
+            this.rl_live_item = itemView.findViewById(R.id.rl_live_item);
+
+            if(isVertical){
+                int new_width = (width/3);
+                int new_height = (3*(new_width-15))/2;
+
+                FrameLayout.LayoutParams fl = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, new_height);
+                this.rl_live_item.setLayoutParams(fl);
+            }
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

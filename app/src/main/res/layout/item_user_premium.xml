@@ -19,7 +19,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="@dimen/dimen_15dp"
+            android:textSize="@dimen/text_regular_medium"
             android:textColor="@color/whiteThree"/>
         <com.happi.android.customviews.TypefacedTextViewBold
             android:id="@+id/tv_subs_type"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:text=""
-            android:textSize="@dimen/dimen_15dp"
+            android:textSize="@dimen/text_regular_medium"
             android:textColor="@color/whiteThree"/>
         <com.happi.android.customviews.TypefacedTextViewBold
             android:id="@+id/tv_subs_price"
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dimen_5dp"
             android:text=""
-            android:textSize="@dimen/dimen_15dp"
+            android:textSize="@dimen/text_regular_medium"
             android:textColor="@color/whiteThree"/>
     </LinearLayout>
 

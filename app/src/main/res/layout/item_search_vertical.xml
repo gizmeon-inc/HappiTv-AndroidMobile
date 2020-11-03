@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_show_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/dark_black"
+    android:orientation="horizontal"
+    app:cardCornerRadius="@dimen/dimen_0dp"
+    app:cardElevation="@dimen/dimen_0dp"
+    app:cardMaxElevation="@dimen/dimen_0dp"
+    app:cardUseCompatPadding="false"
+    android:layout_marginBottom="@dimen/dimen_5dp"
+    app:cardBackgroundColor="@color/dark_black"
+    android:layout_gravity="center_horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <FrameLayout
+            android:id="@+id/fl_main_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dimen_165dp">
+
+            <ImageView
+                android:id="@+id/iv_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dimen_165dp"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_placeholder"
+                android:contentDescription="@string/image_label"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/vignette"
+                android:contentDescription="@string/image_label"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.happi.android.customviews.TypefacedTextViewSemiBold
+                    android:id="@+id/tv_video_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="marquee"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="true"
+                    android:singleLine="true"
+                    android:text="@string/searchKeyword"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_small_medium1"
+                    android:visibility="invisible"/>
+                <ImageView
+                    android:id="@+id/iv_premium_tag"
+                    android:layout_width="@dimen/dimen_30dp"
+                    android:layout_height="@dimen/dimen_30dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/tag_premium"
+                    android:gravity="center"
+                    android:visibility="invisible"
+                    android:contentDescription="@string/image_label"/>
+
+
+            </RelativeLayout>
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/ll_video_name_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/tv_video_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_small_medium"
+                android:maxLines="2"
+                android:minLines="2"
+                android:ellipsize="end"
+                android:gravity="start|top"
+                android:paddingStart="@dimen/dimen_2dp"
+                android:paddingEnd="@dimen/dimen_2dp"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</androidx.cardview.widget.CardView>

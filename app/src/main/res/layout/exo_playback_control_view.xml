@@ -14,6 +14,7 @@
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_exoplayer_parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="ltr"
@@ -44,27 +45,27 @@
             style="@style/ExoMediaButton"
             android:visibility="gone" />-->
         <ImageButton android:id="@id/exo_rew"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="@dimen/dimen_player_72dp"
+            android:layout_height="@dimen/dimen_player_72dp"
             android:tint="@color/dark_black"
             style="@style/ExoMediaButton.Rewind"/>
         <ImageButton
             android:id="@id/exo_play"
             style="@style/ExoMediaButton.Play"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="@dimen/dimen_player_72dp"
+            android:layout_height="@dimen/dimen_player_72dp"
             android:background="@drawable/ic_player_play_pause_bg" />
 
         <ImageButton
             android:id="@id/exo_pause"
             style="@style/ExoMediaButton.Pause"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="@dimen/dimen_player_72dp"
+            android:layout_height="@dimen/dimen_player_72dp"
             android:background="@drawable/ic_player_play_pause_bg" />
 
         <ImageButton android:id="@id/exo_ffwd"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="@dimen/dimen_player_72dp"
+            android:layout_height="@dimen/dimen_player_72dp"
             android:tint="@color/dark_black"
             style="@style/ExoMediaButton.FastForward"/>
         <!--<ImageButton
@@ -92,21 +93,21 @@
         <TextView
             android:id="@id/exo_position"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimen_35dp"
+            android:layout_height="@dimen/dimen_player_35dp"
             android:layout_marginLeft="@dimen/dimen_5dp"
             android:background="@drawable/player_translucent_bg"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:paddingLeft="@dimen/dimen_4dp"
+            android:paddingRight="@dimen/dimen_4dp"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_regular"
             android:textStyle="bold" />
 
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@id/exo_progress"
             android:layout_width="0dp"
-            android:layout_height="15dp"
+            android:layout_height="@dimen/dimen_player_15dp"
             android:layout_marginLeft="@dimen/dimen_5dp"
             android:layout_weight="1"
             android:background="@drawable/player_translucent_bg"
@@ -118,21 +119,21 @@
         <TextView
             android:id="@id/exo_duration"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/dimen_35dp"
+            android:layout_height="@dimen/dimen_player_35dp"
             android:layout_marginLeft="@dimen/dimen_5dp"
             android:background="@drawable/player_translucent_bg"
             android:gravity="center"
             android:includeFontPadding="false"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
+            android:paddingLeft="@dimen/dimen_4dp"
+            android:paddingRight="@dimen/dimen_4dp"
             android:textColor="#FFFFFF"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_regular"
             android:textStyle="bold" />
 
         <FrameLayout
             android:id="@+id/exo_fullscreen_button"
-            android:layout_width="@dimen/dimen_35dp"
-            android:layout_height="@dimen/dimen_35dp"
+            android:layout_width="@dimen/dimen_player_35dp"
+            android:layout_height="@dimen/dimen_player_35dp"
             android:layout_gravity="right|center_vertical"
             android:layout_marginLeft="@dimen/dimen_5dp"
             android:layout_marginRight="@dimen/dimen_5dp"
@@ -140,8 +141,8 @@
 
             <ImageView
                 android:id="@+id/exo_fullscreen_icon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="@dimen/dimen_player_18dp"
+                android:layout_height="@dimen/dimen_player_18dp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"

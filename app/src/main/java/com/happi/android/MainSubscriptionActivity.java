@@ -178,7 +178,7 @@ public class MainSubscriptionActivity extends BaseActivity implements LogoutDial
     private void signOut() {
         LogoutDialogClass logoutDialogClass =
                 new LogoutDialogClass(this, this::onLogoutClicked);
-        Objects.requireNonNull(logoutDialogClass.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         logoutDialogClass.show();
     }
     private void loadWebView(){

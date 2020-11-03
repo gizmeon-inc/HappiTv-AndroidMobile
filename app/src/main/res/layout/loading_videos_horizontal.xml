@@ -4,7 +4,7 @@
     android:layout_width="@dimen/dimen_128dp"
     android:layout_height="@dimen/dimen_165dp"
     android:orientation="horizontal"
-    app:cardCornerRadius="5dp"
+    app:cardCornerRadius="@dimen/dimen_5dp"
     android:layout_marginRight="@dimen/dimen_7dp"
     android:elevation="@dimen/dimen_0dp"
     app:cardMaxElevation="@dimen/dimen_0dp"

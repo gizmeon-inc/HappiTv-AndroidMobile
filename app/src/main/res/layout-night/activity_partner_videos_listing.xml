@@ -49,13 +49,15 @@
        <LinearLayout
            android:id="@+id/ll_image"
            android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:gravity="center_horizontal">
+           android:layout_height="@dimen/dimen_imageview_200dp"
+           android:layout_margin="@dimen/dimen_5dp"
+           android:gravity="center"
+           android:padding="@dimen/dimen_5dp">
+
            <ImageView
                android:id="@+id/iv_partner_image"
-               android:layout_height="@dimen/dimen_150dp"
-               android:layout_width="@dimen/dimen_200dp"
-               android:scaleType="fitXY"/>
+               android:layout_width="@dimen/dimen_imageview_150dp"
+               android:layout_height="match_parent"/>
        </LinearLayout>
 
         <androidx.core.widget.NestedScrollView
@@ -68,20 +70,23 @@
                 android:id="@+id/rl_partner_data"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dimen_10dp">
+                android:layout_marginTop="@dimen/dimen_10dp"
+                android:layout_marginLeft="@dimen/dimen_10dp"
+                android:layout_marginBottom="@dimen/dimen_10dp">
 
                 <LinearLayout
                     android:id="@+id/ll_description"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_marginEnd="@dimen/dimen_10dp">
                     <TextView
                         android:id="@+id/tv_description"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/dimen_5dp"
                         android:textColor="@color/white"
-                        android:textSize="13sp"/>
+                        android:textSize="@dimen/text_small_medium2"/>
                     <at.blogc.android.views.ExpandableTextView
                         android:id="@+id/ex_description"
                         android:layout_width="wrap_content"
@@ -90,7 +95,7 @@
                         android:ellipsize="end"
                         android:maxLines="4"
                         android:textColor="@color/white"
-                        android:textSize="12sp" />
+                        android:textSize="@dimen/text_small_medium1" />
 
                     <TextView
                         android:id="@+id/tv_more"
@@ -126,7 +131,8 @@
                             android:textColor="@color/error_tint"
                             android:layout_centerInParent="true"
                             android:text="@string/no_partner_shows"
-                            android:visibility="gone"/>
+                            android:visibility="gone"
+                            android:layout_marginEnd="@dimen/dimen_10dp"/>
                     </RelativeLayout>
 
 

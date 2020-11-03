@@ -227,7 +227,16 @@ public class SharedPreferenceUtility {
     public static String getAppKey() {
         return getSharedPreferenceInstance().getString("appKey", "empty");
     }
+    public static void setCountry(String country) {
+        SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferenceInstance().edit();
+        sharedPreferencesEditor.putString("country", country);
+        sharedPreferencesEditor.commit();
 
+    }
+
+    public static String getCountry() {
+        return getSharedPreferenceInstance().getString("country", "");
+    }
 
     public static void setCountryCode(String countryCode) {
         SharedPreferences.Editor sharedPreferencesEditor = getSharedPreferenceInstance().edit();

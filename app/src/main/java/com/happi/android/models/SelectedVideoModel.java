@@ -1,5 +1,6 @@
 package com.happi.android.models;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -99,6 +100,20 @@ public class SelectedVideoModel implements Serializable {
     private String synopsis;
 
     private int liked_flag = 0;
+    //==================ad====================//
+    @SerializedName("ad_link")
+    private String ad_link;
+
+
+    public String getAd_link() {
+        return ad_link;
+    }
+
+    public void setAd_link(String ad_link) {
+        this.ad_link = ad_link;
+    }
+
+    //========================================//
 
     public String getRental_flag() {
         return rental_flag;
