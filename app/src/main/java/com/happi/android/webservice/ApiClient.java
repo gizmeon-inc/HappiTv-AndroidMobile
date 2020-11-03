@@ -79,9 +79,9 @@ public class ApiClient {
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
-                .connectTimeout(3, TimeUnit.MINUTES)
+                /*.connectTimeout(3, TimeUnit.MINUTES)
                 .writeTimeout(3, TimeUnit.MINUTES)
-                .readTimeout(3, TimeUnit.MINUTES)
+                .readTimeout(3, TimeUnit.MINUTES)*/
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(IP_BASE_URL)
