@@ -79,8 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone"
-                app:resize_mode="fill"
-                app:surface_type="texture_view"/>
+                app:resize_mode="fill"/>
 
             <ProgressBar
                 android:id="@+id/pb_trailer"
