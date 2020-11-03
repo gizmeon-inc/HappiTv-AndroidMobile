@@ -47,11 +47,14 @@ public class FormatAdUrl {
         }
         String advertisingId_fromThread = SharedPreferenceUtility.getAdvertisingId();
 
-        if (ipAddressModel != null) {
-
-            url = url.replace("[IP_ADDRESS]", ipAddressModel.getQuery());
-
+        if(HappiApplication.getIpAddress() != null && !HappiApplication.getIpAddress().isEmpty()){
+            url = url.replace("[IP_ADDRESS]", HappiApplication.getIpAddress());
+        }else{
+            if (ipAddressModel != null && ipAddressModel.getQuery() != null) {
+                url = url.replace("[IP_ADDRESS]", ipAddressModel.getQuery());
+            }
         }
+
         url = url.replace("[COUNTRY]", SharedPreferenceUtility.getCountry());
         url = url.replace("[CITY]", HappiApplication.getCity());
         url = url.replace("[LATITUDE]", "" + HappiApplication.getLatitude());

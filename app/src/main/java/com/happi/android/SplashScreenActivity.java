@@ -194,7 +194,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
           soundfile from res/raw/sound.ogg */
             mp.start(); //Starts your sound
             //Continue with your run/thread-code here
-        }, 300);
+        }, 400);
 
     }
 

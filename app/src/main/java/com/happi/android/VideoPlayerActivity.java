@@ -1344,6 +1344,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         if (mAdsManager != null && mIsAdDisplayed) {
             mAdsManager.resume();
+            Log.d("ima_ads", "onresume");
         } else{
             if(!isCasting){
                 resumePlayer();
@@ -1651,6 +1652,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         }*/
         if (mAdsManager != null && mIsAdDisplayed) {
             mAdsManager.pause();
+            Log.d("ima_ads", "onpause");
         }else{
             releasePlayer();
         }
@@ -1863,6 +1865,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             mAdsLoader.removeAdErrorListener(this);
             mAdsManager.destroy();
             mAdsManager = null;
+            Log.d("ima_ads", "ondestroy");
         }
         if (exoPlayer != null) {
             exoPlayer.release();
@@ -1919,6 +1922,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                     "adEvent errorCodeNumber: " + errorCodeNumber + " errorNumber: " + errorNumber + " errorType: " + errorType + " errorMessage: " + errorMessage
             );
         } catch (Exception ex) {
+            Log.d("ima_ads", "onAdError: catch");
 
         }
 
@@ -1938,6 +1942,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 Log.d("ima_ads", "adEvent LOADED");
                 if(shouldAutoPlay){
                     mAdsManager.start();
+                    Log.d("ima_ads", "adEvent LOADED:started");
                 }
 
                 break;
@@ -1947,6 +1952,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 Log.d("ima_ads", "adEvent STARTED");
                 if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
+                    mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent STARTED:pause");
                 }
                 break;
             }
@@ -1955,6 +1962,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 Log.d("ima_ads", "adEvent FIRST_QUARTILE");
                 if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
+                    mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
                 }
                 break;
             }
@@ -1963,6 +1972,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 Log.d("ima_ads", "adEvent THIRD_QUARTILE");
                 if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
+                    mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
                 }
                 break;
             }
@@ -1970,12 +1981,17 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
                 Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
                 // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
-                mIsAdDisplayed = true;
+
                 //isAdcalling = true;
                 if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
+                    mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
+                }else{
+                    mIsAdDisplayed = true;
+                    pauseVideo();
                 }
-                pauseVideo();
+
 
                 break;
             }
@@ -2001,6 +2017,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 if(mAdsManager != null){
                     mAdsManager.destroy();
                     mAdsManager = null;
+                    Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:pause");
                 }
 
                 break;
@@ -2009,12 +2026,14 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void pauseVideo() {
+        Log.d("ima_ads", "pauseVideo");
         exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.INVISIBLE);
         if(exoPlayer != null && exoPlayer.getPlayWhenReady()){
             exoPlayer.setPlayWhenReady(false);
         }
     }
     private void playVideo() {
+        Log.d("ima_ads", "playVideo");
         exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
         if(exoPlayer != null && !exoPlayer.getPlayWhenReady() && shouldAutoPlay){
             exoPlayer.setPlayWhenReady(true);

@@ -14,7 +14,7 @@
         android:visibility="visible"
         app:controller_layout_id="@layout/live_play_back_control"
         app:resize_mode="fill"
-        ad:resize_mode="fill"/>
+        app:surface_type="texture_view"/>
 
 
     <androidx.core.widget.NestedScrollView
