@@ -718,6 +718,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             mMediaRouteButton.setVisibility(View.INVISIBLE);
         }
         if (mAdsManager != null && mIsAdDisplayed) {
+            exo_player_view.findViewById(R.id.ll_exoplayer_parent_live).setVisibility(View.GONE);
             mAdsManager.resume();
         } else{
             resumePlayer();
@@ -991,6 +992,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             mAdsLoader.removeAdErrorListener(this);
             mAdsManager.destroy();
             mAdsManager = null;
+            mIsAdDisplayed = false;
             Log.d("ima_ads", "ondestroy");
         }
         if (exoPlayer != null) {
@@ -1010,8 +1012,15 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     }
 
     private void releasePlayer() {
-        if (exoPlayer != null) {
+        /*if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
+        }*/
+        if (mAdsManager != null && mIsAdDisplayed) {
+            mAdsManager.pause();
+        } else {
+            if (exoPlayer != null) {
+                exoPlayer.setPlayWhenReady(false);
+            }
         }
     }
 
@@ -1027,12 +1036,13 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
         shouldAutoPlay = false;
         //AD INSERTION ***************
-        if (mAdsManager != null && mIsAdDisplayed) {
+       /* if (mAdsManager != null && mIsAdDisplayed) {
             mAdsManager.pause();
         } else {
             releasePlayer();
-        }
+        }*/
         //mRewardedVideoAd.pause(this);
+        releasePlayer();
         super.onPause();
 
     }
@@ -1992,7 +2002,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                     mIsAdDisplayed = true;
                     Log.d("ima_ads", "adEvent LOADED:started");
                 }
-
+                mIsAdDisplayed = true;
                 break;
             }
             case STARTED : {

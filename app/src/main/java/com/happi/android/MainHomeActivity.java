@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
@@ -100,13 +99,11 @@ import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
 import com.happi.android.customviews.CustomAlertDialog;
-import com.happi.android.customviews.ScrollingLinearLayoutManager;
 import com.happi.android.customviews.SpacesItemDecoration;
 import com.happi.android.customviews.TypefacedTextViewBold;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.exoplayercontroller.EventLogger;
 import com.happi.android.exoplayercontroller.TrackSelectionHelper;
-import com.happi.android.models.ASTVHome;
 import com.happi.android.models.CategoriesHomeListVideoModel;
 import com.happi.android.models.CategoryModel;
 import com.happi.android.models.ChannelModel;
@@ -250,13 +247,13 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     private boolean isCreate = true;
 
     //ad
-    private ImaSdkFactory mSdkFactory;
+   /* private ImaSdkFactory mSdkFactory;
     private AdsLoader mAdsLoader;
     private AdsManager mAdsManager;
     private boolean mIsAdDisplayed;
     private IPAddressModel ipAddressModel;
     private Long playerDuration  = 0L;
-    private Long playerCurrentPosition  = 0L;
+    private Long playerCurrentPosition  = 0L;*/
 
     @Override
 
@@ -474,13 +471,14 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         mRewardedVideoAd.setRewardedVideoAdListener(this);
 
 
-        mSdkFactory = ImaSdkFactory.getInstance();
+        //ads
+        /*mSdkFactory = ImaSdkFactory.getInstance();
         AdDisplayContainer adDisplayContainer = mSdkFactory.createAdDisplayContainer();
         adDisplayContainer.setAdContainer(exo_player_view_home.getOverlayFrameLayout());
         ImaSdkSettings settings = mSdkFactory.createImaSdkSettings();
         mAdsLoader = mSdkFactory.createAdsLoader(
                 this, settings, adDisplayContainer
-        );
+        );*/
 
     }
 
@@ -526,7 +524,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             rv_partner.scrollToPosition(currentItem);
             startTimer(3500);
         }*/
-        shouldAutoPlay = true;
+
         if(!isCreate){
             if (liveChannelId != 0) {
                 Log.e("HOME", "ONRESUME");
@@ -540,13 +538,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 startTimer(3500);
             }
         }
+        shouldAutoPlay = true;
+        resumePlayer();
         super.onResume();
 
 
 
 
-        Log.d("ima_ads", "onResume");
-       /* if(mAdsManager == null){
+       /* Log.d("ima_ads", "onResume");
+       *//* if(mAdsManager == null){
             Log.d("ima_ads", "onResume>>adsmanager null");
         }else{
             Log.d("ima_ads", "onResume>>adsmanager not null");
@@ -555,7 +555,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Log.d("ima_ads", "onResume>>addisplayed true");
         }else{
             Log.d("ima_ads", "onResume>>addisplayed false");
-        }*/
+        }*//*
         if (mAdsManager != null && mIsAdDisplayed) {
             Log.d("ima_ads", "onResume:ad resume");
             exo_player_view_home.findViewById(R.id.ll_exoplayer_parent_live_home).setVisibility(View.GONE);
@@ -563,7 +563,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         } else{
             resumePlayer();
-        }
+        }*/
     }
 
     private void setupRecyclerView() {
@@ -890,8 +890,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                         liveChannelId = channelModelList.get(0).getChannelId();
                         Log.e("HOME", "GETALLCHANNEL");
                         loadLiveSchedule(liveChannelId);
-                        //generateToken(channelModelList.get(0));
-                        ipAddressApiCall(channelModelList.get(0));
+                        generateToken(channelModelList.get(0));
+                        //ipAddressApiCall(channelModelList.get(0));
                         /*//load live channel list
                         if (channelModelList.size() >= 10) {
                             updateLiveVideos(channelModelList.subList(0, 10));
@@ -924,8 +924,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ipAddressModelResponse -> {
                     HappiApplication.setIpAddress(ipAddressModelResponse.getQuery());
-                    ipAddressModel = ipAddressModelResponse;
-                    generateToken(data);
+                    //ipAddressModel = ipAddressModelResponse;
+                    //generateToken(data);
                 }, throwable -> {
 
                 });
@@ -1039,9 +1039,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
             // Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
             // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
-            String adTagUriString = "";
 
-            try {
+            /* String adTagUriString = "";
+
+           try {
                 Log.d("ima_ads", "getAd_link>>"+liveModel.getAd_link());
                 adTagUriString = FormatAdUrl.formatChannelAdUrl(liveModel, ipAddressModel);
                 Log.e("ADTAG", adTagUriString);
@@ -1049,11 +1050,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 initVastAd(adTagUriString);
             } catch (NullPointerException e) {
                 e.printStackTrace();
-            }
+            }*/
             boolean needNewPlayer = exoPlayer == null;
 
             if (needNewPlayer) {
-                //boolean shouldAutoPlay = true;
                 TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
                 DefaultTrackSelector trackSelector1 = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
                 TrackSelectionHelper trackSelectionHelper = new TrackSelectionHelper(trackSelector1, adaptiveTrackSelectionFactory);
@@ -1548,9 +1548,10 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
         currentItem = 0;
         isCreate = false;
+        releasePlayer();
         super.onPause();
 
-        releasePlayer();
+
     }
 
     public void onBackPressed() {
@@ -1588,13 +1589,13 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         currentItem = 0;
         isCreate = false;
 
-        if(mAdsManager != null) {
+        /*if(mAdsManager != null) {
             mAdsManager.removeAdEventListener(this);
             mAdsLoader.removeAdErrorListener(this);
             mAdsManager.destroy();
             mAdsManager = null;
             Log.d("ima_ads", "ondestroy");
-        }
+        }*/
         if (exoPlayer != null) {
             exoPlayer.release();
         }
@@ -2032,13 +2033,13 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void releaseExoPlayer() {
-        if(mAdsManager != null) {
+        /*if(mAdsManager != null) {
             mAdsManager.removeAdEventListener(this);
             mAdsLoader.removeAdErrorListener(this);
             mAdsManager.destroy();
             mAdsManager = null;
             Log.d("ima_ads", "releaseExoPlayer");
-        }
+        }*/
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
             exoPlayer.stop();
@@ -2072,7 +2073,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void releasePlayer() {
-        Log.d("ima_ads", "releasePlayer");
+       /* Log.d("ima_ads", "releasePlayer");
         if (mAdsManager != null && mIsAdDisplayed) {
             Log.d("ima_ads", "releasePlayer: ad pause");
             mAdsManager.pause();
@@ -2080,15 +2081,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             if (exoPlayer != null) {
                 exoPlayer.setPlayWhenReady(false);
             }
-        }
-        /*Log.d("ima_ads", "releasePlayer");
+        }*/
+        Log.d("ima_ads", "releasePlayer");
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
-        }*/
+        }
     }
 
     private void resumePlayer() {
-        exo_player_view_home.findViewById(R.id.ll_exoplayer_parent_live_home).setVisibility(View.VISIBLE);
+       // exo_player_view_home.findViewById(R.id.ll_exoplayer_parent_live_home).setVisibility(View.VISIBLE);
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(true);
         }
@@ -2168,8 +2169,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
         currentItem = 0;
         isCreate = false;
-        super.onStop();
         releasePlayer();
+        super.onStop();
+
     }
 
     private void stopScrollTimer() {
@@ -2302,7 +2304,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
     }
     //ad
-    private void initVastAd(String adRulesURL) {
+   /* private void initVastAd(String adRulesURL) {
         // Add listeners for when ads are loaded and for errors.
         mAdsLoader.addAdErrorListener(this);
         mAdsLoader.addAdsLoadedListener(new com.google.ads.interactivemedia.v3.api.AdsLoader.AdsLoadedListener() {
@@ -2351,7 +2353,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     ) {
         playerCurrentPosition = exoPlayer.getCurrentPosition();
         playerDuration = exoPlayer.getDuration();
-    }
+    }*/
 
     @Override
     public void onAdError(AdErrorEvent adErrorEvent) {
@@ -2373,7 +2375,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
 
         AdError adError = adErrorEvent.getError();
-        callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());*/
+        callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());*//*
 
         try {
             int errorCodeNumber = adErrorEvent.getError().getErrorCodeNumber();
@@ -2399,7 +2401,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
         //isAdcalling = false
 
-        playVideo();
+        playVideo();*/
     }
     private void pauseVideo() {
         Log.d("ima_ads", "pauseVideo");
@@ -2418,7 +2420,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     @Override
     public void onAdEvent(AdEvent adEvent) {
 
-        switch (adEvent.getType()) {
+       /* switch (adEvent.getType()) {
 
             case LOADED : {
                 Log.d("ima_ads", "adEvent LOADED");
@@ -2506,7 +2508,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
                 break;
             }
-        }
+        }*/
     }
     private void callAddErrorAnalyticsApi(String errorCode, String errorMessage){
         //Uncomment to enable analytics api call

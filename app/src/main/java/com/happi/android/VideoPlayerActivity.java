@@ -1169,7 +1169,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                     mIsAdDisplayed = true;
                     Log.d("ima_ads", "adEvent LOADED:started");
                 }
-
+                mIsAdDisplayed = true;
                 break;
             }
             case STARTED : {
@@ -1482,6 +1482,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         }*/
 
         if (mAdsManager != null && mIsAdDisplayed) {
+            exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.GONE);
             mAdsManager.resume();
             Log.d("ima_ads", "onresume");
         } else{
@@ -1789,12 +1790,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         } else if (Util.SDK_INT <= 23) {
             releasePlayer();
         }*/
-        if (mAdsManager != null && mIsAdDisplayed) {
-            mAdsManager.pause();
-            Log.d("ima_ads", "onpause");
-        }else{
-            releasePlayer();
-        }
+       releasePlayer();
+
         super.onPause();
         shouldAutoPlay = false;
     }
@@ -1802,9 +1799,10 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onStop() {
         shouldAutoPlay = false;
+        releasePlayer();
         super.onStop();
         shouldAutoPlay = false;
-        releasePlayer();
+
         Log.v("okhttp","VIDEOPLAYER>>ONSTOP");
     }
 
@@ -1825,8 +1823,16 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void releasePlayer() {
-        if (exoPlayer != null) {
+        /*if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
+        }*/
+        if (mAdsManager != null && mIsAdDisplayed) {
+            mAdsManager.pause();
+            Log.d("ima_ads", "onpause");
+        }else{
+            if (exoPlayer != null) {
+                exoPlayer.setPlayWhenReady(false);
+            }
         }
     }
 
@@ -2004,6 +2010,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             mAdsLoader.removeAdErrorListener(this);
             mAdsManager.destroy();
             mAdsManager = null;
+            mIsAdDisplayed = false;
             Log.d("ima_ads", "ondestroy");
         }
         if (exoPlayer != null) {
