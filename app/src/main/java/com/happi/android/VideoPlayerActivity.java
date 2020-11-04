@@ -1126,6 +1126,145 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         playerDuration = exoPlayer.getDuration();
     }
 
+    @Override
+    public void onAdError(AdErrorEvent adErrorEvent) {
+        try {
+            int errorCodeNumber = adErrorEvent.getError().getErrorCodeNumber();
+            int errorNumber = adErrorEvent.getError().getErrorCode().getErrorNumber();
+            String errorType = adErrorEvent.getError().getErrorType().toString();
+            String errorMessage = adErrorEvent.getError().getMessage();
+            Log.d("ima_ads", "onAdError: " + errorCodeNumber + ">" + errorNumber + ">" + errorType + ">" + errorMessage);
+
+            //call analytics
+            AdError adError = adErrorEvent.getError();
+            callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
+
+
+            //if (isAdcalling) {
+            Log.d(
+                    "ima_ads",
+                    "adEvent errorCodeNumber: " + errorCodeNumber + " errorNumber: " + errorNumber + " errorType: " + errorType + " errorMessage: " + errorMessage
+            );
+        } catch (Exception ex) {
+            Log.d("ima_ads", "onAdError: catch");
+
+        }
+
+        //isAdcalling = false
+
+        playVideo();
+
+        // }
+    }
+
+    @Override
+    public void onAdEvent(AdEvent adEvent) {
+
+        switch (adEvent.getType()) {
+
+            case LOADED : {
+                Log.d("ima_ads", "adEvent LOADED");
+                if(shouldAutoPlay){
+                    mAdsManager.start();
+                    mIsAdDisplayed = true;
+                    Log.d("ima_ads", "adEvent LOADED:started");
+                }
+
+                break;
+            }
+            case STARTED : {
+
+                Log.d("ima_ads", "adEvent STARTED");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent STARTED:pause");
+                }
+                break;
+            }
+            case FIRST_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent FIRST_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
+                }
+                break;
+            }
+            case THIRD_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent THIRD_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
+                }
+                break;
+            }
+            case CONTENT_PAUSE_REQUESTED : {
+
+                Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
+                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
+
+                //isAdcalling = true;
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
+                }else{
+                    mIsAdDisplayed = true;
+                    pauseVideo();
+                }
+
+
+                break;
+            }
+            case CONTENT_RESUME_REQUESTED : {
+                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
+                // and you should start playing your content.
+
+                Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
+                mIsAdDisplayed = false;
+                // isAdcalling = false;
+
+                playVideo();
+
+                break;
+            }
+            case COMPLETED : {
+                Log.d("ima_ads", "adEvent COMPLETED");
+
+                break;
+            }
+            case ALL_ADS_COMPLETED : {
+                Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
+                if(mAdsManager != null){
+                    mIsAdDisplayed = false;
+                    mAdsManager.destroy();
+                    mAdsManager = null;
+                    Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:pause");
+                }
+
+                break;
+            }
+        }
+    }
+
+    private void pauseVideo() {
+        Log.d("ima_ads", "pauseVideo");
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.INVISIBLE);
+        if(exoPlayer != null && exoPlayer.getPlayWhenReady()){
+            exoPlayer.setPlayWhenReady(false);
+        }
+    }
+    private void playVideo() {
+        Log.d("ima_ads", "playVideo");
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
+        if(exoPlayer != null && !exoPlayer.getPlayWhenReady() && shouldAutoPlay){
+            exoPlayer.setPlayWhenReady(true);
+        }
+    }
     private void initializeTimerScheduler(String event) {//edit timer
         timerSChedule = new Timer();
         timerSChedule.scheduleAtFixedRate(new TimerTask() {
@@ -1902,143 +2041,6 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
 
-    @Override
-    public void onAdError(AdErrorEvent adErrorEvent) {
-        try {
-            int errorCodeNumber = adErrorEvent.getError().getErrorCodeNumber();
-            int errorNumber = adErrorEvent.getError().getErrorCode().getErrorNumber();
-            String errorType = adErrorEvent.getError().getErrorType().toString();
-            String errorMessage = adErrorEvent.getError().getMessage();
-            Log.d("ima_ads", "onAdError: " + errorCodeNumber + ">" + errorNumber + ">" + errorType + ">" + errorMessage);
-
-            //call analytics
-            AdError adError = adErrorEvent.getError();
-            callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
-
-
-            //if (isAdcalling) {
-            Log.d(
-                    "ima_ads",
-                    "adEvent errorCodeNumber: " + errorCodeNumber + " errorNumber: " + errorNumber + " errorType: " + errorType + " errorMessage: " + errorMessage
-            );
-        } catch (Exception ex) {
-            Log.d("ima_ads", "onAdError: catch");
-
-        }
-
-        //isAdcalling = false
-
-        playVideo();
-
-        // }
-    }
-
-    @Override
-    public void onAdEvent(AdEvent adEvent) {
-
-        switch (adEvent.getType()) {
-
-            case LOADED : {
-                Log.d("ima_ads", "adEvent LOADED");
-                if(shouldAutoPlay){
-                    mAdsManager.start();
-                    Log.d("ima_ads", "adEvent LOADED:started");
-                }
-
-                break;
-            }
-            case STARTED : {
-
-                Log.d("ima_ads", "adEvent STARTED");
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent STARTED:pause");
-                }
-                break;
-            }
-            case FIRST_QUARTILE : {
-
-                Log.d("ima_ads", "adEvent FIRST_QUARTILE");
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
-                }
-                break;
-            }
-            case THIRD_QUARTILE : {
-
-                Log.d("ima_ads", "adEvent THIRD_QUARTILE");
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
-                }
-                break;
-            }
-            case CONTENT_PAUSE_REQUESTED : {
-
-                Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
-                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
-
-                //isAdcalling = true;
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
-                }else{
-                    mIsAdDisplayed = true;
-                    pauseVideo();
-                }
-
-
-                break;
-            }
-            case CONTENT_RESUME_REQUESTED : {
-                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
-                // and you should start playing your content.
-
-                Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
-                mIsAdDisplayed = false;
-                // isAdcalling = false;
-
-                playVideo();
-
-                break;
-            }
-            case COMPLETED : {
-                Log.d("ima_ads", "adEvent COMPLETED");
-
-                break;
-            }
-            case ALL_ADS_COMPLETED : {
-                Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
-                if(mAdsManager != null){
-                    mAdsManager.destroy();
-                    mAdsManager = null;
-                    Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:pause");
-                }
-
-                break;
-            }
-        }
-    }
-
-    private void pauseVideo() {
-        Log.d("ima_ads", "pauseVideo");
-        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.INVISIBLE);
-        if(exoPlayer != null && exoPlayer.getPlayWhenReady()){
-            exoPlayer.setPlayWhenReady(false);
-        }
-    }
-    private void playVideo() {
-        Log.d("ima_ads", "playVideo");
-        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
-        if(exoPlayer != null && !exoPlayer.getPlayWhenReady() && shouldAutoPlay){
-            exoPlayer.setPlayWhenReady(true);
-        }
-    }
     private void showLoginOrRegisterAlert() {
         if(progressDialog.isShowing()){
             progressDialog.dismiss();

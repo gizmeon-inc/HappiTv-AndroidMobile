@@ -45,6 +45,18 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.ethanhua.skeleton.Skeleton;
 import com.ethanhua.skeleton.SkeletonScreen;
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
+import com.google.ads.interactivemedia.v3.api.AdDisplayContainer;
+import com.google.ads.interactivemedia.v3.api.AdError;
+import com.google.ads.interactivemedia.v3.api.AdErrorEvent;
+import com.google.ads.interactivemedia.v3.api.AdEvent;
+import com.google.ads.interactivemedia.v3.api.AdsLoader;
+import com.google.ads.interactivemedia.v3.api.AdsManager;
+import com.google.ads.interactivemedia.v3.api.AdsManagerLoadedEvent;
+import com.google.ads.interactivemedia.v3.api.AdsRequest;
+import com.google.ads.interactivemedia.v3.api.ImaSdkFactory;
+import com.google.ads.interactivemedia.v3.api.ImaSdkSettings;
+import com.google.ads.interactivemedia.v3.api.player.ContentProgressProvider;
+import com.google.ads.interactivemedia.v3.api.player.VideoProgressUpdate;
 import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlaybackException;
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -94,9 +106,11 @@ import com.happi.android.customviews.TypefacedTextViewBold;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.exoplayercontroller.EventLogger;
 import com.happi.android.exoplayercontroller.TrackSelectionHelper;
+import com.happi.android.models.ASTVHome;
 import com.happi.android.models.CategoriesHomeListVideoModel;
 import com.happi.android.models.CategoryModel;
 import com.happi.android.models.ChannelModel;
+import com.happi.android.models.IPAddressModel;
 import com.happi.android.models.LiveScheduleResponse;
 import com.happi.android.models.PartnerResponseModel;
 import com.happi.android.models.ShowModel;
@@ -106,6 +120,7 @@ import com.happi.android.recyclerview.AnimationItem;
 import com.happi.android.recyclerview.GridRecyclerView;
 import com.happi.android.utils.AppUtils;
 import com.happi.android.utils.ConstantUtils;
+import com.happi.android.utils.FormatAdUrl;
 import com.happi.android.webservice.AnalyticsApi;
 import com.happi.android.webservice.ApiClient;
 
@@ -137,7 +152,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         ShowsAdapter.itemClickListener, ChannelListAdapter.itemClickListener,
         RewardedVideoAdListener, CategoriesHomeListAdapter.ICallAdmobAd,
         CategoryCircleViewAdapter.itemClickListenerForCategory,
-        ChannelListAdapter.RedirectToLive, PartnersListingAdapter.PartnerItemClickListener {
+        ChannelListAdapter.RedirectToLive, PartnersListingAdapter.PartnerItemClickListener,
+        AdErrorEvent.AdErrorListener, AdEvent.AdEventListener{
 
 
     VideoList_adapter videoList_adapter;
@@ -232,6 +248,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     //for resume
     private boolean isCreate = true;
+
+    //ad
+    private ImaSdkFactory mSdkFactory;
+    private AdsLoader mAdsLoader;
+    private AdsManager mAdsManager;
+    private boolean mIsAdDisplayed;
+    private IPAddressModel ipAddressModel;
+    private Long playerDuration  = 0L;
+    private Long playerCurrentPosition  = 0L;
 
     @Override
 
@@ -448,6 +473,15 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
         mRewardedVideoAd.setRewardedVideoAdListener(this);
 
+
+        mSdkFactory = ImaSdkFactory.getInstance();
+        AdDisplayContainer adDisplayContainer = mSdkFactory.createAdDisplayContainer();
+        adDisplayContainer.setAdContainer(exo_player_view_home.getOverlayFrameLayout());
+        ImaSdkSettings settings = mSdkFactory.createImaSdkSettings();
+        mAdsLoader = mSdkFactory.createAdsLoader(
+                this, settings, adDisplayContainer
+        );
+
     }
 
     @Override
@@ -481,8 +515,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             new AdvertisingIdAsyncTask().execute();
         }
 
-        shouldAutoPlay = true;
-        resumePlayer();
+
        /* if (liveChannelId != 0 && ) {
             Log.e("HOME", "ONRESUME");
             loadLiveSchedule(liveChannelId);
@@ -493,7 +526,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             rv_partner.scrollToPosition(currentItem);
             startTimer(3500);
         }*/
-
+        shouldAutoPlay = true;
         if(!isCreate){
             if (liveChannelId != 0) {
                 Log.e("HOME", "ONRESUME");
@@ -508,6 +541,29 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             }
         }
         super.onResume();
+
+
+
+
+        Log.d("ima_ads", "onResume");
+       /* if(mAdsManager == null){
+            Log.d("ima_ads", "onResume>>adsmanager null");
+        }else{
+            Log.d("ima_ads", "onResume>>adsmanager not null");
+        }
+        if(mIsAdDisplayed){
+            Log.d("ima_ads", "onResume>>addisplayed true");
+        }else{
+            Log.d("ima_ads", "onResume>>addisplayed false");
+        }*/
+        if (mAdsManager != null && mIsAdDisplayed) {
+            Log.d("ima_ads", "onResume:ad resume");
+            exo_player_view_home.findViewById(R.id.ll_exoplayer_parent_live_home).setVisibility(View.GONE);
+            mAdsManager.resume();
+
+        } else{
+            resumePlayer();
+        }
     }
 
     private void setupRecyclerView() {
@@ -834,8 +890,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                         liveChannelId = channelModelList.get(0).getChannelId();
                         Log.e("HOME", "GETALLCHANNEL");
                         loadLiveSchedule(liveChannelId);
-                        generateToken(channelModelList.get(0));
-
+                        //generateToken(channelModelList.get(0));
+                        ipAddressApiCall(channelModelList.get(0));
                         /*//load live channel list
                         if (channelModelList.size() >= 10) {
                             updateLiveVideos(channelModelList.subList(0, 10));
@@ -860,7 +916,21 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
                 });
         compositeDisposable.add(liveDisposable);
     }
+    private void ipAddressApiCall(ChannelModel data) {
 
+        ApiClient.IpAddressApiService ipAddressApiService = ApiClient.createIPService();
+        Disposable ipDisposable = ipAddressApiService.fetchIPAddress()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ipAddressModelResponse -> {
+                    HappiApplication.setIpAddress(ipAddressModelResponse.getQuery());
+                    ipAddressModel = ipAddressModelResponse;
+                    generateToken(data);
+                }, throwable -> {
+
+                });
+        compositeDisposable.add(ipDisposable);
+    }
     private void generateToken(ChannelModel channelModel) {
 
         pb_live.setVisibility(View.VISIBLE);
@@ -969,7 +1039,17 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Uri videoURI = Uri.parse(liveModel.getLiveLink().trim());
             // Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
             // Uri videoURI = Uri.parse("https://gizmeon.s.llnwi.net/vod/PUB-50023/202009291601356793/playlist~360p.m3u8");
+            String adTagUriString = "";
 
+            try {
+                Log.d("ima_ads", "getAd_link>>"+liveModel.getAd_link());
+                adTagUriString = FormatAdUrl.formatChannelAdUrl(liveModel, ipAddressModel);
+                Log.e("ADTAG", adTagUriString);
+
+                initVastAd(adTagUriString);
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
             boolean needNewPlayer = exoPlayer == null;
 
             if (needNewPlayer) {
@@ -1452,8 +1532,9 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     protected void onPause() {
+        Log.d("ima_ads", "onPause");
         shouldAutoPlay = false;
-        releasePlayer();
+
         if (swipeTimer != null) {
             Log.e("CARS", "onpause:timer cancel");
             swipeTimer.cancel();
@@ -1468,6 +1549,8 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         currentItem = 0;
         isCreate = false;
         super.onPause();
+
+        releasePlayer();
     }
 
     public void onBackPressed() {
@@ -1483,6 +1566,7 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     protected void onDestroy() {
+        Log.d("ima_ads", "onDestroy");
         SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
         if(timerSChedule != null) {
             timerSChedule.cancel();
@@ -1503,6 +1587,17 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
         }
         currentItem = 0;
         isCreate = false;
+
+        if(mAdsManager != null) {
+            mAdsManager.removeAdEventListener(this);
+            mAdsLoader.removeAdErrorListener(this);
+            mAdsManager.destroy();
+            mAdsManager = null;
+            Log.d("ima_ads", "ondestroy");
+        }
+        if (exoPlayer != null) {
+            exoPlayer.release();
+        }
         super.onDestroy();
         safelyDispose(compositeDisposable);
     }
@@ -1937,6 +2032,13 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void releaseExoPlayer() {
+        if(mAdsManager != null) {
+            mAdsManager.removeAdEventListener(this);
+            mAdsLoader.removeAdErrorListener(this);
+            mAdsManager.destroy();
+            mAdsManager = null;
+            Log.d("ima_ads", "releaseExoPlayer");
+        }
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
             exoPlayer.stop();
@@ -1970,12 +2072,23 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void releasePlayer() {
+        Log.d("ima_ads", "releasePlayer");
+        if (mAdsManager != null && mIsAdDisplayed) {
+            Log.d("ima_ads", "releasePlayer: ad pause");
+            mAdsManager.pause();
+        } else {
+            if (exoPlayer != null) {
+                exoPlayer.setPlayWhenReady(false);
+            }
+        }
+        /*Log.d("ima_ads", "releasePlayer");
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(false);
-        }
+        }*/
     }
 
     private void resumePlayer() {
+        exo_player_view_home.findViewById(R.id.ll_exoplayer_parent_live_home).setVisibility(View.VISIBLE);
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(true);
         }
@@ -2047,14 +2160,16 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
 
     @Override
     protected void onStop() {
+        Log.d("ima_ads", "onStop");
         shouldAutoPlay = false;
+
         if(timerOrientation != null){
             timerOrientation.cancel();
         }
         currentItem = 0;
         isCreate = false;
         super.onStop();
-
+        releasePlayer();
     }
 
     private void stopScrollTimer() {
@@ -2186,4 +2301,254 @@ public class MainHomeActivity extends BaseActivity implements SwipeRefreshLayout
             Log.e("000##","exception: "+eventType+" - "+ex);
         }
     }
+    //ad
+    private void initVastAd(String adRulesURL) {
+        // Add listeners for when ads are loaded and for errors.
+        mAdsLoader.addAdErrorListener(this);
+        mAdsLoader.addAdsLoadedListener(new com.google.ads.interactivemedia.v3.api.AdsLoader.AdsLoadedListener() {
+            @Override
+            public void onAdsManagerLoaded(AdsManagerLoadedEvent adsManagerLoadedEvent) {
+                // Ads were successfully loaded, so get the AdsManager instance. AdsManager has
+                // events for ad playback and errors.
+                mAdsManager = adsManagerLoadedEvent.getAdsManager();
+                // Attach event and error event listeners.
+                mAdsManager.addAdErrorListener(MainHomeActivity.this);
+                mAdsManager.addAdEventListener(MainHomeActivity.this);
+                mAdsManager.init();
+            }
+        });
+        requestAds(adRulesURL);
+    }
+    private void requestAds(String adTagUrl) { // Create the ads request.
+        if (adTagUrl.length() > 0) {
+            //  if (!isAdcalling) {
+            //      isAdcalling = true;
+            Log.d("ima_ads", "adTagUrl>>"+adTagUrl);
+            AdsRequest request = mSdkFactory.createAdsRequest();
+            request.setAdTagUrl(adTagUrl);
+            request.setContentProgressProvider(new ContentProgressProvider() {
+                @Override
+                public VideoProgressUpdate getContentProgress() {
+
+                    onPlayerSeekPosition();
+                    if (mIsAdDisplayed || playerDuration <= 0) {
+                        return VideoProgressUpdate.VIDEO_TIME_NOT_READY;
+                    } else {
+                        return new VideoProgressUpdate(
+                                playerCurrentPosition,
+                                playerDuration );
+                    }
+                }
+            });
+
+            // Request the ad. After the ad is loaded, onAdsManagerLoaded() will be called.
+            mAdsLoader.requestAds(request);
+            // }
+
+        }
+    }
+    void onPlayerSeekPosition(
+    ) {
+        playerCurrentPosition = exoPlayer.getCurrentPosition();
+        playerDuration = exoPlayer.getDuration();
+    }
+
+    @Override
+    public void onAdError(AdErrorEvent adErrorEvent) {
+
+       /* if (mAdsManager != null) {
+            mAdsManager.destroy();
+            mAdsManager = null;
+        }
+        if (exoPlayer != null) {
+
+            if (isFirstAdHandler) {
+                exoPlayer.prepare(videoSource);
+                isFirstAdHandler = false;
+            }
+            exoPlayer.setVolume(volume);
+            isAdPlaying = false;
+            // requestAds(adpodURL);
+
+        }
+
+        AdError adError = adErrorEvent.getError();
+        callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());*/
+
+        try {
+            int errorCodeNumber = adErrorEvent.getError().getErrorCodeNumber();
+            int errorNumber = adErrorEvent.getError().getErrorCode().getErrorNumber();
+            String errorType = adErrorEvent.getError().getErrorType().toString();
+            String errorMessage = adErrorEvent.getError().getMessage();
+            Log.d("ima_ads", "onAdError: " + errorCodeNumber + ">" + errorNumber + ">" + errorType + ">" + errorMessage);
+
+            //call analytics
+            AdError adError = adErrorEvent.getError();
+            callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
+
+
+            //if (isAdcalling) {
+            Log.d(
+                    "ima_ads",
+                    "adEvent errorCodeNumber: " + errorCodeNumber + " errorNumber: " + errorNumber + " errorType: " + errorType + " errorMessage: " + errorMessage
+            );
+        } catch (Exception ex) {
+            Log.d("ima_ads", "onAdError: catch");
+
+        }
+
+        //isAdcalling = false
+
+        playVideo();
+    }
+    private void pauseVideo() {
+        Log.d("ima_ads", "pauseVideo");
+        exo_player_view_home.findViewById(R.id.ll_exoplayer_parent_live_home).setVisibility(View.INVISIBLE);
+        if(exoPlayer != null && exoPlayer.getPlayWhenReady()){
+            exoPlayer.setPlayWhenReady(false);
+        }
+    }
+    private void playVideo() {
+        Log.d("ima_ads", "playVideo");
+        exo_player_view_home.findViewById(R.id.ll_exoplayer_parent_live_home).setVisibility(View.VISIBLE);
+        if(exoPlayer != null && !exoPlayer.getPlayWhenReady() && shouldAutoPlay){
+            exoPlayer.setPlayWhenReady(true);
+        }
+    }
+    @Override
+    public void onAdEvent(AdEvent adEvent) {
+
+        switch (adEvent.getType()) {
+
+            case LOADED : {
+                Log.d("ima_ads", "adEvent LOADED");
+                if(shouldAutoPlay){
+                    mAdsManager.start();
+                    mIsAdDisplayed = true;
+                    Log.d("ima_ads", "adEvent LOADED:started");
+                }
+                mIsAdDisplayed = true;
+                break;
+            }
+            case STARTED : {
+
+                Log.d("ima_ads", "adEvent STARTED");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent STARTED:pause");
+                }
+                break;
+            }
+            case FIRST_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent FIRST_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
+                }
+                break;
+            }
+            case THIRD_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent THIRD_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                   // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
+                }
+                break;
+            }
+            case CONTENT_PAUSE_REQUESTED : {
+
+                Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
+                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
+
+                //isAdcalling = true;
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
+                }else{
+                    mIsAdDisplayed = true;
+                    pauseVideo();
+                }
+
+
+                break;
+            }
+            case CONTENT_RESUME_REQUESTED : {
+                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
+                // and you should start playing your content.
+
+                Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
+                mIsAdDisplayed = false;
+                // isAdcalling = false;
+
+                playVideo();
+
+                break;
+            }
+            case COMPLETED : {
+                Log.d("ima_ads", "adEvent COMPLETED");
+
+                break;
+            }
+            case ALL_ADS_COMPLETED : {
+                Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
+                if(mAdsManager != null){
+                    mIsAdDisplayed = false;
+                    mAdsManager.destroy();
+                    mAdsManager = null;
+                    Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:pause");
+                }
+
+                break;
+            }
+        }
+    }
+    private void callAddErrorAnalyticsApi(String errorCode, String errorMessage){
+        //Uncomment to enable analytics api call
+        Calendar currentCalendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+        long epoch = currentCalendar.getTimeInMillis() / 1000L;
+
+        String device_id = SharedPreferenceUtility.getAdvertisingId();
+
+        JsonObject errorDetails = new JsonObject();
+        errorDetails.addProperty("device_id",device_id);
+        errorDetails.addProperty("user_id",String.valueOf(SharedPreferenceUtility.getUserId()));
+        errorDetails.addProperty("event_type","POP08");
+        errorDetails.addProperty("error_code",errorCode);
+        errorDetails.addProperty("error_message",errorMessage);
+        errorDetails.addProperty("timestamp",String.valueOf(epoch));
+        errorDetails.addProperty("app_id", SharedPreferenceUtility.getApp_Id());
+        errorDetails.addProperty("session_id", SharedPreferenceUtility.getSession_Id());
+        errorDetails.addProperty("video_id","0");
+        errorDetails.addProperty("channel_id",channelId);
+        errorDetails.addProperty("video_title",channelTitle);
+        errorDetails.addProperty("publisherid",SharedPreferenceUtility.getPublisher_id());
+
+        try{
+            Log.e("000##",": api call is about to be made:  "+"POP08"+" - ");
+
+            AnalyticsApi.AnalyticsServiceScalar analyticsServiceScalar = AnalyticsApi.createScalar();
+            Call<String> stringCall = analyticsServiceScalar.eventCall2(errorDetails);
+            stringCall.enqueue(new Callback<String>() {
+                @Override
+                public void onResponse(Call<String> call, Response<String> response) {
+                    Log.e("000##","success: "+"POP08"+" - "+response.code());
+                }
+
+                @Override
+                public void onFailure(Call<String> call, Throwable t) {
+                    Log.e("000##","failure: "+"POP08"+" - "+t.getMessage());
+                }
+            });
+        }catch(Exception ex){
+            Log.e("000##",": exception :  "+"POP08"+" - "+ex.toString());
+        }
+    }
+
+
 }

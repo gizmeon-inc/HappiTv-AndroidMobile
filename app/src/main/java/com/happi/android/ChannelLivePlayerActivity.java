@@ -41,6 +41,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.exoplayer2.metadata.Metadata;
+import com.google.android.exoplayer2.metadata.MetadataOutput;
+import com.google.android.exoplayer2.metadata.id3.TextInformationFrame;
 import com.happi.android.adapters.ChannelSuggestionAdapter;
 import com.happi.android.adapters.LiveScheduleAdapter;
 import com.happi.android.adapters.VideoListAdapter_New;
@@ -64,6 +67,7 @@ import com.happi.android.exoplayercontroller.EventLogger;
 import com.happi.android.exoplayercontroller.TrackSelectionHelper;
 import com.happi.android.models.ASTVHome;
 import com.happi.android.models.ChannelSubscriptionModel;
+import com.happi.android.models.IPAddressModel;
 import com.happi.android.models.ScheduleUpdatedModel;
 import com.happi.android.models.TokenResponse;
 import com.happi.android.models.UserSubscriptionModel;
@@ -73,6 +77,7 @@ import com.happi.android.recyclerview.AnimationItem;
 import com.happi.android.recyclerview.GridRecyclerView;
 import com.happi.android.utils.AppUtils;
 import com.happi.android.utils.ConstantUtils;
+import com.happi.android.utils.FormatAdUrl;
 import com.happi.android.webservice.AnalyticsApi;
 import com.happi.android.webservice.ApiClient;
 import com.bumptech.glide.Glide;
@@ -273,15 +278,15 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     private RelativeLayout rl_btm_navigation_channel;
     private int actionBarHeight = 0;
 
+    //ad
+    private IPAddressModel ipAddressModel;
+    private boolean shouldAutoPlay = true;
+    private Long playerDuration  = 0L;
+    private Long playerCurrentPosition  = 0L;
     @Override
     public void onClick(View view) {
     }
 
-
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -433,15 +438,6 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* if(timerSChedule != null) {
-                    timerSChedule.cancel();
-                }
-                if(HappiApplication.isIsNewSubscriber()){
-                    goToHome();
-                }else{
-                    ChannelLivePlayerActivity.super.onBackPressed();
-                    finish();
-                }*/
                 onBackPressed();
             }
         });
@@ -455,21 +451,12 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         tv_channel_title_live = exo_player_view.findViewById(R.id.tv_channel_title_live);
         tv_channel_title_live.setVisibility(View.VISIBLE);
         tv_channel_title_live.setSelected(true);
-        // play = exo_player_view.findViewById(R.id.exo_play);
-        // play.setVisibility(View.INVISIBLE);
-        // pause = exo_player_view.findViewById(R.id.exo_pause);
-        //  pause.setVisibility(View.INVISIBLE);
+
 
         exo_fullscreen_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*if (!isExoPlayerFullscreen) {
 
-                    openFullscreen();
-                } else {
-
-                    closeFullscreen();
-                }*/
                 if (!isExoPlayerFullscreen) {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 } else {
@@ -515,28 +502,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                             //   Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER ELSE", Toast.LENGTH_SHORT).show();
 
                         }
-                        /*if (orientation == 0 || orientation == 180) {
-                            Toast.makeText(HappiApplication.getCurrentContext(), "portrait",
-                                    Toast.LENGTH_LONG).show();
-                            if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
-                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                            }
-                        } else if (orientation == 90 || orientation == 270) {
-                            Toast.makeText(HappiApplication.getCurrentContext(), "landscape",
-                                    Toast.LENGTH_LONG).show();
-                            if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
-                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                            }
-                        }*/
 
-                        /*if(isOrientationChange){
-//                            Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER FIN", Toast.LENGTH_SHORT).show();
-//                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-
-
-
-
-                        }*/
                     }
 
                     private boolean epsilonCheck(int a, int b, int epsilon) {
@@ -551,30 +517,14 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         if (savedInstanceState != null) {
             isExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
+
         mSdkFactory = ImaSdkFactory.getInstance();
         AdDisplayContainer adDisplayContainer = mSdkFactory.createAdDisplayContainer();
-        adDisplayContainer.setAdContainer(mAdUiContainer);
+        adDisplayContainer.setAdContainer(exo_player_view.getOverlayFrameLayout());
         ImaSdkSettings settings = mSdkFactory.createImaSdkSettings();
-        mAdsLoader = mSdkFactory.createAdsLoader(this, settings, adDisplayContainer);
-        mAdsLoader.addAdErrorListener(this);
-        mAdsLoader.addAdsLoadedListener(new AdsLoader.AdsLoadedListener() {
-            @Override
-            public void onAdsManagerLoaded(AdsManagerLoadedEvent adsManagerLoadedEvent) {
-                // Ads were successfully loaded, so get the AdsManager instance. AdsManager has
-                // events for ad playback and errors.
-
-                AdsRenderingSettings adsRenderingSettings = mSdkFactory.createAdsRenderingSettings();
-                //adsRenderingSettings.setEnablePreloading(true);
-                adsRenderingSettings.setDisableUi(false);
-//                Set<UiElement> var= Collections.emptySet();
-//                adsRenderingSettings.setUiElements(var);
-
-                mAdsManager = adsManagerLoadedEvent.getAdsManager();
-                mAdsManager.addAdErrorListener(ChannelLivePlayerActivity.this);
-                mAdsManager.addAdEventListener(ChannelLivePlayerActivity.this);
-                mAdsManager.init(adsRenderingSettings);
-            }
-        });
+        mAdsLoader = mSdkFactory.createAdsLoader(
+                this, settings, adDisplayContainer
+        );
 
     }
 
@@ -747,6 +697,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     }
     @Override
     protected void onResume() {
+        shouldAutoPlay = true;
         HappiApplication.setCurrentContext(this);
         updateMenuItem(SharedPreferenceUtility.getCurrentBottomMenu());
         if (AppUtils.isDeviceRooted()) {
@@ -766,12 +717,11 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             //  mMediaRouteButton.setVisibility(View.VISIBLE);
             mMediaRouteButton.setVisibility(View.INVISIBLE);
         }
-       /* if (mAdsManager != null && mIsAdDisplayed) {
+        if (mAdsManager != null && mIsAdDisplayed) {
             mAdsManager.resume();
-        } else if (exoPlayer != null) {
+        } else{
             resumePlayer();
-        }*/
-        resumePlayer();
+        }
         super.onResume();
 
 
@@ -934,7 +884,8 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             exo_player_view.setVisibility(View.VISIBLE);
             if (exoPlayer == null) {
                 LIVE_URL = pHome.getLiveLink();
-                getToken(pHome);
+                //getToken(pHome);
+                ipAddressApiCall(pHome);
             }
         } else {
             isLiveAvailable = false;
@@ -1014,6 +965,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
     @Override
     protected void onDestroy() {
+        shouldAutoPlay = false;
         if(timerSChedule != null) {
             timerSChedule.cancel();
         }
@@ -1034,6 +986,13 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
         safelyDispose(compositeDisposable);
 
+        if(mAdsManager != null) {
+            mAdsManager.removeAdEventListener(this);
+            mAdsLoader.removeAdErrorListener(this);
+            mAdsManager.destroy();
+            mAdsManager = null;
+            Log.d("ima_ads", "ondestroy");
+        }
         if (exoPlayer != null) {
             exoPlayer.release();
         }
@@ -1057,6 +1016,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     }
 
     private void resumePlayer() {
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent_live).setVisibility(View.VISIBLE);
         if (exoPlayer != null) {
             exoPlayer.setPlayWhenReady(true);
         }
@@ -1064,27 +1024,22 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
     @Override
     protected void onPause() {
- /*       super.onPause();
-        releasePlayer();
-*/
 
+        shouldAutoPlay = false;
         //AD INSERTION ***************
-       /* if (mAdsManager != null && mIsAdDisplayed) {
+        if (mAdsManager != null && mIsAdDisplayed) {
             mAdsManager.pause();
         } else {
             releasePlayer();
-        }*/
+        }
         //mRewardedVideoAd.pause(this);
-        releasePlayer();
         super.onPause();
 
     }
 
     private void getToken(ASTVHome pHome) {
         objectHome = pHome;
-        //ApiClient.UsersService usersService = ApiClient.create();
         ApiClient.UsersService usersService = ApiClient.createToken();
-        //Disposable tokenDisposable = usersService.getVideoTokenLive(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
         Disposable tokenDisposable = usersService.getVideoToken(HappiApplication.getAppToken(), SharedPreferenceUtility.getPublisher_id())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -1212,7 +1167,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         // loadVideoList();
         loadVodToLive();
         // loadScheduleDetails();
-        ipAddressApiCall();
+        //ipAddressApiCall();
     }
     private void loadScheduleDetails(){
 
@@ -1465,25 +1420,28 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             String adTagUriString = "";
 
             try {
-                //  adTagUriString = FormatAdUrl.formatChannelAdUrl(pHome, ipAddressModel);
+                Log.d("ima_ads", "getAd_link>>"+pHome.getAdLink());
+                  adTagUriString = FormatAdUrl.formatChannelAdUrl(pHome, ipAddressModel);
+                  Log.e("ADTAG", adTagUriString);
+
+                 initVastAd(adTagUriString);
             } catch (NullPointerException e) {
                 e.printStackTrace();
             }
             boolean needNewPlayer = exoPlayer == null;
 
             Log.e("needNewPlayer", needNewPlayer + "");
-            try {
-                // adpodURL = pHome.getAd_pod_url().trim();
+            /*try {
+                 adpodURL = pHome.getAd_pod_url().trim();
                 // Log.e("adpodURLTry", adpodURL + "");
             } catch (NullPointerException e) {
                 // Log.e("adpodURLCatch", adpodURL + "adpodURLCatch");
                 e.printStackTrace();
 
-            }
+            }*/
 
             Log.e("ADTAG", adTagUriString);
             if (needNewPlayer) {
-                boolean shouldAutoPlay = true;
                 TrackSelection.Factory adaptiveTrackSelectionFactory = new AdaptiveTrackSelection.Factory(BANDWIDTH_METER);
                 DefaultTrackSelector trackSelector1 = new DefaultTrackSelector(adaptiveTrackSelectionFactory);
                 TrackSelectionHelper trackSelectionHelper = new TrackSelectionHelper(trackSelector1, adaptiveTrackSelectionFactory);
@@ -1665,7 +1623,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         } catch (Exception e) {
             Log.e("MainAcvtivity error", " exoplayer error " + e.toString());
         }
-       /* exoPlayer.addMetadataOutput(new MetadataOutput() {
+      /*  exoPlayer.addMetadataOutput(new MetadataOutput() {
             @Override
             public void onMetadata(Metadata metadata) {
 
@@ -1818,6 +1776,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
     }
 
 
+/*
     private void requestAds(String adTagUrl) {
 
         if (mAdsManager != null) {
@@ -1839,6 +1798,7 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         });
         mAdsLoader.requestAds(request);
     }
+*/
 
     private DataSource.Factory buildDataSourceFactory(boolean useBandwidthMeter) {
         return buildDataSourceFactory(useBandwidthMeter ? BANDWIDTH_METER : null);
@@ -1876,11 +1836,61 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                 .getItem(adapterPosition).getShow_id());
 
     }
+    private void initVastAd(String adRulesURL) {
+        // Add listeners for when ads are loaded and for errors.
+        mAdsLoader.addAdErrorListener(this);
+        mAdsLoader.addAdsLoadedListener(new com.google.ads.interactivemedia.v3.api.AdsLoader.AdsLoadedListener() {
+            @Override
+            public void onAdsManagerLoaded(AdsManagerLoadedEvent adsManagerLoadedEvent) {
+                // Ads were successfully loaded, so get the AdsManager instance. AdsManager has
+                // events for ad playback and errors.
+                mAdsManager = adsManagerLoadedEvent.getAdsManager();
+                // Attach event and error event listeners.
+                mAdsManager.addAdErrorListener(ChannelLivePlayerActivity.this);
+                mAdsManager.addAdEventListener(ChannelLivePlayerActivity.this);
+                mAdsManager.init();
+            }
+        });
+        requestAds(adRulesURL);
+    }
+    private void requestAds(String adTagUrl) { // Create the ads request.
+        if (adTagUrl.length() > 0) {
+            //  if (!isAdcalling) {
+            //      isAdcalling = true;
+            Log.d("ima_ads", "adTagUrl>>"+adTagUrl);
+            AdsRequest request = mSdkFactory.createAdsRequest();
+            request.setAdTagUrl(adTagUrl);
+            request.setContentProgressProvider(new ContentProgressProvider() {
+                @Override
+                public VideoProgressUpdate getContentProgress() {
+
+                    onPlayerSeekPosition();
+                    if (mIsAdDisplayed || playerDuration <= 0) {
+                        return VideoProgressUpdate.VIDEO_TIME_NOT_READY;
+                    } else {
+                        return new VideoProgressUpdate(
+                                playerCurrentPosition,
+                                playerDuration );
+                    }
+                }
+            });
+
+            // Request the ad. After the ad is loaded, onAdsManagerLoaded() will be called.
+            mAdsLoader.requestAds(request);
+            // }
+
+        }
+    }
+    void onPlayerSeekPosition(
+    ) {
+        playerCurrentPosition = exoPlayer.getCurrentPosition();
+        playerDuration = exoPlayer.getDuration();
+    }
 
     @Override
     public void onAdError(AdErrorEvent adErrorEvent) {
 
-        if (mAdsManager != null) {
+       /* if (mAdsManager != null) {
             mAdsManager.destroy();
             mAdsManager = null;
         }
@@ -1897,18 +1907,57 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         }
 
         AdError adError = adErrorEvent.getError();
-        callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
-    }
+        callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());*/
 
+        try {
+            int errorCodeNumber = adErrorEvent.getError().getErrorCodeNumber();
+            int errorNumber = adErrorEvent.getError().getErrorCode().getErrorNumber();
+            String errorType = adErrorEvent.getError().getErrorType().toString();
+            String errorMessage = adErrorEvent.getError().getMessage();
+            Log.d("ima_ads", "onAdError: " + errorCodeNumber + ">" + errorNumber + ">" + errorType + ">" + errorMessage);
+
+            //call analytics
+            AdError adError = adErrorEvent.getError();
+            callAddErrorAnalyticsApi(String.valueOf(adError.getErrorCode().getErrorNumber()), adError.getMessage().toString());
+
+
+            //if (isAdcalling) {
+            Log.d(
+                    "ima_ads",
+                    "adEvent errorCodeNumber: " + errorCodeNumber + " errorNumber: " + errorNumber + " errorType: " + errorType + " errorMessage: " + errorMessage
+            );
+        } catch (Exception ex) {
+            Log.d("ima_ads", "onAdError: catch");
+
+        }
+
+        //isAdcalling = false
+
+        playVideo();
+    }
+    private void pauseVideo() {
+        Log.d("ima_ads", "pauseVideo");
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent_live).setVisibility(View.INVISIBLE);
+        if(exoPlayer != null && exoPlayer.getPlayWhenReady()){
+            exoPlayer.setPlayWhenReady(false);
+        }
+    }
+    private void playVideo() {
+        Log.d("ima_ads", "playVideo");
+        exo_player_view.findViewById(R.id.ll_exoplayer_parent_live).setVisibility(View.VISIBLE);
+        if(exoPlayer != null && !exoPlayer.getPlayWhenReady() && shouldAutoPlay){
+            exoPlayer.setPlayWhenReady(true);
+        }
+    }
     @Override
     public void onAdEvent(AdEvent adEvent) {
-        switch (adEvent.getType()) {
+      /*  switch (adEvent.getType()) {
             case LOADED:
                 mAdsManager.start();
-                /*if(isFirstAd){
+                *//*if(isFirstAd){
                     mAdsManager.start();
                     isFirstAd=false;
-                }*/
+                }*//*
                 break;
             case CONTENT_PAUSE_REQUESTED:
                 mIsAdDisplayed = true;
@@ -1933,6 +1982,95 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
                 break;
             default:
                 break;
+        }*/
+        switch (adEvent.getType()) {
+
+            case LOADED : {
+                Log.d("ima_ads", "adEvent LOADED");
+                if(shouldAutoPlay){
+                    mAdsManager.start();
+                    mIsAdDisplayed = true;
+                    Log.d("ima_ads", "adEvent LOADED:started");
+                }
+
+                break;
+            }
+            case STARTED : {
+
+                Log.d("ima_ads", "adEvent STARTED");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent STARTED:pause");
+                }
+                break;
+            }
+            case FIRST_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent FIRST_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
+                }
+                break;
+            }
+            case THIRD_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent THIRD_QUARTILE");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
+                }
+                break;
+            }
+            case CONTENT_PAUSE_REQUESTED : {
+
+                Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
+                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
+
+                //isAdcalling = true;
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    //mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
+                }else{
+                    mIsAdDisplayed = true;
+                    pauseVideo();
+                }
+
+
+                break;
+            }
+            case CONTENT_RESUME_REQUESTED : {
+                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
+                // and you should start playing your content.
+
+                Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
+                mIsAdDisplayed = false;
+                // isAdcalling = false;
+
+                playVideo();
+
+                break;
+            }
+            case COMPLETED : {
+                Log.d("ima_ads", "adEvent COMPLETED");
+
+                break;
+            }
+            case ALL_ADS_COMPLETED : {
+                Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
+                if(mAdsManager != null){
+                    mIsAdDisplayed = false;
+                    mAdsManager.destroy();
+                    mAdsManager = null;
+                    Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:pause");
+                }
+
+                break;
+            }
         }
     }
 
@@ -1962,14 +2100,16 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
         compositeDisposable.add(tokenDisposable);
     }
 
-    private void ipAddressApiCall() {
+    private void ipAddressApiCall(ASTVHome data) {
 
         ApiClient.IpAddressApiService ipAddressApiService = ApiClient.createIPService();
         Disposable ipDisposable = ipAddressApiService.fetchIPAddress()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ipAddressModel -> {
-                    HappiApplication.setIpAddress(ipAddressModel.getQuery());
+                .subscribe(ipAddressModelResponse -> {
+                    HappiApplication.setIpAddress(ipAddressModelResponse.getQuery());
+                    ipAddressModel = ipAddressModelResponse;
+                    getToken(data);
                 }, throwable -> {
 
                 });
@@ -2670,5 +2810,12 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             }
         }.start();
 
+    }
+
+    @Override
+    protected void onStop() {
+        shouldAutoPlay = false;
+        releasePlayer();
+        super.onStop();
     }
 }
