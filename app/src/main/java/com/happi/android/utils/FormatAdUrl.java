@@ -231,10 +231,10 @@ public class FormatAdUrl {
         url = url.replace("[PL]", "" + 0);
 
         if (advertisingId_fromThread != null) {
-            url = url.replace("[USER_ID]", advertisingId_fromThread);
+            url = url.replace("[USER_ID]", String.valueOf(SharedPreferenceUtility.getUserId()));
             url = url.replace("[UUID]", advertisingId_fromThread);
         } else {
-            url = url.replace("[USER_ID]", device_id);
+            url = url.replace("[USER_ID]", String.valueOf(SharedPreferenceUtility.getUserId()));
             url = url.replace("[UUID]", device_id);
         }
 
