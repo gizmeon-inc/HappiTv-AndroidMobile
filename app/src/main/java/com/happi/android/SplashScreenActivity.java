@@ -63,6 +63,8 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     String showId = "empty";
 
     private MediaPlayer mp;
+    private boolean isAudioCompleted = false;
+    private boolean isApiCompleted = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,10 +101,26 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
         setCredentials();
         //getSessionToken();
 
-
+        mp = MediaPlayer.create(getBaseContext(), R.raw.splashmp3); /*Gets your
+          soundfile from res/raw/sound.ogg */
+        mp.setOnCompletionListener(mediaPlayerListener);
+        if(isNetworkConnected()){
+                mp.start(); //Starts your sound
+                //Continue with your run/thread-code here
+                isAudioCompleted = false;
+        }else{
+            isAudioCompleted = true;
+        }
 
     }
 
+    private MediaPlayer.OnCompletionListener mediaPlayerListener = new MediaPlayer.OnCompletionListener() {
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            isAudioCompleted = true;
+            checkAndNav();
+        }
+    };
     private void checkLocationPermission(){
         if(SharedPreferenceUtility.isLocationAccepted() == 2){
             if (ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -184,17 +202,21 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
     @Override
     protected void onStart() {
-
         super.onStart();
        // check();
+
         getPubID();
-        Handler handlerSound = new Handler();
+       /* Handler handlerSound = new Handler();
         handlerSound.postDelayed(() -> {
-            mp = MediaPlayer.create(getBaseContext(), R.raw.splashmp3); /*Gets your
-          soundfile from res/raw/sound.ogg */
-            mp.start(); //Starts your sound
-            //Continue with your run/thread-code here
-        }, 400);
+
+            if(isResume){
+                mp.start(); //Starts your sound
+                //Continue with your run/thread-code here
+            }
+
+        }, 400);*/
+
+
 
     }
 
@@ -221,11 +243,14 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
     @Override
     protected void onResume() {
+
         super.onResume();
+        HappiApplication.setCurrentContext(this);
 
         if (AppUtils.isDeviceRooted()) {
             showAlertDialogAndExitApp("This device is rooted. You can't use this app.");
         }
+
     }
 
 
@@ -255,44 +280,46 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
 
     private void checkAndNav() {
 
-            if (SharedPreferenceUtility.getUserId() == 0) {
+         if(isApiCompleted && isAudioCompleted){
+             if (SharedPreferenceUtility.getUserId() == 0) {
 
-               final Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                    goToLoginPage();
-                }, 500);
-            } else {
+                 final Handler handler = new Handler();
+                 handler.postDelayed(() -> {
+                     goToLoginPage();
+                 }, 500);
+             } else {
 
-                final Handler handler = new Handler();
-               handler.postDelayed(() -> {
-                   if(SharedPreferenceUtility.isRegistration_mandatory_flag()){
-                       if(SharedPreferenceUtility.getGuest()){
+                 final Handler handler = new Handler();
+                 handler.postDelayed(() -> {
+                     if(SharedPreferenceUtility.isRegistration_mandatory_flag()){
+                         if(SharedPreferenceUtility.getGuest()){
 
-                           SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
-                           SharedPreferenceUtility.setGuest(false);
-                           SharedPreferenceUtility.setIsFirstTimeInstall(false);
-                           SharedPreferenceUtility.setChannelId(0);
-                           SharedPreferenceUtility.setShowId("0");
-                           SharedPreferenceUtility.setVideoId(0);
-                           SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
-                           SharedPreferenceUtility.setChannelTimeZone("");
-                           SharedPreferenceUtility.setSession_Id("");
-                           SharedPreferenceUtility.setPartnerId("");
-                           SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
-                           SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
+                             SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "", "", false, "");
+                             SharedPreferenceUtility.setGuest(false);
+                             SharedPreferenceUtility.setIsFirstTimeInstall(false);
+                             SharedPreferenceUtility.setChannelId(0);
+                             SharedPreferenceUtility.setShowId("0");
+                             SharedPreferenceUtility.setVideoId(0);
+                             SharedPreferenceUtility.setCurrentBottomMenuIndex(0);
+                             SharedPreferenceUtility.setChannelTimeZone("");
+                             SharedPreferenceUtility.setSession_Id("");
+                             SharedPreferenceUtility.setPartnerId("");
+                             SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
+                             SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
 
-                           HappiApplication.setSub_id(new ArrayList<>());
+                             HappiApplication.setSub_id(new ArrayList<>());
 
-                           goToLoginPage();
-                       }else{
-                           checkIfSubscriptionMandatory();
-                       }
-                   }else{
-                       checkIfSubscriptionMandatory();
-                   }
-                   //getSessionToken();
-                }, 500);
-            }
+                             goToLoginPage();
+                         }else{
+                             checkIfSubscriptionMandatory();
+                         }
+                     }else{
+                         checkIfSubscriptionMandatory();
+                     }
+                     //getSessionToken();
+                 }, 500);
+             }
+         }
 
     }
 
@@ -385,40 +412,6 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
         compositeDisposable.add(tokenDisposable);
     }
 
-    private void loginRemovalApiCall() {
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("uid", "" + SharedPreferenceUtility.getUserId());
-        jsonObject.addProperty("fcm_token", SharedPreferenceUtility.getFcmToken());
-
-        ApiClient.UsersService usersService = ApiClient.create();
-        Disposable disposable = usersService.LoginRemoval(HappiApplication.getAppToken(),
-                jsonObject)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(loginResponseModel -> {
-
-                    if (loginResponseModel.getStatus() == 1) {
-
-                        if (loginResponseModel.getData().get(0).isValidity()) {
-
-                            navigate();
-                        } else {
-
-                            SharedPreferenceUtility.saveUserDetails(0, "", "", "", "", "", "",
-                                    "", false,"");
-                            goToLoginPage();
-                        }
-                    } else if (loginResponseModel.getStatus() == 2) {
-
-                        navigate();
-                    }
-                }, throwable -> {
-
-                    Toast.makeText(this, getString(R.string.server_error), Toast.LENGTH_SHORT).show();
-                });
-        compositeDisposable.add(disposable);
-    }
 
     //================================================
 
@@ -521,6 +514,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                         HappiApplication.setRegion(addresses.get(0).getAdminArea());
                         SharedPreferenceUtility.setCountry(addresses.get(0).getCountryName());
                     }
+                    isApiCompleted = true;
                     checkAndNav();
                 } catch (Exception e) {
 
@@ -537,6 +531,7 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
         if (locationTrack != null) {
             locationTrack.stopListener();
         }
@@ -567,10 +562,10 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
                     HappiApplication.setRegion(ipAddressModel.getRegion());
                     HappiApplication.setIpAddress(ipAddressModel.getQuery());
                     SharedPreferenceUtility.setCountry(ipAddressModel.getCountry());
-
+                    isApiCompleted = true;
                     checkAndNav();
                 }, throwable -> {
-
+                    isApiCompleted = true;
                     checkAndNav();
                 });
         compositeDisposable.add(ipDisposable);
@@ -673,8 +668,16 @@ public class SplashScreenActivity extends BaseActivity implements LocationTrack.
     @Override
     protected void onStop() {
         super.onStop();
+
         if(mp != null && mp.isPlaying()){ //Must check if it's playing, otherwise it may be a NPE
             mp.pause(); //Pauses the sound
+            isAudioCompleted = true;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
     }
 }
