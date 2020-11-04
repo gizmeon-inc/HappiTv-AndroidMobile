@@ -158,6 +158,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.google.ads.interactivemedia.v3.api.AdEvent.AdEventType.AD_PROGRESS;
+
 public class VideoPlayerActivity extends BaseActivity implements View.OnClickListener,
         AdErrorEvent.AdErrorListener, AdEvent.AdEventListener, Cast.MessageReceivedCallback,
         ShowList_adapter.itemClickListener,
@@ -1160,46 +1162,82 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     @Override
     public void onAdEvent(AdEvent adEvent) {
 
-        switch (adEvent.getType()) {
+       /* switch (adEvent.getType()) {
 
             case LOADED : {
                 Log.d("ima_ads", "adEvent LOADED");
-                if(shouldAutoPlay){
+                *//*if(shouldAutoPlay){
                     mAdsManager.start();
                     mIsAdDisplayed = true;
                     Log.d("ima_ads", "adEvent LOADED:started");
-                }
+                }else{
+                    Log.d("ima_ads", "adEvent LOADED:shouldAutoPlay F");
+                }*//*
                 mIsAdDisplayed = true;
+                mAdsManager.start();
                 break;
             }
             case STARTED : {
-
                 Log.d("ima_ads", "adEvent STARTED");
-                if(!shouldAutoPlay && mAdsManager != null){
+
+              *//*  if(mAdsManager == null){
+                    Log.d("ima_ads", "adEvent STARTED>>adsmanager null");
+                }else{
+                    Log.d("ima_ads", "adEvent STARTED>>adsmanager not null");
+                }
+                if(shouldAutoPlay){
+                    Log.d("ima_ads", "adEvent STARTED>>shouldAutoPlay true");
+                }else{
+                    Log.d("ima_ads", "adEvent STARTED>>shouldAutoPlay false");
+                }*//*
+               *//* if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     //mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent STARTED:pause");
-                }
+                }*//*
+                mIsAdDisplayed = true;
                 break;
             }
             case FIRST_QUARTILE : {
 
                 Log.d("ima_ads", "adEvent FIRST_QUARTILE");
-                if(!shouldAutoPlay && mAdsManager != null){
+               *//* if(mAdsManager == null){
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE>>adsmanager null");
+                }else{
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE>>adsmanager not null");
+                }
+                if(shouldAutoPlay){
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE>>shouldAutoPlay true");
+                }else{
+                    Log.d("ima_ads", "adEvent FIRST_QUARTILE>>shouldAutoPlay false");
+                }*//*
+               *//* if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     //mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
-                }
+                }*//*
+                mIsAdDisplayed = true;
                 break;
             }
             case THIRD_QUARTILE : {
 
                 Log.d("ima_ads", "adEvent THIRD_QUARTILE");
-                if(!shouldAutoPlay && mAdsManager != null){
+               *//* if(mAdsManager == null){
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE>>adsmanager null");
+                }else{
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE>>adsmanager not null");
+                }
+                if(shouldAutoPlay){
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE>>shouldAutoPlay true");
+                }else{
+                    Log.d("ima_ads", "adEvent THIRD_QUARTILE>>shouldAutoPlay false");
+                }*//*
+              *//*  if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     // mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
-                }
+                }*//*
+                mIsAdDisplayed = true;
                 break;
             }
             case CONTENT_PAUSE_REQUESTED : {
@@ -1208,16 +1246,27 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
 
                 //isAdcalling = true;
-                if(!shouldAutoPlay && mAdsManager != null){
+                *//*if(mAdsManager == null){
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED>>adsmanager null");
+                }else{
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED>>adsmanager not null");
+                }
+                if(shouldAutoPlay){
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED>>shouldAutoPlay true");
+                }else{
+                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED>>shouldAutoPlay false");
+                }*//*
+                *//*if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     //mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
                 }else{
                     mIsAdDisplayed = true;
                     pauseVideo();
-                }
+                }*//*
 
-
+                mIsAdDisplayed = true;
+                pauseVideo();
                 break;
             }
             case CONTENT_RESUME_REQUESTED : {
@@ -1244,8 +1293,184 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                     mAdsManager.destroy();
                     mAdsManager = null;
                     Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:pause");
+                }else{
+                    Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:mAdsManager NULL");
                 }
 
+                break;
+            }
+            case  AD_PROGRESS : {
+                Log.d("ima_ads", "adEvent AD_PROGRESS");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent AD_PROGRESS:pause");
+                }
+                break;
+            }
+            case  AD_BUFFERING : {
+                Log.d("ima_ads", "adEvent AD_BUFFERING");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent AD_BUFFERING:pause");
+                }
+                break;
+            }
+        }*/
+       /* switch (adEvent.getType()) {
+
+            case LOADED : {
+                Log.d("ima_ads", "adEvent LOADED");
+                mAdsManager.start();
+                mIsAdDisplayed = true;
+                break;
+            }
+            case STARTED : {
+                mIsAdDisplayed = true;
+                Log.d("ima_ads", "adEvent STARTED");
+                break;
+            }
+            case FIRST_QUARTILE : {
+                mIsAdDisplayed = true;
+                Log.d("ima_ads", "adEvent FIRST_QUARTILE");
+
+                break;
+            }
+            case THIRD_QUARTILE : {
+                mIsAdDisplayed = true;
+                Log.d("ima_ads", "adEvent THIRD_QUARTILE");
+
+                break;
+            }
+            case CONTENT_PAUSE_REQUESTED : {
+
+                Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
+                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
+                mIsAdDisplayed = true;
+                //isAdcalling = true;
+
+                pauseVideo();
+
+                break;
+            }
+            case CONTENT_RESUME_REQUESTED : {
+                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
+                // and you should start playing your content.
+
+                Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
+                mIsAdDisplayed = false;
+                // isAdcalling = false;
+
+                playVideo();
+
+                break;
+            }
+            case COMPLETED : {
+                Log.d("ima_ads", "adEvent COMPLETED");
+
+                break;
+            }
+            case ALL_ADS_COMPLETED : {
+                Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
+                if(mAdsManager != null){
+                    mAdsManager.destroy();
+                    mAdsManager = null;
+                }
+                mIsAdDisplayed = false;
+                break;
+            }
+            case  AD_PROGRESS : {
+                Log.d("ima_ads", "adEvent AD_PROGRESS");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent AD_PROGRESS:pause");
+                }
+                break;
+            }
+        }*/
+
+
+
+
+        switch (adEvent.getType()) {
+
+            case LOADED : {
+                Log.d("ima_ads", "adEvent LOADED");
+                mAdsManager.start();
+                break;
+            }
+            case STARTED : {
+
+                Log.d("ima_ads", "adEvent STARTED");
+                mIsAdDisplayed = true;
+                break;
+            }
+            case FIRST_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent FIRST_QUARTILE");
+                mIsAdDisplayed = true;
+                break;
+            }
+            case THIRD_QUARTILE : {
+
+                Log.d("ima_ads", "adEvent THIRD_QUARTILE");
+                mIsAdDisplayed = true;
+                break;
+            }
+            case CONTENT_PAUSE_REQUESTED : {
+
+                Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
+                // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
+                mIsAdDisplayed = true;
+
+                pauseVideo();
+
+                break;
+            }
+            case CONTENT_RESUME_REQUESTED : {
+                // AdEventType.CONTENT_RESUME_REQUESTED is fired when the ad is completed
+                // and you should start playing your content.
+
+                Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
+                mIsAdDisplayed = false;
+
+                playVideo();
+
+                break;
+            }
+            case COMPLETED : {
+                Log.d("ima_ads", "adEvent COMPLETED");
+
+                break;
+            }
+            case ALL_ADS_COMPLETED : {
+                Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
+                if(mAdsManager != null){
+                    mAdsManager.destroy();
+                    mAdsManager = null;
+                    mIsAdDisplayed = false;
+                }
+
+                break;
+            }
+            case  AD_PROGRESS : {
+                Log.d("ima_ads", "adEvent AD_PROGRESS");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent AD_PROGRESS:pause");
+                }
+                break;
+            }
+            case  AD_BUFFERING : {
+                Log.d("ima_ads", "adEvent AD_BUFFERING");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent AD_BUFFERING:pause");
+                }
                 break;
             }
         }

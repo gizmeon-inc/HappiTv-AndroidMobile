@@ -1997,59 +1997,34 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
             case LOADED : {
                 Log.d("ima_ads", "adEvent LOADED");
-                if(shouldAutoPlay){
-                    mAdsManager.start();
-                    mIsAdDisplayed = true;
-                    Log.d("ima_ads", "adEvent LOADED:started");
-                }
-                mIsAdDisplayed = true;
+                mAdsManager.start();
                 break;
             }
             case STARTED : {
 
                 Log.d("ima_ads", "adEvent STARTED");
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    //mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent STARTED:pause");
-                }
+                mIsAdDisplayed = true;
                 break;
             }
             case FIRST_QUARTILE : {
 
                 Log.d("ima_ads", "adEvent FIRST_QUARTILE");
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    //mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
-                }
+                mIsAdDisplayed = true;
                 break;
             }
             case THIRD_QUARTILE : {
 
                 Log.d("ima_ads", "adEvent THIRD_QUARTILE");
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    // mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
-                }
+                mIsAdDisplayed = true;
                 break;
             }
             case CONTENT_PAUSE_REQUESTED : {
 
                 Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED");
                 // AdEventType.CONTENT_PAUSE_REQUESTED is fired immediately before a video ad is played.
+                mIsAdDisplayed = true;
 
-                //isAdcalling = true;
-                if(!shouldAutoPlay && mAdsManager != null){
-                    mAdsManager.pause();
-                    //mIsAdDisplayed = false;
-                    Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
-                }else{
-                    mIsAdDisplayed = true;
-                    pauseVideo();
-                }
-
+                pauseVideo();
 
                 break;
             }
@@ -2059,7 +2034,6 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
 
                 Log.d("ima_ads", "adEvent CONTENT_RESUME_REQUESTED");
                 mIsAdDisplayed = false;
-                // isAdcalling = false;
 
                 playVideo();
 
@@ -2073,12 +2047,29 @@ public class ChannelLivePlayerActivity extends BaseActivity implements View.OnCl
             case ALL_ADS_COMPLETED : {
                 Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED");
                 if(mAdsManager != null){
-                    mIsAdDisplayed = false;
                     mAdsManager.destroy();
                     mAdsManager = null;
-                    Log.d("ima_ads", "adEvent ALL_ADS_COMPLETED:pause");
+                    mIsAdDisplayed = false;
                 }
 
+                break;
+            }
+            case  AD_PROGRESS : {
+                Log.d("ima_ads", "adEvent AD_PROGRESS");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent AD_PROGRESS:pause");
+                }
+                break;
+            }
+            case  AD_BUFFERING : {
+                Log.d("ima_ads", "adEvent AD_BUFFERING");
+                if(!shouldAutoPlay && mAdsManager != null){
+                    mAdsManager.pause();
+                    // mIsAdDisplayed = false;
+                    Log.d("ima_ads", "adEvent AD_BUFFERING:pause");
+                }
                 break;
             }
         }
