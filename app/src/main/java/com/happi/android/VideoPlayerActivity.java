@@ -220,7 +220,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     public static final String KEY_DESCRIPTION = "token";
     private static final String TAG = "VideoProvider";
     private static final String NAMESPACE = "urn:x-cast:com.google.ads.ima.cast";
-    // private static final String NAMESPACE = "urn:x-cast:"+ConstantUtils.BASE_URL;
+     //private static final String NAMESPACE = "urn:x-cast:"+ConstantUtils.BASE_URL;
 
     /*Analytics*/
 
@@ -273,7 +273,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onStatusUpdated() {
                 super.onStatusUpdated();
-                Log.v("okhttp","VIDEOPLAYER>>STATUS UPDTD");
+                Log.v("ima_ads","VIDEOPLAYER>>STATUS UPDTD");
 
                 Intent intent = new Intent(VideoPlayerActivity.this, ExpandedControlsActivity.class);
                 startActivity(intent);
@@ -310,7 +310,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         MediaLoadOptions mediaLoadOptions = new MediaLoadOptions.Builder().build();
         try {
             Log.d(TAG, "loading media");
-            Log.v("okhttp","VIDEOPLAYER>>.LOAD");
+            Log.v("ima_ads","VIDEOPLAYER>>.LOAD");
 
             remoteMediaClient.load(mSelectedMedia, mediaLoadOptions).setResultCallback(
                     new ResultCallback<RemoteMediaClient.MediaChannelResult>() {
@@ -322,13 +322,13 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                                 // are multiple ad breaks. To request a single ad use same the same
                                 // message with current time as 0.
 
-                                // sendMessage("requestAd," + mAdTagUrl + "," + 0);
-
+                                 sendMessage("requestAd," + mAdTagUrl + "," + 0);
+                                Log.v("ima_ads","remoteMediaClient>>.LOAD SUCCESS");
 //                                if(selectedVideoModel.getVideo_name() != null && !selectedVideoModel.getVideo_name().isEmpty())
 //                                    sendMessage("requestAd," + selectedVideoModel.getVideo_name() + "," + 0);
 
                             } else {
-                                Log.e(TAG, "Error loading Media : "
+                                Log.e("ima_ads", "Error loading Media : "
                                         + mediaChannelResult.getStatus().getStatusCode());
                                 Log.v("okhttp","VIDEOPLAYER>> ERR"+mediaChannelResult.getStatus().getStatusCode());
 
@@ -336,8 +336,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                         }
                     });
         } catch (Exception e) {
-            Log.e(TAG, "Problem opening media during loading", e);
-            Log.v("okhttp","VIDEOPLAYER>>.LOAD CATCH");
+            Log.e("ima_ads", "Problem opening media during loading", e);
+            Log.v("ima_ads","VIDEOPLAYER>>.LOAD CATCH");
         }
     }
 
@@ -368,17 +368,25 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             Log.e(TAG, "Failed to add token to the json object", e);
         }
 
-        return new MediaInfo.Builder(url)
+        /*return new MediaInfo.Builder(url)
                 .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
                 .setContentType(mimeType)
                 .setMetadata(movieMetadata)
                 .setMediaTracks(tracks)
                 .setStreamDuration(duration * 1000)
                 .setCustomData(jsonObj)
+                .build();*/
+        return new MediaInfo.Builder(url)
+                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                .setContentType("videos/mp4")
+                .setMetadata(movieMetadata)
+                .setStreamDuration(duration * 1000)
                 .build();
-
     }
 
+ //for ad
+         float mAspectRatio = 72f / 128;
+         String mAdTagUrl = "https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpreonly&cmsid=496&vid=short_onecue&correlator=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -908,7 +916,8 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         try {
 
             if ((videoModel.getVideo_name() != null) && (videoModel.getVideo_name().length() > 0)) {
-                Uri videoURI = Uri.parse(videoModel.getVideo_name().trim());
+                //Uri videoURI = Uri.parse(videoModel.getVideo_name().trim());
+                Uri videoURI = Uri.parse("https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/hls/DesigningForGoogleCast.m3u8");
                 // Uri videoURI = Uri.parse("https://content.uplynk.com/channel/e1e04b2670174e93b5d5499ee73de095.m3u8");
                 // Uri videoURI = Uri.parse("http://34.198.11.177:3001/275/playlist.m3u8");
 
@@ -917,6 +926,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
                 String adTagUriString = "";
                 try {
+                    videoModel.setAd_link(mAdTagUrl);
                     Log.d("ima_ads", "getAd_link>>"+videoModel.getAd_link());
                     adTagUriString = FormatAdUrl.formatAdUrl(videoModel, ipAddressModelLocal);
                     Log.e("ADTAG", adTagUriString);
@@ -1457,7 +1467,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             }
             case  AD_PROGRESS : {
                 Log.d("ima_ads", "adEvent AD_PROGRESS");
-                if(!shouldAutoPlay && mAdsManager != null){
+                if((!shouldAutoPlay && mAdsManager != null) || (isCasting && mAdsManager != null)){
                     mAdsManager.pause();
                     // mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent AD_PROGRESS:pause");
@@ -1466,7 +1476,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             }
             case  AD_BUFFERING : {
                 Log.d("ima_ads", "adEvent AD_BUFFERING");
-                if(!shouldAutoPlay && mAdsManager != null){
+                if((!shouldAutoPlay && mAdsManager != null) || (isCasting && mAdsManager != null)){
                     mAdsManager.pause();
                     // mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent AD_BUFFERING:pause");
@@ -1485,6 +1495,12 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
     private void playVideo() {
         Log.d("ima_ads", "playVideo");
+        if(mAdsManager != null){
+            mAdsManager.destroy();
+            mAdsManager = null;
+            mIsAdDisplayed = false;
+            Log.d("ima_ads", "playVideo>>adsmanager destroy");
+        }
         exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
         if(exoPlayer != null && !exoPlayer.getPlayWhenReady() && shouldAutoPlay){
             exoPlayer.setPlayWhenReady(true);
@@ -1958,15 +1974,23 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                     case CastState.CONNECTED:
                         //disable exoplayer
                         isCasting = true;
-                        if (exoPlayer != null) {
+                       /* if (exoPlayer != null) {
                             exoPlayer.setPlayWhenReady(false);
-                        }
+                        }*/
+                        releasePlayer();
                         break;
                     case CastState.NOT_CONNECTED:
                         //enable exoplayer
                         isCasting = false;
-                        if (exoPlayer != null) {
+                       /* if (exoPlayer != null) {
                             exoPlayer.setPlayWhenReady(true);
+                        }*/
+                        if (mAdsManager != null && mIsAdDisplayed) {
+                            exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.GONE);
+                            mAdsManager.resume();
+                            Log.d("ima_ads", "onresume");
+                        } else{
+                            resumePlayer();
                         }
                         break;
                     default:
@@ -2319,25 +2343,25 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
     private void sendMessage(String message) {
         try {
-            Log.d(TAG, "Sending message: " + message);
+            Log.d("ima_ads", "Sending message: " + message);
             mCastSession.sendMessage(NAMESPACE, message)
                     .setResultCallback(new ResultCallback<Status>() {
                         @Override
                         public void onResult(Status result) {
                             if (!result.isSuccess()) {
-                                Log.e(TAG, "Sending message failed");
+                                Log.e("ima_ads", "Sending message failed");
                             }
                         }
                     });
         } catch (Exception e) {
-            Log.e(TAG, "Exception while sending message", e);
+            Log.e("ima_ads", "Exception while sending message", e);
         }
     }
 
 
     @Override
     public void onMessageReceived(CastDevice castDevice, String namespace, String message) {
-        Log.e("CAST", "onMessageReceived: " + message);
+        Log.e("ima_ads", "onMessageReceived: " + message);
     }
 
 

@@ -21,20 +21,16 @@ public class CastOptionsProvider implements OptionsProvider {
     @Override
     public CastOptions getCastOptions(Context context) {
         NotificationOptions notificationOptions = new NotificationOptions.Builder()
-//                .setActions(Arrays.asList(MediaIntentReceiver.ACTION_SKIP_NEXT,
-//                        MediaIntentReceiver.ACTION_TOGGLE_PLAYBACK,
-//                        MediaIntentReceiver.ACTION_STOP_CASTING), new int[]{1, 2})
-                // .setTargetActivityClassName(HomeActivity.class.getName())
                 .setTargetActivityClassName(ExpandedControlsActivity.class.getName())
                 .build();
         CastMediaOptions mediaOptions = new CastMediaOptions.Builder()
                 .setImagePicker(new ImagePickerImpl())
                 .setNotificationOptions(notificationOptions)
-                //.setExpandedControllerActivityClassName(HomeActivity.class.getName())
                 .setExpandedControllerActivityClassName(ExpandedControlsActivity.class.getName())
                 .build();
         return new CastOptions.Builder()
-                .setReceiverApplicationId("A2844572")
+                //.setReceiverApplicationId("A2844572")
+                .setReceiverApplicationId("4F8B3483")
                 .setCastMediaOptions(mediaOptions)
                 .build();
     }
