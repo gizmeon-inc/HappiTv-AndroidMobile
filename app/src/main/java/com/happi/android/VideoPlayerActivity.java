@@ -1706,15 +1706,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             resumePlayer();
         }*/
 
-        if (mAdsManager != null && mIsAdDisplayed) {
-            exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.GONE);
-            mAdsManager.resume();
-            Log.d("ima_ads", "onresume");
-        } else{
-            if(!isCasting){
-                resumePlayer();
-            }
-        }
+        resumePlayer();
 
         super.onResume();
 
@@ -1958,16 +1950,18 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                     case CastState.CONNECTED:
                         //disable exoplayer
                         isCasting = true;
-                        if (exoPlayer != null) {
+                        /*if (exoPlayer != null) {
                             exoPlayer.setPlayWhenReady(false);
-                        }
+                        }*/
+                        releasePlayer();
                         break;
                     case CastState.NOT_CONNECTED:
                         //enable exoplayer
                         isCasting = false;
-                        if (exoPlayer != null) {
+                        /*if (exoPlayer != null) {
                             exoPlayer.setPlayWhenReady(true);
-                        }
+                        }*/
+                        resumePlayer();
                         break;
                     default:
                         break;
@@ -2041,9 +2035,17 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void resumePlayer() {
-        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
-        if (exoPlayer != null) {
-            exoPlayer.setPlayWhenReady(true);
+        if (mAdsManager != null && mIsAdDisplayed) {
+            exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.GONE);
+            mAdsManager.resume();
+            Log.d("ima_ads", "onresume");
+        }else{
+            if(!isCasting){
+                exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
+                if (exoPlayer != null) {
+                    exoPlayer.setPlayWhenReady(true);
+                }
+            }
         }
     }
 
