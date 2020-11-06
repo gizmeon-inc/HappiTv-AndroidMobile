@@ -78,7 +78,7 @@ public class ApiClient {
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+                //.addInterceptor(interceptor)
                 /*.connectTimeout(3, TimeUnit.MINUTES)
                 .writeTimeout(3, TimeUnit.MINUTES)
                 .readTimeout(3, TimeUnit.MINUTES)*/
@@ -104,7 +104,7 @@ public class ApiClient {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+                //.addInterceptor(interceptor)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
@@ -119,7 +119,7 @@ public class ApiClient {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+               // .addInterceptor(interceptor)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL_TOKEN)
@@ -135,7 +135,7 @@ public class ApiClient {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(interceptor)
+               // .addInterceptor(interceptor)
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL)
