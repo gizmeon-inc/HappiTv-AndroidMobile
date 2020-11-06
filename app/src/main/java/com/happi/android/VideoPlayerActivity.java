@@ -510,17 +510,17 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             @Override
             public void onClick(View v) {
                 if (!isExoPlayerFullscreen) {
-                   // openFullscreen();
+                    // openFullscreen();
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-                   // Toast.makeText(HappiApplication.getCurrentContext(),"CLICK-openfullscr",Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(HappiApplication.getCurrentContext(),"CLICK-openfullscr",Toast.LENGTH_SHORT).show();
 
-                   // openFullscreenDialog();
+                    // openFullscreenDialog();
 
                 } else {
 
-                   // closeFullscreen();
+                    // closeFullscreen();
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                  //  Toast.makeText(HappiApplication.getCurrentContext(),"CLICK-closefullscr",Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(HappiApplication.getCurrentContext(),"CLICK-closefullscr",Toast.LENGTH_SHORT).show();
                     //closeFullscreenDialog();
                 }
             }
@@ -536,10 +536,10 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                         int portraitUpside = 180;
                         if(epsilonCheck(orientation, leftLandscape, epsilon) ||
                                 epsilonCheck(orientation, rightLandscape, epsilon)){
-                          //  Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND", Toast.LENGTH_SHORT).show();
+                            //  Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND", Toast.LENGTH_SHORT).show();
                             if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT){
                                 isOrientationChange = true;
-                          //      Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND CHANGE", Toast.LENGTH_SHORT).show();
+                                //      Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER LAND CHANGE", Toast.LENGTH_SHORT).show();
                                 //setTimer();
 
                             }
@@ -548,18 +548,18 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
                         }else if(epsilonCheck(orientation, portrait, epsilon) ||
                                 epsilonCheck(orientation, portraitUpside, epsilon)){
-                         //   Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT", Toast.LENGTH_SHORT).show();
+                            //   Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT", Toast.LENGTH_SHORT).show();
 
                             if(getRequestedOrientation() == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE){
                                 isOrientationChange = true;
-                            //    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT CHANGE", Toast.LENGTH_SHORT).show();
-                               // setTimer();
+                                //    Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER PORT CHANGE", Toast.LENGTH_SHORT).show();
+                                // setTimer();
 
                             }
 
                         }else{
                             isOrientationChange = false;
-                         //   Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER ELSE", Toast.LENGTH_SHORT).show();
+                            //   Toast.makeText(HappiApplication.getCurrentContext(), "LISTNER ELSE", Toast.LENGTH_SHORT).show();
 
                         }
                         /*if (orientation == 0 || orientation == 180) {
@@ -598,7 +598,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         if (savedInstanceState != null) {
             isExoPlayerFullscreen = savedInstanceState.getBoolean(STATE_PLAYER_FULLSCREEN);
         }
-      //  Toast.makeText(this,"ONCREATE: OR: "+getRequestedOrientation(),Toast.LENGTH_SHORT).show();
+        //  Toast.makeText(this,"ONCREATE: OR: "+getRequestedOrientation(),Toast.LENGTH_SHORT).show();
 
 
 
@@ -615,7 +615,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         iv_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               onBackPressed();
+                onBackPressed();
             }
         });
 
@@ -790,7 +790,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ipAddressModel -> {
                     HappiApplication.setIpAddress(ipAddressModel.getQuery());
-                     ipAddressModelLocal = ipAddressModel;
+                    ipAddressModelLocal = ipAddressModel;
                 }, throwable -> {
 
                 });
@@ -1190,7 +1190,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 }else{
                     Log.d("ima_ads", "adEvent STARTED>>shouldAutoPlay false");
                 }*//*
-               *//* if(!shouldAutoPlay && mAdsManager != null){
+         *//* if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     //mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent STARTED:pause");
@@ -1211,7 +1211,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 }else{
                     Log.d("ima_ads", "adEvent FIRST_QUARTILE>>shouldAutoPlay false");
                 }*//*
-               *//* if(!shouldAutoPlay && mAdsManager != null){
+         *//* if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     //mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent FIRST_QUARTILE:pause");
@@ -1232,7 +1232,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 }else{
                     Log.d("ima_ads", "adEvent THIRD_QUARTILE>>shouldAutoPlay false");
                 }*//*
-              *//*  if(!shouldAutoPlay && mAdsManager != null){
+         *//*  if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     // mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent THIRD_QUARTILE:pause");
@@ -1256,7 +1256,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                 }else{
                     Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED>>shouldAutoPlay false");
                 }*//*
-                *//*if(!shouldAutoPlay && mAdsManager != null){
+         *//*if(!shouldAutoPlay && mAdsManager != null){
                     mAdsManager.pause();
                     //mIsAdDisplayed = false;
                     Log.d("ima_ads", "adEvent CONTENT_PAUSE_REQUESTED:pause");
@@ -1706,15 +1706,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             resumePlayer();
         }*/
 
-        if (mAdsManager != null && mIsAdDisplayed) {
-            exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.GONE);
-            mAdsManager.resume();
-            Log.d("ima_ads", "onresume");
-        } else{
-            if(!isCasting){
-                resumePlayer();
-            }
-        }
+        resumePlayer();
 
         super.onResume();
 
@@ -1958,16 +1950,18 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
                     case CastState.CONNECTED:
                         //disable exoplayer
                         isCasting = true;
-                        if (exoPlayer != null) {
+                        /*if (exoPlayer != null) {
                             exoPlayer.setPlayWhenReady(false);
-                        }
+                        }*/
+                        releasePlayer();
                         break;
                     case CastState.NOT_CONNECTED:
                         //enable exoplayer
                         isCasting = false;
-                        if (exoPlayer != null) {
+                        /*if (exoPlayer != null) {
                             exoPlayer.setPlayWhenReady(true);
-                        }
+                        }*/
+                        resumePlayer();
                         break;
                     default:
                         break;
@@ -2015,7 +2009,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         } else if (Util.SDK_INT <= 23) {
             releasePlayer();
         }*/
-       releasePlayer();
+        releasePlayer();
 
         super.onPause();
         shouldAutoPlay = false;
@@ -2041,9 +2035,17 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void resumePlayer() {
-        exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
-        if (exoPlayer != null) {
-            exoPlayer.setPlayWhenReady(true);
+        if (mAdsManager != null && mIsAdDisplayed) {
+            exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.GONE);
+            mAdsManager.resume();
+            Log.d("ima_ads", "onresume");
+        }else{
+            if(!isCasting){
+                exo_player_view.findViewById(R.id.ll_exoplayer_parent).setVisibility(View.VISIBLE);
+                if (exoPlayer != null) {
+                    exoPlayer.setPlayWhenReady(true);
+                }
+            }
         }
     }
 
@@ -2169,7 +2171,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
             timerSChedule.cancel();
         }
         if (isExoPlayerFullscreen){
-           // closeFullscreen();
+            // closeFullscreen();
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT);
             //closeFullscreenDialog();
         }else {
@@ -2191,7 +2193,7 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void goToHome() {
-       // Intent intentH = new Intent(VideoPlayerActivity.this, HomeActivity.class);
+        // Intent intentH = new Intent(VideoPlayerActivity.this, HomeActivity.class);
         Intent intentH = new Intent(VideoPlayerActivity.this, MainHomeActivity.class);
         intentH.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
         startActivity(intentH);
@@ -2604,20 +2606,20 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
 
         if(newConfig.orientation==Configuration.ORIENTATION_LANDSCAPE){
 
-          //  Toast.makeText(this, "LANDSCAPE - fullscreen- "+isExoPlayerFullscreen, Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(this, "LANDSCAPE - fullscreen- "+isExoPlayerFullscreen, Toast.LENGTH_SHORT).show();
             /*if(orientationTimer == null){
                 setTimer();
             }*/
             openFullscreenDialog();
         }else if(newConfig.orientation==Configuration.ORIENTATION_PORTRAIT){
 
-        //    Toast.makeText(this, "PORTRAIT - fullscreen-  "+isExoPlayerFullscreen, Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(this, "PORTRAIT - fullscreen-  "+isExoPlayerFullscreen, Toast.LENGTH_SHORT).show();
             /*if(orientationTimer == null){
                 setTimer();
             }*/
             closeFullscreenDialog();
         }else{
-        //    Toast.makeText(this, "ORIENTATION -"+newConfig.orientation, Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(this, "ORIENTATION -"+newConfig.orientation, Toast.LENGTH_SHORT).show();
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
         }
     }
@@ -2683,14 +2685,14 @@ public class VideoPlayerActivity extends BaseActivity implements View.OnClickLis
         exo_fullscreen_icon.setImageDrawable(ContextCompat.getDrawable(VideoPlayerActivity.this, R.drawable.ic_fullscreen_white));
 
 
-       /* getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);*/
+        /* getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);*/
         /*if(getSupportActionBar() != null){
             getSupportActionBar().show();
         }*/
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) exo_player_view.getLayoutParams();
         params.width = RelativeLayout.LayoutParams.MATCH_PARENT;
         params.height = (int) getResources().getDimension(R.dimen.dimen_player_250dp);
-     //   Toast.makeText(this, "CLOSE: "+params.width+","+ params.height, Toast.LENGTH_SHORT).show();
+        //   Toast.makeText(this, "CLOSE: "+params.width+","+ params.height, Toast.LENGTH_SHORT).show();
 
         exo_player_view.setLayoutParams(params);
 
