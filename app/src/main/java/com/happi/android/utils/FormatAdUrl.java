@@ -56,7 +56,7 @@ public class FormatAdUrl {
             }
         }
 
-        url = url.replace("[COUNTRY]", SharedPreferenceUtility.getCountry());
+        url = url.replace("[COUNTRY]", SharedPreferenceUtility.getCountryCode());
         url = url.replace("[CITY]", HappiApplication.getCity());
         url = url.replace("[LATITUDE]", "" + HappiApplication.getLatitude());
         url = url.replace("[LONGITUDE]", "" + HappiApplication.getLongitude());
@@ -73,7 +73,17 @@ public class FormatAdUrl {
 
             url = url.replace("[DEVICE_IFA]", advertisingId_fromThread);
         }
-        String user_agent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+        //String user_agent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+        String user_agent = "";
+        try {
+            user_agent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+        } catch (Exception ex) {
+            user_agent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+        }
+
+        if (user_agent == null || user_agent.isEmpty()) {
+            user_agent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+        }
         if (user_agent != null) {
 
             url = url.replace("[USER_AGENT]", encodeValue(user_agent));
@@ -170,7 +180,7 @@ public class FormatAdUrl {
             }
         }
 
-        url = url.replace("[COUNTRY]", SharedPreferenceUtility.getCountry());
+        url = url.replace("[COUNTRY]", SharedPreferenceUtility.getCountryCode());
         url = url.replace("[CITY]", HappiApplication.getCity());
         url = url.replace("[LATITUDE]", "" + HappiApplication.getLatitude());
         url = url.replace("[LONGITUDE]", "" + HappiApplication.getLongitude());
@@ -187,7 +197,17 @@ public class FormatAdUrl {
 
             url = url.replace("[DEVICE_IFA]", advertisingId_fromThread);
         }
-        String user_agent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+        //String user_agent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+        String user_agent = "";
+        try {
+            user_agent = new WebView(HappiApplication.getCurrentContext()).getSettings().getUserAgentString();
+        } catch (Exception ex) {
+            user_agent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+        }
+
+        if (user_agent == null || user_agent.isEmpty()) {
+            user_agent = "Mozilla/5.0 (Linux; Android 5.1.1; NEO-U1 Build/LMY47V; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/58.0.3029.83 Safari/537.36";
+        }
         if (user_agent != null) {
 
             url = url.replace("[USER_AGENT]", encodeValue(user_agent));
