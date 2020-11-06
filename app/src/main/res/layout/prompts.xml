@@ -14,8 +14,8 @@
         android:backgroundTint="@android:color/transparent"
         android:hint="@string/enter_email_address"
         android:inputType="textEmailAddress"
-        android:textColor="@color/greyishBrown"
-        android:textColorHint="@color/whiteThree"
+        android:textColor="@color/whiteThree"
+        android:textColorHint="@color/coolGrey"
         android:textSize="@dimen/text_large"
         android:textStyle="bold" >
 

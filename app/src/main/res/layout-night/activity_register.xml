@@ -230,6 +230,7 @@
 
 
                 <LinearLayout
+                    android:id="@+id/ll_login"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dimen_15dp"
@@ -259,6 +260,16 @@
                         android:textSize="@dimen/text_regular_medium1" />
 
                 </LinearLayout>
+
+
+                <com.facebook.login.widget.LoginButton
+                    android:id="@+id/fb_login_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/dimen_15dp"
+                    xmlns:facebook="http://schemas.android.com/apk/res-auto"
+                    facebook:com_facebook_login_text="@string/fb_register_Text"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -130,12 +130,23 @@
             android:textSize="@dimen/text_regular_medium1"
             android:textColor="@color/whiteThree"/>
 
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/fb_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/dimen_15dp"
+            android:layout_marginBottom="@dimen/dimen_20dp"
+            android:layout_below="@+id/tv_forgot_password"
+            android:layout_centerInParent="true"
+            xmlns:facebook="http://schemas.android.com/apk/res-auto"
+            facebook:com_facebook_login_text="@string/fb_login_Text"/>
 
         <LinearLayout
             android:id="@+id/ll_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/tv_forgot_password"
+            android:layout_below="@id/fb_login_button"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/dimen_15dp"
             android:orientation="horizontal">

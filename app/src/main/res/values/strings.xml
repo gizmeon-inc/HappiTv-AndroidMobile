@@ -3,8 +3,8 @@
     <string name="app_store_url">https://play.google.com/store/apps/details?id=com.happi.android</string>
     <string name="USER_PREFERENCES">user_preferences</string>
 
-    <string name="facebook_app_id">1989191491402145</string>
-    <string name="fb_login_protocol_scheme">fb1989191491402145</string>
+    <string name="facebook_app_id">642916756425595</string>
+    <string name="fb_login_protocol_scheme">fb642916756425595</string>
 
     <!--   <string name="facebook_app_id">304997783624225</string>
     <string name="fb_login_protocol_scheme">fb304997783624225</string>-->
@@ -217,5 +217,8 @@
     <string name="dislike_label">Dislike</string>
 
     <string name="yt_api_key">AIzaSyDqTCHtltk1Y9xgGZgw-SYPBGWgo-mN_gM</string>
+    //fb login, register
+    <string name="fb_login_Text">Login with Facebook</string>
+    <string name="fb_register_Text">Register with Facebook</string>
 
 </resources>

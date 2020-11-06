@@ -1,6 +1,7 @@
 package com.happi.android;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,9 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.core.content.res.ResourcesCompat;
-
 import android.os.CountDownTimer;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,6 +17,7 @@ import android.text.format.Formatter;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,24 +32,42 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.JsonObject;
 import com.happi.android.common.AdvertisingIdAsyncTask;
 import com.happi.android.common.AlertDialogRegisterScreen;
 import com.happi.android.common.BaseActivity;
 import com.happi.android.common.HappiApplication;
 import com.happi.android.common.SharedPreferenceUtility;
+import com.happi.android.customviews.EmailFbLoginAlertDialog;
 import com.happi.android.customviews.LogoutAlertDialog;
+import com.happi.android.customviews.NumberRegistrationAlert;
 import com.happi.android.customviews.TypefacedTextViewRegular;
 import com.happi.android.models.UserSubscriptionModel;
 import com.happi.android.otpView.OtpView;
 import com.happi.android.utils.AppUtils;
 import com.happi.android.webservice.ApiClient;
-import com.google.gson.JsonObject;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
@@ -62,6 +79,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
+
 public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onLogoutClickListener {
 
     private EditText et_email;
@@ -71,23 +89,38 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
     private CompositeDisposable compositeDisposable;
 
     //otp
-    CountDownTimer otpTimer;
-    public int counterdown;
-    public int minute;
-    String downTimer = "";
-    String minuteTimer = "";
-    Button btLogin;
-    RelativeLayout rl_otp_screen;
-    RelativeLayout rl_otp_verification_screen;
-    TextView tv_timer;
-    TextView tv_resend_otp;
-    TextView tv_done;
+    private CountDownTimer otpTimer;
+    private int counterdown;
+    private int minute;
+    private String downTimer = "";
+    private String minuteTimer = "";
+    private Button btLogin;
+    private RelativeLayout rl_otp_screen;
+    private RelativeLayout rl_otp_verification_screen;
+    private TextView tv_timer;
+    private TextView tv_resend_otp;
+    private TextView tv_done;
     private OtpView otpView;
-    TextView tv_verfication_code_number;
-    ImageView iv_back_to_page;
-    LinearLayout ll_resend;
-    boolean isOtpScreenOpen = false;
+    private TextView tv_verfication_code_number;
+    private ImageView iv_back_to_page;
+    private LinearLayout ll_resend;
+    private boolean isOtpScreenOpen = false;
     private int user_id = 0;
+
+    //fb login
+    private CallbackManager callbackManager;
+    private LoginButton fbLoginButton;
+    private static final String EMAIL = "email";
+    private String fbEmailID = "";
+    private String fbtoken = "";
+    private String fbUserName = "";
+    private String fbId = "";
+    private String fbUserImagePath = "";
+
+    private String emailAddress = "";
+    private String password = "";
+
+
     public static boolean isValidEmail(String email) {
 
         String EMAIL_PATTERN = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
@@ -114,6 +147,24 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
             this.getWindow().getDecorView().setSystemUiVisibility(flags);
         }
         setContentView(R.layout.activity_login);
+
+
+        /*try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.happi.android",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        }
+        catch (PackageManager.NameNotFoundException e) {
+        }
+        catch (NoSuchAlgorithmException e) {
+        }*/
+
+
         compositeDisposable = new CompositeDisposable();
 
         dialog = new ProgressDialog(LoginActivity.this);
@@ -128,6 +179,7 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
         }
         RelativeLayout ll_parent = findViewById(R.id.ll_parent);
         setupUI(ll_parent);
+
 
         LinearLayout ll_signup = findViewById(R.id.ll_signup);
         TextView tv_signup = findViewById(R.id.tv_signup);
@@ -159,6 +211,203 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
         tl_password.setError(null);
         et_password.setError(null);
 
+        //fb
+        LoginManager.getInstance().logOut();
+        callbackManager = CallbackManager.Factory.create();
+        fbLoginButton = findViewById(R.id.fb_login_button);
+        fbLoginButton.setReadPermissions(Arrays.asList(EMAIL));
+        // Callback registration
+        fbLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult result) {
+                // App code
+                Log.e("FACB","onSuccess");
+                Log.e("FACB","onSuccess"+result.getAccessToken());
+                Log.e("FACB","onSuccess"+result.getRecentlyDeniedPermissions());
+                Log.e("FACB","onSuccess"+result.getRecentlyGrantedPermissions());
+
+                GraphRequest request = GraphRequest.newMeRequest(
+                        result.getAccessToken(),
+                        (object, response) -> {
+
+                            AfterLogin(object);
+
+                            JSONObject json = response
+                                    .getJSONObject();
+
+                            try {
+                                if (json != null) {
+                                    Log.e("FACB","onSuccess"+json.toString());
+
+                                    /*JSONObject jsonPicture = json
+                                            .getJSONObject("picture");
+                                    JSONObject jsonData = jsonPicture
+                                            .getJSONObject("data");
+                                    fbUserImagePath = jsonData
+                                            .getString("url");*/
+
+                                    if (json.has("email")) {
+                                        fbEmailID = json
+                                                .getString("email");
+                                    } else {
+                                        fbEmailID = null;
+                                    }
+                                    fbUserName = json
+                                            .getString("name");
+                                    fbId = json
+                                            .getString("id");
+                                    if (fbUserImagePath == null) {
+
+                                        fbUserImagePath = "";
+                                    }
+                                    if (fbEmailID == null
+                                            || fbEmailID
+                                            .equals("null")) {
+                                        fbEmailID = "";
+                                    }
+
+                                    String[] firstNameUser = fbUserName
+                                            .split("\\s+");
+
+                                    if (AppUtils.isOnline()) {
+
+                                        //loginApi Call
+                                        emailAddress = fbEmailID;
+                                        password = "";
+                                        if (emailAddress.isEmpty()) {
+                                            EmailFbLoginAlertDialog emailDialog = new EmailFbLoginAlertDialog(HappiApplication.getCurrentActivity(), "OK", "CANCEL",
+                                                    new EmailFbLoginAlertDialog.OnOkClicked() {
+                                                        @Override
+                                                        public void onClickPositive(String email) {
+                                                            emailAddress = email;
+                                                            Log.e("FACB", "onSuccess>> Email-" + emailAddress);
+                                                            Log.e("FACB", "onSuccess>>fbLoginApiCall-from-dialog");
+                                                            Log.e("FACB", "onSuccess>>fbLoginApiCall-from-dialog>>fbId" + fbId);
+                                                            fbLoginApiCall(fbId);
+                                                        }
+                                                    }, new EmailFbLoginAlertDialog.OnCancelClicked() {
+                                                @Override
+                                                public void onClickNegative() {
+                                                    LoginManager.getInstance().logOut();
+                                                    Log.e("FACB","onSuccess>>CANCEL");
+                                                }
+                                            });
+                                            emailDialog.setCancelable(false);
+                                            Objects.requireNonNull(emailDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            emailDialog.show();
+
+
+                                         /*   LayoutInflater li = LayoutInflater.from(HappiApplication.getCurrentContext());
+                                            View promptsView = li.inflate(R.layout.prompts, null);
+
+                                            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                                                    HappiApplication.getCurrentContext());
+
+                                            // set prompts.xml to alertdialog builder
+                                            alertDialogBuilder.setView(promptsView);
+
+                                            final EditText userInput = (EditText) promptsView
+                                                    .findViewById(R.id.editTextDialogUserInput);
+
+                                            // set dialog message
+                                            alertDialogBuilder
+                                                    .setCancelable(false)
+                                                    .setPositiveButton("OK",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    // get user input and set it to result
+                                                                    // edit text
+
+                                                                    hideSoftKeyBoard();
+                                                                    if (userInput.getText().toString().trim().isEmpty()) {
+
+                                                                        userInput.setError("Please enter your email Address");
+                                                                        userInput.requestFocus();
+                                                                    } else if (!isValidEmail(userInput.getText().toString().trim())) {
+
+                                                                        userInput.setError("Invalid Email");
+                                                                        userInput.requestFocus();
+                                                                    }else{
+                                                                        emailAddress = userInput.getText().toString().trim().toLowerCase();
+                                                                        Log.e("FACB","onSuccess>> Email-"+emailAddress);
+                                                                        Log.e("FACB","onSuccess>>fbLoginApiCall-from-dialog");
+                                                                        Log.e("FACB","onSuccess>>fbLoginApiCall-from-dialog>>fbId"+fbId);
+                                                                        dialog.dismiss();
+                                                                        fbLoginApiCall(fbId);
+                                                                    }
+
+                                                                    *//*if (!isValidEmail(emailAddress)) {
+
+                                                                        LoginManager.getInstance().logOut();
+                                                                        Log.e("FACB","onSuccess>>Invalid Email");
+                                                                        Toast.makeText(LoginActivity.this, "Invalid Email", Toast.LENGTH_SHORT).show();
+
+                                                                    } else {
+
+                                                                        dialog.dismiss();
+                                                                        Log.e("FACB","reg>> 2");
+//                                                                        registerApiCall(emailAddress, password, fbUserName, "", "", SharedPreferenceUtility.getAdvertisingId(),
+//                                                                                "android-phone", "fb-Login", fbId);
+
+                                                                    }*//*
+
+                                                                }
+                                                            })
+                                                    .setNegativeButton("Cancel",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                    LoginManager.getInstance().logOut();
+                                                                    Log.e("FACB","onSuccess>>CANCEL");
+                                                                }
+                                                            });
+                                            // create alert dialog
+                                            AlertDialog alertDialog = alertDialogBuilder.create();
+
+                                            // show it
+                                            alertDialog.show();*/
+                                        } else {
+
+                                            emailAddress = fbEmailID.toLowerCase();
+                                            dialog.show();
+                                            Log.e("FACB","onSuccess>>fbLoginApiCall");
+                                            Log.e("FACB","onSuccess>>fbLoginApiCall>>fbId"+fbId);
+                                            fbLoginApiCall(fbId);
+                                        }
+
+                                    } else{
+                                        Log.e("FACB","onSuccess>>no internet");
+                                        Toast.makeText(HappiApplication.getCurrentContext(), "Check your Internet connection", Toast.LENGTH_LONG).show();
+
+                                    }
+                                }
+
+                            } catch (JSONException e) {
+                                Log.e("FACB","JSONException>>"+e.getMessage());
+                                e.printStackTrace();
+                            }
+
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields",
+                        //"id,name,email,gender,picture.type(large), birthday");
+                        "id,name,email");
+                request.setParameters(parameters);
+                request.executeAsync();
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+                Log.e("FACB","onCancel>>");
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+                Log.e("FACB","onError>>"+exception.getLocalizedMessage());
+            }
+        });
 
         //otp
         rl_otp_screen = findViewById(R.id.rl_otp_screen);
@@ -240,8 +489,9 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
 
                 hideSoftKeyBoard();
 
-                String emailAddress = et_email.getText().toString().trim().toLowerCase();
-                loginApiCall(emailAddress, et_password.getText().toString().trim());
+                 emailAddress = et_email.getText().toString().trim().toLowerCase();
+                 password = et_password.getText().toString().trim();
+                loginApiCall(emailAddress, password);
 
             }
         });
@@ -290,7 +540,7 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -826,7 +1076,7 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
                         SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
 
                         HappiApplication.setSub_id(new ArrayList<>());
-
+                        LoginManager.getInstance().logOut();
                         et_email.setText("");
                         et_password.setText("");
                         et_email.requestFocus();
@@ -983,5 +1233,233 @@ public class LoginActivity extends BaseActivity implements LogoutAlertDialog.onL
             }
         }.start();
     }
+    //fb
+    private void AfterLogin(JSONObject fbobject) {
+
+        try {
+
+            AccessToken token = AccessToken.getCurrentAccessToken();
+            if (token != null) {
+
+                fbtoken = token.getToken();
+            }
+        } catch (Exception ex) {
+
+            ex.printStackTrace();
+        }
+    }
+    //check fb id is already used
+    private void fbLoginApiCall(final String fbId) {
+        if(dialog != null && !dialog.isShowing()){
+            dialog.show();
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("device_id", SharedPreferenceUtility.getAdvertisingId());
+        jsonObject.addProperty("facebook_id", fbId);
+        jsonObject.addProperty("ipaddress", HappiApplication.getIpAddress());
+        jsonObject.addProperty("pubid", SharedPreferenceUtility.getPublisher_id());
+        jsonObject.addProperty("loginType", "facebook");
+        jsonObject.addProperty("fb_email", emailAddress);
+        jsonObject.addProperty("country_code", SharedPreferenceUtility.getCountryCode());
+
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable loginDisposable = usersService.loginViaSocialMedia(jsonObject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(loginResponseModel -> {
+
+                    if (loginResponseModel.getStatus() == 100) {
+
+                        SharedPreferenceUtility.saveUserDetails(loginResponseModel.getData().get(0)
+                                        .getUser_id(), loginResponseModel.getData().get(0).getUser_name(), emailAddress,
+                                password, "", "", "", "", false, loginResponseModel.getData().get(0).getPhone());
+                        SharedPreferenceUtility.setGuest(false);
+
+                        getSessionToken();
+
+
+                    } else if (loginResponseModel.getStatus() == 101) {
+
+                        user_id = loginResponseModel.getData().get(0).getUser_id();
+                        showOtpVerificationPage();
+
+                    } else if (loginResponseModel.getStatus() == 102) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                       /* et_email.setError("Invalid Credentials");
+                        et_email.requestFocus();*/
+                        Toast.makeText(this, "Invalid Credentials", Toast.LENGTH_SHORT).show();
+
+                    }else if (loginResponseModel.getStatus() == 103) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        goToRegisterScreen();
+
+                    } else if (loginResponseModel.getStatus() == 104) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        showAlertForLinkingAccount();
+
+                    } else if (loginResponseModel.getStatus() == 500) {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        Toast.makeText(LoginActivity.this, "Internal Server Error", Toast
+                                .LENGTH_SHORT).show();
+                    }else {
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        if (loginResponseModel.getMessage() != null && !loginResponseModel.getMessage().isEmpty())
+                            Toast.makeText(LoginActivity.this, "" + loginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+
+
+                }, throwable -> {
+
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(LoginActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
+
+                });
+        compositeDisposable.add(loginDisposable);
+
+        /*call.enqueue(new Callback<LoginResponseModel>() {
+            @Override
+            public void onResponse(@NonNull Call<LoginResponseModel> call, Response<LoginResponseModel> response) {
+
+                if (response.isSuccessful()) {
+                    if(response.body() != null){
+                        if (response.body().getStatus() == 100) {
+
+                            SharedPreferenceUtility.saveUserDetails(response.body().getData().get(0)
+                                            .getUser_id(), response.body().getData().get(0).getUser_name(), emailAddress, password, "", "",
+                                    "", fbId, false,"");
+                            Log.e("FACB","getStatus>> 100");
+                            Log.e("FACB","fbId>> "+fbId);
+                            //goToHomePage();
+                            getSessionToken();
+                        } else if (response.body().getStatus() == 102) {
+                            Log.e("FACB","getStatus>> 102");
+                            //registerApiCall(emailAddress, password, fbUserName, "", "", SharedPreferenceUtility.getAdvertisingId(), "android-phone", "fb-Login", fbId);
+
+                        }else{
+                            Log.e("FACB","getStatus>> "+response.body().getStatus());
+                        }
+                    }else{
+                        Log.e("FACB","response body>> null");
+                    }
+
+                }else{
+                    Log.e("FACB","response >> not success");
+                }
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponseModel> call, Throwable t) {
+
+                if (dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+                Log.e("FACB","onFailure");
+                Toast.makeText(LoginActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
+
+            }
+        });*/
+    }
+
+
+    private void showAlertForLinkingAccount(){
+        if (dialog.isShowing()) {
+            dialog.dismiss();
+        }
+        String message = "Do you want to link your Facebook account?";
+        NumberRegistrationAlert alertLinking = new NumberRegistrationAlert(this, message, "Yes", "No", new NumberRegistrationAlert.OnNumberRegisterUserNegative() {
+            @Override
+            public void onNumberRegisterNegativeClick() {
+                if(dialog != null && !dialog.isShowing()){
+                    dialog.show();
+                }
+              getSessionToken();
+            }
+        }, new NumberRegistrationAlert.OnNumberRegisterUserPositive() {
+            @Override
+            public void onNumberRegisterPositiveClick() {
+                linkSocialAccountApiCall();
+            }
+        });
+        Objects.requireNonNull(alertLinking.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alertLinking.setCancelable(false);
+        alertLinking.show();
+    }
+    private void linkSocialAccountApiCall(){
+
+        if(dialog != null && !dialog.isShowing()){
+            dialog.show();
+        }
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("device_id", SharedPreferenceUtility.getAdvertisingId());
+        jsonObject.addProperty("facebook_id", fbId);
+        jsonObject.addProperty("ipaddress", HappiApplication.getIpAddress());
+        jsonObject.addProperty("pubid", SharedPreferenceUtility.getPublisher_id());
+        jsonObject.addProperty("loginType", "facebook");
+        jsonObject.addProperty("fb_email", emailAddress);
+        jsonObject.addProperty("country_code", SharedPreferenceUtility.getCountryCode());
+
+        ApiClient.UsersService usersService = ApiClient.create();
+        Disposable loginDisposable = usersService.linkSocialAccount(jsonObject)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(loginResponseModel -> {
+
+                    if (loginResponseModel.getStatus() == 100) {
+
+                        SharedPreferenceUtility.saveUserDetails(loginResponseModel.getData().get(0)
+                                        .getUser_id(), loginResponseModel.getData().get(0).getUser_name(), emailAddress,
+                                password, "", "", "", "", false, loginResponseModel.getData().get(0).getPhone());
+                        SharedPreferenceUtility.setGuest(false);
+
+                        getSessionToken();
+
+
+                    }else{
+                        if (dialog.isShowing()) {
+                            dialog.dismiss();
+                        }
+                        if (loginResponseModel.getMessage() != null && !loginResponseModel.getMessage().isEmpty())
+                            Toast.makeText(LoginActivity.this, "" + loginResponseModel.getMessage(), Toast.LENGTH_SHORT).show();
+
+                    }
+
+
+                }, throwable -> {
+
+                    if (dialog.isShowing()) {
+                        dialog.dismiss();
+                    }
+                    Toast.makeText(LoginActivity.this, "Something went wrong. Please try again after sometime", Toast.LENGTH_SHORT).show();
+
+                });
+        compositeDisposable.add(loginDisposable);
+    }
+
+    private void goToRegisterScreen(){
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        intent.putExtra("userName",fbUserName);
+        intent.putExtra("userEmail",emailAddress);
+        startActivity(intent);
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
+    }
+
 }
 

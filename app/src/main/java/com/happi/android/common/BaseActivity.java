@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.facebook.login.LoginManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.happi.android.ChannelLivePlayerActivity;
 import com.happi.android.ChannelsListingActivity;
@@ -526,7 +527,7 @@ public class BaseActivity extends AppCompatActivity {
                         SharedPreferenceUtility.setPartnerId("");
                         SharedPreferenceUtility.setNotificationIds(new ArrayList<>());
                         SharedPreferenceUtility.setSubscriptionItemIdList(new ArrayList<>());
-
+                        LoginManager.getInstance().logOut();
                         HappiApplication.setSub_id(new ArrayList<>());
 
                         goToLoginPage();
